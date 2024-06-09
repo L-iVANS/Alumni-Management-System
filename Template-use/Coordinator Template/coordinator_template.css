@@ -38,6 +38,11 @@
 font-weight: bold;
 }
 
+.header-content label {
+    cursor: pointer;
+}
+
+
 
 .side-header {
     box-shadow: 0px 5px 5px -5px rgb(0 0 0 /10%);
