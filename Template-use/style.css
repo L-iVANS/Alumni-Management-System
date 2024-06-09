@@ -46,6 +46,12 @@ font-weight: bold;
     justify-content: center;
     align-items: center;
 }
+
+.sidebar ul li a:hover {
+    color: #2a9134;
+    background: rgba(0,0,0,0.1);
+}
+
 .side-header img{
     width: 40px;
 }
