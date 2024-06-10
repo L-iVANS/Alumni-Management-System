@@ -1,126 +1,128 @@
+
 body {
-  background-color: #f8f9fa;
-}
-.navbar {
-  background-color: #2a9134; /* Hex color */
-  color: white;
-}
-.navbar-brand img {
-  height: 70px; /* Increased logo height */
-  margin-top: -10px; /* Overlapping the header */
-}
-.navbar-brand, .navbar-nav .nav-link, .user-profile img {
-  color: white;
-}
-.navbar-nav .nav-link {
-  margin: 0 5px;
-  border: none; /* Removed the border */
-  border-radius: 5px;
-}
-.navbar-nav .nav-link:hover {
-  background-color: #6c757d;
-  color: #fff;
-}
-.navbar .btn {
-  border: 1px solid white;
-  border-radius: 5px;
-  color: white;
-  margin-left: 10px;
-}
-.navbar .btn:hover {
-  background-color: #6c757d;
-  color: #fff;
-}
-.user-profile {
-  height: 40px;
-  width: 40px;
-  background-color: white;
-  border-radius: 50%;
-  overflow: hidden;
-}
-.user-profile img {
-  width: 100%;
-  height: auto;
-}
-.navbar-nav {
-  margin-top: 10px;
-}
-.navbar-text {
-  margin-bottom: 10px;
-}
-.hero-section {
-  position: relative;
-  text-align: center;
-  color: white;
-}
-.hero-section img {
-  width: 100%;
-  height: 100%;
-}
-.hero-section .overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-.hero-section .overlay h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-}
-.hero-section .overlay p {
-  font-size: 1.2rem;
-}
-.about-section {
-  padding: 50px 0;
-  background-color: #f8f9fa;
-}
-.about-section h2 {
-  text-align: center;
-  margin-bottom: 30px;
-}
-.about-section p {
-  text-align: center;
-  font-size: 18px;
-  margin-bottom: 40px;
-}
-.footer {
-  background-color: #2e2f34;
-  color: white;
-  padding: 20px 0;
-}
-.footer .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.footer .logo-info {
-  display: flex;
-  align-items: center;
-}
-.footer .logo-info img {
-  height: 50px;
-  margin-right: 10px;
-}
-.footer .quick-links a {
-      margin: 0;
-      padding: 2px 0;
+    background-color: #f8f9fa;
+  }
+  .navbar {
+    background-color: #2a9134; /* Hex color */
+    color: white;
+  }
+  .navbar-brand img {
+    height: 70px; /* Increased logo height */
+    margin-top: -10px; /* Overlapping the header */
+  }
+  .navbar-brand, .navbar-nav .nav-link, .user-profile img {
+    color: white;
+  }
+  .navbar-nav .nav-link {
+    margin: 0 5px;
+    border: none; /* Removed the border */
+    border-radius: 5px;
+  }
+  .navbar-nav .nav-link:hover {
+    background-color: rgba(0,0,0,0.1);
+    color: #fff;
+  }
+  .navbar .btn {
+    border: 1px solid white;
+    border-radius: 5px;
+    color: white;
+    margin-left: 10px;
+  }
+  .navbar .btn:hover {
+    background-color: rgba(0,0,0,0.1);
+    color: #fff;
+  }
+  .user-profile {
+    height: 40px;
+    width: 40px;
+    background-color: white;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  .user-profile img {
+    width: 100%;
+    height: auto;
+  }
+  .navbar-nav {
+    margin-top: 10px;
+  }
+  .navbar-text {
+    margin-bottom: 10px;
+  }
+  .hero-section {
+    position: relative;
+    text-align: center;
+    color: white;
+  }
+  .hero-section img {
+    width: 100%;
+    height: 100%;
+  }
+  .hero-section .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .hero-section .overlay h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  .hero-section .overlay p {
+    font-size: 1.2rem;
+  }
+  .about-section {
+    padding: 50px 0;
+    background-color: #f8f9fa;
+  }
+  .about-section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .about-section p {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 40px;
+  }
+  .footer {
+    background-color: #2e2f34;
+    color: white;
+    padding: 20px 0;
+  }
+  .footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer .logo-info {
+    display: flex;
+    align-items: center;
+  }
+  .footer .logo-info img {
+    height: 50px;
+    margin-right: 10px;
   }
   .footer .quick-links a {
-      color: white;
-      text-decoration: none;
+        margin: 0;
+        padding: 15px 10px  ;
+    }
+    .footer .quick-links a {
+        color: white;
+        text-decoration: none;
+    }
+    .footer .quick-links a:hover {
+        text-decoration: underline;
+    }
+  .footer .copyright {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #bbb;
   }
-  .footer .quick-links a:hover {
-      text-decoration: underline;
-  }
-.footer .copyright {
-  text-align: center;
-  margin-top: 10px;
-  font-size: 0.9em;
-  color: #bbb;
-}
+  
