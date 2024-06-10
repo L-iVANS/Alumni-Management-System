@@ -1,6 +1,6 @@
 <?php 
     if(isset($_GET['id'])){
-        $alumni_id = $_GET['id'];
+        $coor_id = $_GET['id'];
 
     $serername="localhost";
     $db_username="root";
@@ -14,14 +14,14 @@
         echo"Successfully Connected!";
     }
     //insert data into table alumni_archive from alumni
-    $sql_archive = "INSERT INTO alumni_archive (student_id, alumni_name, course, batch, connected_to, contact, address, email, username, password, date_created)" . 
-                   "SELECT student_id, alumni_name, course, batch, connected_to, contact, address, email, username, password, date_created FROM alumni WHERE student_id=$alumni_id";
+    $sql_archive = "INSERT INTO coordinator_archive (coor_id, coor_name, contact, email, username, password, date_created)" . 
+                   "SELECT coor_id, coor_name, contact, email, username, password, date_created FROM coordinator WHERE coor_id=$coor_id";
     $conn->query($sql_archive);
 
     //delete data in table alumni
-    $sql_delete = "DELETE FROM alumni WHERE student_id=$alumni_id";
+    $sql_delete = "DELETE FROM coordinator WHERE coor_id=$coor_id";
     $conn->query($sql_delete);
     }
-    header("location: ../alumni.php");
+    header("location: ../coordinator.php");
     exit;
 ?>

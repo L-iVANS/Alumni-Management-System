@@ -18,27 +18,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
-    <title>Profile</title>
+    <title>Coordinator List</title>
 </head>
 
 <body style="margin: 100px;">
     <div style="margin-left: 7%; margin-right: 7%;" >
-        <H3>Alumni List</H3>
+        <H3>Coordinator List</H3>
         <hr>
         <!-- add new alumni -->
-        <a class="btn btn-primary btn-sm" href="alumniCrud/add_alumni.php">Add new</a>
+        <a class="btn btn-primary btn-sm" href="coordinatorCrud/add_coor.php">Add new</a>
         <br>
         <!-- table -->
         <table id="myTable" class="table">
             <thead>
                 <tr>
-                    <th>Student ID</th>
+                    <th>Coordinator ID</th>
                     <th>Name</th>
-                    <th>Course</th>
-                    <th>Batch</th>
-                    <th>Currently Connected To</th>
                     <th>Contact</th>
-                    <th>Address</th>
                     <th>Email</th>
                     <th>Username</th>
                     <th>Date Created</th>
@@ -50,25 +46,21 @@
                 <tr>
                     <?php
                         // to retrieve data in table
-                        $query = "SELECT * FROM alumni";
+                        $query = "SELECT * FROM coordinator";
                         $result = mysqli_query($conn, $query);
 
                         while ($row = mysqli_fetch_assoc($result)) {
                     echo "
-                    <td>$row[student_id]</td>
-                    <td>$row[alumni_name]</td>
-                    <td>$row[course]</td>
-                    <td>$row[batch]</td>
-                    <td>$row[connected_to]</td>
+                    <td>$row[coor_id]</td>
+                    <td>$row[coor_name]</td>
                     <td>$row[contact]</td>
-                    <td>$row[address]</td>
                     <td>$row[email]</td>
                     <td>$row[username]</td>
                     <td>$row[date_created]</td>
                     <td>
                         <!-- update and delete button -->
-                        <a class='btn btn-primary btn-sm' href='alumniCrud/update_alumni.php?id=$row[student_id]'>Update</a>
-                        <a class='btn btn-danger btn-sm' href='alumniCrud/del_alumni.php?id=$row[student_id]'>Archive</a>
+                        <a class='btn btn-primary btn-sm' href='coordinatorCrud/update_coor.php?id=$row[coor_id]'>Update</a>
+                        <a class='btn btn-danger btn-sm' href='coordinatorCrud/del_coor.php?id=$row[coor_id]'>Archive</a>
                     </td>";
                     ?>
                 </tr>
