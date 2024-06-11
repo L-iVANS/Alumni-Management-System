@@ -42,7 +42,12 @@ font-weight: bold;
     cursor: pointer;
 }
 
-
+.user a span{
+    font-size: 30px;
+    color: white;
+    border-left: solid 1px #fff;
+    padding-left: 10px;
+}
 
 .side-header {
     box-shadow: 0px 5px 5px -5px rgb(0 0 0 /10%);
