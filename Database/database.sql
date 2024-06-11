@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 07, 2024 at 03:40 AM
+-- Generation Time: Jun 11, 2024 at 02:53 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -82,25 +82,51 @@ CREATE TABLE `alumni` (
   `batch` varchar(250) NOT NULL,
   `connected_to` varchar(250) NOT NULL,
   `contact` bigint(20) NOT NULL,
+  `address` varchar(250) NOT NULL,
   `email` varchar(250) NOT NULL,
   `username` varchar(250) NOT NULL,
   `password` varchar(250) NOT NULL,
-  `date_created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `date_created` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `alumni`
 --
 
-INSERT INTO `alumni` (`student_id`, `alumni_name`, `course`, `batch`, `connected_to`, `contact`, `email`, `username`, `password`, `date_created`) VALUES
-(1, 'Alumni', 'BSIT', '2023-2024', 'Oracle', 12345678901, 'alumni@email.com', 'alumni', 'pas', '2024-05-17 15:10:51'),
-(2, 'Marc Andrei A. Toledo', 'BSIT', '2022-2026', 'CvSU', 1234567890, 'user@email.com', 'user123', 'user123', '2024-06-06 06:06:17'),
-(3, 'Monique Lhouisse R. Tan ', 'BSIT', '2022-2026', 'CvSU', 1234567890, 'user@email.com', 'user123', 'pass123', '2024-06-06 06:06:17'),
-(4, 'Lance Ivan Listana ', 'BSIT', '2022-2026', 'CvSU', 1234567890, 'user@email.com', 'user123', 'pass123', '2024-06-06 06:06:17'),
-(5, 'Alen N. Fidelis', 'BSIT', '2022-2026', 'CvSU', 1234567890, 'user@email.com', 'user123', 'pass123', '2024-06-06 06:06:17'),
-(6, 'Rhanel Seighmone Sy. Buclares', 'BSIT', '2022-2026', 'CvSU', 1234567890, 'user@email.com', 'user123', 'pass123', '2024-06-06 06:06:17'),
-(7, 'Carlos JR O. Nicol ', 'BSIT', '2022-2026', 'CvSU', 1234567890, 'user@email.com', 'user123', 'pass123', '2024-06-06 06:06:17'),
-(8, 'John Patrick P. Macaspac', 'BSIT', '2022-2026', 'CvSU', 1234567890, 'user@email.com', 'user123', 'pass123', '2024-06-06 06:06:17');
+INSERT INTO `alumni` (`student_id`, `alumni_name`, `course`, `batch`, `connected_to`, `contact`, `address`, `email`, `username`, `password`, `date_created`) VALUES
+(1, 'Alumni', 'BSIT', '2023-2024', 'Oracle', 12345678901, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'alumni@email.com', 'username', 'password', '2024-06-09 03:18:27'),
+(2, 'Marc Andrei A. Toledo', 'BSIT', '2022-2026', 'CvSU', 1234567890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'usesdr@email.com', 'ussdaer123', 'user123', '2024-06-09 06:32:54'),
+(3, 'Monique Lhouisse R. Tan ', 'BSIT', '2022-2026', 'CvSU', 1234567890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'usesdawe213r@email.com', 'usersdas23123123', 'pass123', '2024-06-09 06:36:30'),
+(4, 'Lance Ivan Listana ', 'BSIT', '2022-2026', 'CvSU', 1234567890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'sdahdfhuser@email.com', 'usadasdfsder123', 'pass123', '2024-06-09 06:36:30'),
+(5, 'Alen N. Fidelis', 'BSIT', '2022-2026', 'CvSU', 1234567890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'usasdaedfsdfr@email.com', 'ussddfsddaer123', 'pass123', '2024-06-09 06:36:30'),
+(6, 'Rhanel Seighmone Sy. Buclares', 'BSIT', '2022-2026', 'CvSU', 1234567890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'ussdewraser@email.com', 'useaserwedar123', 'pass123', '2024-06-09 06:36:30'),
+(7, 'Carlos JR O. Nicol ', 'BSIT', '2022-2026', 'CvSU', 1234567890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'ussadaerwer@email.com', 'useasdwerwasdr123', 'pass123', '2024-06-09 06:36:30'),
+(8, 'John Patrick P. Macaspac', 'BSIT', '2022-2026', 'CvSU', 1234567890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'usersa12das@email.com', 'uses3423dadr123', 'pass123', '2024-06-09 06:36:30'),
+(12, 'sdadsad', 'sdadas', 'sdasd', 'sadasd', 12345678890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'saffsd5345fsdf', 'dfsdf756sdf', 'dfsdfsd', '2024-06-09 06:32:54'),
+(13, 'sdsada', 'sdasdsa', 'sdasd', 'sadasda', 9876543210, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'wqewqe66wqe', 'dasdsa565d', 'sdasd', '2024-06-09 06:32:54'),
+(14, 'sdadsad', 'sdadas', 'sdasd', 'sadasd', 12345678890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'saffsdf21312sdf', 'dfsdfsd7547f', 'dfsdfsd', '2024-06-09 06:32:54'),
+(15, 'sdsada', 'sdasdsa', 'sdasd', 'sadasda', 9876543210, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'wqewqewq342e', 'dasd565sad', 'sdasd', '2024-06-09 06:32:54'),
+(16, 'sdadsad', 'sdadas', 'sdasd', 'sadasd', 12345678890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'saffsd564fsdf', 'dfsdfs67df', 'dfsdfsd', '2024-06-09 06:32:54'),
+(17, 'sdsada', 'sdasdsa', 'sdasd', 'sadasda', 9876543210, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'wqewqewq565e', 'dasdsad43', 'sdasd', '2024-06-09 06:32:54'),
+(18, 'sdadsad', 'sdasd', 'sdasd', 'sadasd', 12345678890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'saffsd34534fsdf', '435345', 'dfsdfsd', '2024-06-09 06:40:00'),
+(19, 'sdsada', 'sdasdsa', 'sdasd', 'sadasda', 9876543210, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'wqew4534qewqe', 'dasdsa234234d', 'sdasd', '2024-06-09 06:40:00'),
+(20, 'sdadsad', 'sdadas', 'sdasd', 'sadasd', 12345678890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'saffsdf8856sdf', 'dfsdf899sdf', 'dfsdfsd', '2024-06-09 06:40:00'),
+(21, 'sdsada', 'sdasdsa', 'sdasd', 'sadasda', 9876543210, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'wqewq456435ewqe', 'dasdsad785678', 'sdasd', '2024-06-09 06:40:00'),
+(22, 'sdadsad', 'sdadas', 'sdasd', 'sadasd', 12345678890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'saffs23423dfsdf', 'dfsdfs655423df', 'dfsdfsd', '2024-06-09 06:40:00'),
+(23, 'sdsada', 'sdasdsa', 'sdasd', 'sadasda', 9876543210, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'wqew2342qewq565e', 'dasdsadsadwqr55', 'sdasd', '2024-06-09 06:40:00'),
+(24, 'sdadsad', 'sdadas', 'sdasd', 'sadasd', 12345678890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'saffsd76657fsdf', 'dfsdfsd989f', 'dfsdfsd', '2024-06-09 06:40:00'),
+(25, 'sdsada', 'sdasdsa', 'sdasd', 'sadasda', 9876543210, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'wqewq54656ewqe', 'das87689dsad', 'sdasd', '2024-12-31 17:02:00'),
+(26, 'sdadsad', 'sdadas', 'sdasd', 'sadasd', 12345678890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'saffs89780dfsdf', 'dfsdfsd67464', 'dfsdfsd', '2024-06-09 06:40:00'),
+(27, 'sdsada', 'sdasdsa', 'sdasd', 'sadasda', 9876543210, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'wqewqew78900980qe', 'dasds8900ad', 'sdasd', '2024-06-09 06:40:00'),
+(28, 'sdadsad', 'sdadas', 'sdasd', 'sadasd', 12345678890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'saf67443fsdfsdf', 'dfsdfs98877df', 'dfsdfsd', '2024-06-09 06:40:00'),
+(29, 'sdsada', 'sdasdsa', 'sdasd', 'sadasda', 9876543210, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'wqewqe8755wqe', 'dasdsad9867', 'sdasd', '2024-06-09 06:40:00'),
+(30, 'sdadsad', 'sdadas', 'sdasd', 'sadasd', 12345678890, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'saffsd646fsdf', 'dfsdfs765756df', 'dfsdfsd', '2024-06-09 06:40:00'),
+(31, 'sdsada', 'sdasdsa', 'sdasd', 'sadasda', 9876543210, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'wqewqe7567wqe', 'dasdsa8978d', 'sdasd', '2024-06-09 06:40:00'),
+(65, 'alumni2', '2022-2026', 'BSCS', 'ORACLE', 9372166324, 'Bacoor', 'alumni2@email.com', 'username1', 'password', '2024-06-09 06:54:53'),
+(66, 'dasda', 'dasd', 'asdasd', 'asdasd', 34234, 'sadasdasd', 'alumni3@email.com', 'dasdasdasdeqwe', 'dasdasdq', '2024-06-12 07:14:44'),
+(70, 'dasdad', 'sadsadsa', 'sadsadsad', 'dsadsad', 987654321, 'fghfghfgh', 'hfghfgj', 'jfjrtujrtujj', 'jghjghjgjgh', '2024-06-09 07:37:11'),
+(72, 'marc', 'BSCS', '2022-2026', 'CVSU', 890985436, 'Bacoor', 'marc12345@email.com', 'marc12345', 'fggfgfd', '2024-06-09 15:58:18'),
+(73, 'fsdfsdf', 'sdfsdfsfsd', 'fsdfsdf', 'sdfsdfsdf', 0, 'fsdfsdf', 'sdfsdfsdfsdfsdfsd', 'fsdfsd', 'feftwerwrwr', '2024-06-09 17:01:50');
 
 -- --------------------------------------------------------
 
@@ -115,12 +141,22 @@ CREATE TABLE `alumni_archive` (
   `batch` varchar(255) NOT NULL,
   `connected_to` varchar(255) NOT NULL,
   `contact` bigint(20) NOT NULL,
+  `address` varchar(250) NOT NULL,
   `email` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `date_created` datetime NOT NULL,
   `date_archive` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `alumni_archive`
+--
+
+INSERT INTO `alumni_archive` (`student_id`, `alumni_name`, `course`, `batch`, `connected_to`, `contact`, `address`, `email`, `username`, `password`, `date_created`, `date_archive`) VALUES
+(1, 'Alumni', 'BSIT', '2023-2024', 'Oracle', 12345678901, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'alumni@email.com', 'username', 'password', '2024-06-09 11:18:27', '2024-06-10 01:15:33'),
+(11, 'sdsada', 'sdasdsa', 'sdasd', 'sadasda', 9876543210, 'Palico-lico Dos-por-dos Kanto Imus, Cavite', 'wqewqewqe67657', 'dasds876ad', 'sdasd', '2024-06-09 14:32:54', '2024-06-10 01:17:17'),
+(74, 'nix', 'BSIT', '2022-2026', 'CVSU', 98765, 'BACOOR', 'nix@email.com', 'nix123', '42434234234fsdfsdfdf', '2024-06-10 01:45:07', '2024-06-10 01:20:20');
 
 -- --------------------------------------------------------
 
@@ -152,21 +188,21 @@ INSERT INTO `contact_page` (`contact_id`, `page_title`, `address`, `contact`, `e
 --
 
 CREATE TABLE `coordinator` (
-  `coord_id` int(10) NOT NULL,
+  `coor_id` int(10) NOT NULL,
   `coor_name` varchar(250) NOT NULL,
-  `username` varchar(255) NOT NULL,
   `contact` bigint(12) NOT NULL,
   `email` varchar(250) NOT NULL,
+  `username` varchar(250) NOT NULL,
   `password` varchar(250) NOT NULL,
-  `date_created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `date_created` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `coordinator`
 --
 
-INSERT INTO `coordinator` (`coord_id`, `coor_name`, `username`, `contact`, `email`, `password`, `date_created`) VALUES
-(1, 'Coordinator', 'coordinator', 12345678901, 'coordinator@email.com', 'coor123', '2024-05-17 14:17:01');
+INSERT INTO `coordinator` (`coor_id`, `coor_name`, `contact`, `email`, `username`, `password`, `date_created`) VALUES
+(3, 'sfsddsfgfdgsdfg', 7643224325, 'fsdfsdfsds', 'sdfsdfsdfsdfsdfs', 'sdfsdfsdfsdfsd', '2024-06-10 02:16:10');
 
 -- --------------------------------------------------------
 
@@ -175,15 +211,23 @@ INSERT INTO `coordinator` (`coord_id`, `coor_name`, `username`, `contact`, `emai
 --
 
 CREATE TABLE `coordinator_archive` (
-  `coord_id` int(11) NOT NULL,
+  `coor_id` int(11) NOT NULL,
   `coor_name` varchar(255) NOT NULL,
-  `username` varchar(255) NOT NULL,
   `contact` bigint(20) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `username` varchar(250) NOT NULL,
   `password` varchar(255) NOT NULL,
   `date_created` datetime NOT NULL,
   `date_archive` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `coordinator_archive`
+--
+
+INSERT INTO `coordinator_archive` (`coor_id`, `coor_name`, `contact`, `email`, `username`, `password`, `date_created`, `date_archive`) VALUES
+(1, 'admin', 98765432, 'admin@email.com', 'admin', 'coor123', '2024-05-17 22:17:01', '2024-06-10 02:16:45'),
+(2, 'fsafsdafadsd', 20007654, 'dfasfadsfadsf', 'sadasdasdffa', 'sdasfsadfsa', '2024-06-10 10:04:15', '2024-06-10 02:14:07');
 
 -- --------------------------------------------------------
 
@@ -243,13 +287,20 @@ ALTER TABLE `admin`
 -- Indexes for table `alumni`
 --
 ALTER TABLE `alumni`
-  ADD PRIMARY KEY (`student_id`);
+  ADD PRIMARY KEY (`student_id`),
+  ADD UNIQUE KEY `email` (`email`,`username`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email_2` (`email`,`username`),
+  ADD UNIQUE KEY `email_3` (`email`),
+  ADD UNIQUE KEY `username_2` (`username`);
 
 --
 -- Indexes for table `alumni_archive`
 --
 ALTER TABLE `alumni_archive`
-  ADD PRIMARY KEY (`student_id`);
+  ADD PRIMARY KEY (`student_id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- Indexes for table `contact_page`
@@ -261,13 +312,17 @@ ALTER TABLE `contact_page`
 -- Indexes for table `coordinator`
 --
 ALTER TABLE `coordinator`
-  ADD PRIMARY KEY (`coord_id`);
+  ADD PRIMARY KEY (`coor_id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- Indexes for table `coordinator_archive`
 --
 ALTER TABLE `coordinator_archive`
-  ADD PRIMARY KEY (`coord_id`);
+  ADD PRIMARY KEY (`coor_id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- Indexes for table `event`
@@ -301,7 +356,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `alumni`
 --
 ALTER TABLE `alumni`
-  MODIFY `student_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `student_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `contact_page`
@@ -313,7 +368,7 @@ ALTER TABLE `contact_page`
 -- AUTO_INCREMENT for table `coordinator`
 --
 ALTER TABLE `coordinator`
-  MODIFY `coord_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `coor_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `event`
