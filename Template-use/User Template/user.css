@@ -42,7 +42,12 @@ font-weight: bold;
     cursor: pointer;
 }
 
-
+.user a span{
+    font-size: 30px;
+    color: white;
+    border-left: solid 1px #fff;
+    padding-left: 10px;
+}
 
 .side-header {
     box-shadow: 0px 5px 5px -5px rgb(0 0 0 /10%);
@@ -123,7 +128,7 @@ font-weight: bold;
 }
 
 .sidebar {
-    /*overflow-y: auto;*/
+    overflow-y: auto;
 }
 
 .side-menu ul {
@@ -198,7 +203,7 @@ header {
     z-index: 100;
     height: 60px;
     box-shadow: 0px 5px 5px -5px rgb(0 0 0 /10%);
-    background: #fff;
+    background: #2a9134;
     transition: left 300ms;
 }
 
@@ -308,15 +313,3 @@ main {
         width: 900px;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
