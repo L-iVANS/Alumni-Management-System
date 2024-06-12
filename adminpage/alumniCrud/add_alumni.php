@@ -64,7 +64,8 @@
                 $temp_password ="";
                 $errorMessage = "";
 
-                $successMessage = "Alumni added sucessfully";
+                // $successMessage = "Alumni added sucessfully";
+                echo "<script>alert('Alumni added successfully')</script>";
                 header("location: ../alumni.php");
                 exit;
 
@@ -169,7 +170,7 @@
 
             <div class="row mb-3">
                 <div class="offset-sm-3 col-sm-3 d-grid">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" name="insert" id="insert" value="insert">Submit</button>
                 </div>
                 <div class="col-sm-3 d-grid">
                     <a class="btn btn-outline-primary" href="../alumni.php">Cancel</a>
