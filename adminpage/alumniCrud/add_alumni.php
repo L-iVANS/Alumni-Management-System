@@ -5,12 +5,6 @@
     $db_name="alumni_management_system";
     $conn=mysqli_connect($serername, $db_username, $db_password, $db_name);
 
-    if(mysqli_connect_errno()){
-        die("". mysqli_connect_error());
-    }else{
-        echo"Successfully Connected!";
-    }
-
     $name ="";
     $course ="";
     $batch ="";
@@ -24,6 +18,7 @@
     $errorMessage = "";
     $successMessage = "";
 
+    // get the data from form
     if($_SERVER['REQUEST_METHOD'] == 'POST' ){
         $name = $_POST['name'];
         $course = $_POST['batch'];
@@ -34,17 +29,25 @@
         $email = $_POST['email'];
         $username = $_POST['username'];
         $temp_password = $_POST['temp_pass'];
+        // for image
+        $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
 
         do{
-            if(empty($name) || empty($course) || empty($batch) || empty($connected_to) || empty($contact) || empty($address) || empty($email) || empty($username) || empty($temp_password)){
-                $errorMessage = "All the field are required";
-                break;
-            }
+            // if(empty($name) || empty($course) || empty($batch) || empty($connected_to) || empty($contact) || empty($address) || empty($email) || empty($username) || empty($temp_password)){
+            //     $errorMessage = "All the field are required";
+            //     break;
+            // }
+                // query for insert image in database
+                // $insert_image = "INSERT INTO alumni SET picture ='$file'";
+                // if(mysqli_query($conn, $insert_image)){
+                //     echo'<script>alert("Image Inserted in database")</script>';
+                // }
 
                 // Add new client to the database
                 // $sql = "INSERT INTO alumni (alumni_name, course, batch, connected_to, contact, alumni_address, email, username, pass)" .
                 //        "VAlUE ($name, $course, $batch, $connected_to, $contact, $address, $email, $username, $temp_password)"; 
-                $sql = "INSERT INTO alumni SET alumni_name='$name', course='$course', batch='$batch', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', password='$temp_password'";
+                
+                $sql = "INSERT INTO alumni SET name='$name', course='$course', batch='$batch', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', password='$temp_password', picture='$file'";
         
                 $result = $conn->query($sql);
 
@@ -64,8 +67,13 @@
                 $temp_password ="";
                 $errorMessage = "";
 
-                // $successMessage = "Alumni added sucessfully";
-                echo "<script>alert('Alumni added successfully')</script>";
+                $successMessage = "Alumni added sucessfully";
+                echo
+                "
+                    <Script> 
+                        alert('User Edited Successfully');
+                    </Script>
+                ";
                 header("location: ../alumni.php");
                 exit;
 
@@ -86,7 +94,7 @@
 </head>
 <body>
     <div class="container my-5 " style="background-color: gainsboro; padding: 10px;">
-        <h2>Add New Alumni</h2>
+        <h2>Profile Alumni</h2>
 
         <?php
             if(!empty($errorMessage)){
@@ -97,59 +105,73 @@
             } 
         ?>
 
-        <form action="" method="POST">
+        <form action="" method="POST" enctype="multipart/form-data">
+           <!-- div for choose image file -->
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <input class="form-control"
+                           type="file" 
+                           name="image"
+                           id="image"
+                           onchange="getImagePreview(event)" required>
+                </div>
+                <div class="col-sm-6">
+                    <!-- preview image -->
+                    <div id="preview" class="form-control"></div>
+                </div>
+            </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="name" value="<?php echo $name; ?>">
+                    <input type="text" class="form-control" name="name" required value="<?php echo $name; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Course</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="course" value="<?php echo $course; ?>">
+                    <input type="text" class="form-control" name="course" required value="<?php echo $course; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Batch</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="batch" value="<?php echo $batch; ?>">
+                    <input type="text" class="form-control" name="batch" required value="<?php echo $batch; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Connected to</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="connected_to" value="<?php echo $connected_to; ?>">
+                    <input type="text" class="form-control" name="connected_to" required value="<?php echo $connected_to; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Contact</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="contact" value="<?php echo $contact; ?>">
+                    <input type="text" class="form-control" name="contact" required value="<?php echo $contact; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Address</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="address" value="<?php echo $address; ?>">
+                    <input type="text" class="form-control" name="address" required value="<?php echo $address; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">email</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="email" value="<?php echo $email; ?>">
+                    <input type="text" class="form-control" name="email" required value="<?php echo $email; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Username</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="username" value="<?php echo $username; ?>">
+                    <input type="text" class="form-control" name="username" required value="<?php echo $username; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Temporary Password</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="temp_pass" value="<?php echo $temp_password; ?>">
+                    <input type="text" class="form-control" name="temp_pass" required value="<?php echo $temp_password; ?>">
                 </div>
             </div>
 
@@ -167,10 +189,10 @@
                     ";
                 } 
             ?>
-
+            <!-- div for submit button -->
             <div class="row mb-3">
                 <div class="offset-sm-3 col-sm-3 d-grid">
-                    <button type="submit" class="btn btn-primary" name="insert" id="insert" value="insert">Submit</button>
+                <button type="submit" class="btn btn-primary" name="insert" id="insert" value="insert">Submit</button>
                 </div>
                 <div class="col-sm-3 d-grid">
                     <a class="btn btn-outline-primary" href="../alumni.php">Cancel</a>
@@ -178,5 +200,38 @@
             </div>
         </form>
     </div>
+    <!-- Script to display preview of selected image -->
+    <script type="text/javascript">
+         function getImagePreview(event)
+            {
+                var image=URL.createObjectURL(event.target.files[0]);
+                var imagediv= document.getElementById('preview');
+                var newimg=document.createElement('img');
+                imagediv.innerHTML='';
+                newimg.src=image;
+                newimg.width="300";
+                imagediv.appendChild(newimg);
+            }
+    </script>
+    <!-- script to insert image to database -->
+    <Script>
+        $(document).ready(function(){
+            $('#insert').click(function(){
+                var image_name = $('#image').val();
+                if(image_name == ''){
+                    alert("please Select Profile")
+                    return false;
+                }else{
+                    var extension = $('#image').val().split('.').pop().toLowerCase();
+                    if(jquery.inArray(extenssion,['gif','png','jpg','jpeg']) == -1){
+                        alert("Invalid Image File")
+                        $('#image').val('');
+                         return false;
+                    }
+                }
+            })
+        });
+    </Script>
+
 </body>
 </html>

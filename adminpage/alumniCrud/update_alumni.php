@@ -5,12 +5,6 @@
     $db_name="alumni_management_system";
     $conn=mysqli_connect($serername, $db_username, $db_password, $db_name);
 
-    if(mysqli_connect_errno()){
-        die("". mysqli_connect_error());
-    }else{
-        echo"Successfully Connected!";
-    }
-
     $alumni_id ="";
     $name ="";
     $course ="";
@@ -41,8 +35,8 @@
             header("location: ../alumni.php");
             exit;
         }
-
-        $name = $row['alumni_name'];
+        // data from table alumni
+        $name = $row['name'];
         $course = $row['course'];
         $batch = $row['batch'];
         $connected_to =$row['connected_to'];
@@ -50,6 +44,7 @@
         $address = $row['address'];
         $email = $row['email'];
         $username = $row['username'];
+        $file = $row['picture'];
         
 
     }else{
@@ -64,12 +59,21 @@
         $email = $_POST['email'];
         $username = $_POST['username'];
 
+        // for image
+        $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
+
         do{
-            if(empty($alumni_id) || empty($name) || empty($course) || empty($batch) || empty($connected_to) || empty($contact) || empty($address) || empty($email) || empty($username)){
-                $errorMessage = "All the field are required";
-                break;
-            }
-            $sql = "UPDATE alumni SET alumni_name='$name', course='$course', batch='$batch', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username' WHERE student_id=$alumni_id";
+            // if(empty($alumni_id) || empty($name) || empty($course) || empty($batch) || empty($connected_to) || empty($contact) || empty($address) || empty($email) || empty($username)){
+            //     $errorMessage = "All the field are required";
+            //     break;
+            // }
+            // query for insert image in database
+            // $insert_image = "INSERT INTO alumni SET picture='$file'";
+            // if(mysqli_query($conn, $insert_image)){
+            //     echo'<script>alert("Image Inserted in database")</script>';
+            // }
+
+            $sql = "UPDATE alumni SET name='$name', course='$course', batch='$batch', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', picture='$file' WHERE student_id=$alumni_id";
             $result = $conn->query($sql);
 
             if(!$result){
@@ -107,7 +111,28 @@
             } 
         ?>
 
-        <form action="" method="POST">
+        <form action="" method="POST" enctype="multipart/form-data">
+        <div class="row mb-3">
+                <div class="col-sm-6">
+                <input class="form-control"
+                           type="file" 
+                           name="image" required>
+                    <!-- <input class="form-control"
+                           type="hidden" 
+                           name="image"
+                           id="image"
+                           onchange="getImagePreview(event)"> -->
+                </div>
+                <div class="col-sm-6">
+                    <!-- preview image -->
+                    <div class="form-control">
+                    
+                    <?php echo '<img id="preview" src="data:image/jpeg;base64,'.base64_encode($row['picture']).'" style="width:200px;height:140px;">'; ?>
+                        <!-- <img id="preview" src="data:image/jpeg;base64,'.base64_encode($row['profile']).'"> -->
+                    </div>
+                </div>
+            </div>
+
             <input type="hidden" name="id" value="<?php echo $alumni_id; ?>">
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Name</label>
@@ -183,5 +208,39 @@
             </div>
         </form>
     </div>
+
+    <!-- Script to display preview of selected image -->
+    <script type="text/javascript">
+         function getImagePreview(event)
+            {
+                var image=URL.createObjectURL(event.target.files[0]);
+                var imagediv= document.getElementById('preview');
+                var newimg=document.createElement('img');
+                imagediv.innerHTML='';
+                newimg.src=image;
+                newimg.width="300";
+                imagediv.appendChild(newimg);
+            }
+    </script>
+    <!-- script to insert image to database -->
+    <Script>
+        $(document).ready(function(){
+            $('#insert').click(function(){
+                var image_name = $('#image').val();
+                if(image_name == ''){
+                    alert("please Select Profile")
+                    return false;
+                }else{
+                    var extension = $('#image').val().split('.').pop().toLowerCase();
+                    if(jquery.inArray(extenssion,['gif','png','jpg','jpeg']) == -1){
+                        alert("Invalid Image File")
+                        $('#image').val('');
+                         return false;
+                    }
+                }
+            })
+        });
+    </Script>
+
 </body>
 </html>

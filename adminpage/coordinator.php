@@ -4,13 +4,8 @@
     $db_password="";
     $db_name="alumni_management_system";
     $conn=mysqli_connect($serername, $db_username, $db_password, $db_name);
-
-    if(mysqli_connect_errno()){
-        die("". mysqli_connect_error());
-    }else{
-        echo"Successfully Connected!";
-    }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -49,8 +44,8 @@
                     <th>Name</th>
                     <th>Contact</th>
                     <th>Email</th>
-                    <th>Username</th>
-                    <th>Date Created</th>
+                    <th>username</th>
+                    <th>Creation Date</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -65,7 +60,7 @@
                         while ($row = mysqli_fetch_assoc($result)) {
                     echo "
                     <td>$row[coor_id]</td>
-                    <td>$row[coor_name]</td>
+                    <td>$row[name]</td>
                     <td>$row[contact]</td>
                     <td>$row[email]</td>
                     <td>$row[username]</td>
