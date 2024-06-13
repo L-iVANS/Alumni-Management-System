@@ -42,12 +42,7 @@ font-weight: bold;
     cursor: pointer;
 }
 
-.user a span{
-    font-size: 30px;
-    color: white;
-    border-left: solid 1px #fff;
-    padding-left: 10px;
-}
+
 
 .side-header {
     box-shadow: 0px 5px 5px -5px rgb(0 0 0 /10%);
@@ -133,15 +128,19 @@ font-weight: bold;
 
 .side-menu ul {
     text-align: center;
+    padding: 0px;
 }
 
 .side-menu ul li small{
     color: white;
+    ;
 }
 
 .side-menu a {
     display: block;
     padding: 1.2rem 0rem;
+    text-decoration: none !important;
+    
 }
 
 .side-menu a.active {
@@ -255,7 +254,7 @@ main {
     padding: 1.3rem 1rem;
 }
 
-/*  */
+/*media queries  */
 
 
 @media only screen and (max-width: 1200px) {
@@ -313,4 +312,3 @@ main {
         width: 900px;
     }
 }
-
