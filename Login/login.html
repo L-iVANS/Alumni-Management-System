@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in || Sign up form</title>
+    <!-- font awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="shortcut icon" href="cvsu.png" type="image/svg+xml">
+    <!-- css stylesheet -->
+    <link rel="stylesheet" href="login.css">
+    
+</head>
+<body>
+
+    <div class="container" id="container">
+        <div class="form-container sign-up-container">
+            <form action="#">
+                <h1>Sign Up</h1>
+                <div class="infield">
+                    <input type="text" placeholder="Name" />
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="text" placeholder="Username" />
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="email" placeholder="Email" name="email"/>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="password" placeholder="Password" />
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="text" placeholder="Course" />
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="text" placeholder="Batch" />
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="text" placeholder="Currently connected to" />
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="text" placeholder="Contact" />
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="text" placeholder="Address" />
+                    <label></label>
+                </div>
+                <button>Sign Up</button>
+            </form>
+        </div>
+        <div class="form-container log-in-container">
+            <form action="#">
+                <h1>Log in</h1>
+                <div class="infield">
+                    <input type="text" placeholder="Username" name="Username"/>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="password" placeholder="Password" />
+                    <label></label>
+                </div>
+                <a href="#" class="forgot">Forgot your password?</a>
+                <button>Log In</button>
+            </form>
+        </div>
+        <div class="overlay-container" id="overlayCon">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <img src="cvsu.png" usemap="#logo">
+                    <map name="logo">
+                        <area shape="poly" coords="101,8,200,106,129,182,73,182,1,110" href="https://programminghead.com/Projects/find-coordinates-of-image-online.html">
+                    </map>
+                    <br>
+                    <br>
+                    <button class="ghost" id="logIn">Log In</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <img src="cvsu.png" usemap="#logo">
+                    <map name="logo">
+                        <area shape="poly" coords="101,8,200,106,129,182,73,182,1,110" href="https://programminghead.com/Projects/find-coordinates-of-image-online.html">
+                    </map>
+                    <br>
+                    <br>
+                    <button class="ghost" id="signUp">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- js code -->
+    <script>
+        const signUpButton = document.getElementById('signUp');
+        const logInButton = document.getElementById('logIn');
+        const container = document.getElementById('container');
+
+        signUpButton.addEventListener('click', () => {
+            container.classList.add('right-panel-active');
+        });
+
+        logInButton.addEventListener('click', () => {
+            container.classList.remove('right-panel-active');
+        });
+    </script>
+</body>
+</html>
