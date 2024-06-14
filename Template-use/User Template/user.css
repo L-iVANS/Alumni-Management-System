@@ -1,5 +1,7 @@
 
 
+
+
 @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;500;600&display=swap');
 
 :root {
@@ -42,12 +44,7 @@ font-weight: bold;
     cursor: pointer;
 }
 
-.user a span{
-    font-size: 30px;
-    color: white;
-    border-left: solid 1px #fff;
-    padding-left: 10px;
-}
+
 
 .side-header {
     box-shadow: 0px 5px 5px -5px rgb(0 0 0 /10%);
@@ -133,15 +130,19 @@ font-weight: bold;
 
 .side-menu ul {
     text-align: center;
+    padding: 0px;
 }
 
 .side-menu ul li small{
     color: white;
+    ;
 }
 
 .side-menu a {
     display: block;
     padding: 1.2rem 0rem;
+    text-decoration: none !important;
+    
 }
 
 .side-menu a.active {
@@ -242,7 +243,7 @@ main {
 
 .page-header {
     padding: 1.3rem 1rem;
-    background: #E9edf2;
+    background: #fff;
     border-bottom: 1px solid #dee2e8;
 }
 
@@ -255,7 +256,21 @@ main {
     padding: 1.3rem 1rem;
 }
 
-/*  */
+.profile h4{
+    font-size: medium;
+}
+
+.user a span{
+    font-size: 30px; 
+    border-left: 1px solid #fff; 
+    padding-left:10px; 
+    color:#fff
+}
+
+.header-content span{
+    color: white;
+}
+/*media queries  */
 
 
 @media only screen and (max-width: 1200px) {
