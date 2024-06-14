@@ -1,5 +1,6 @@
 
 
+
 @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;500;600&display=swap');
 
 :root {
@@ -95,10 +96,6 @@ font-weight: bold;
 .profile {
     text-align: center;
     padding: 2rem 0rem;
-}
-
-.profile h4{
-    font-size: large;
 }
 
 .bg-img {
@@ -258,6 +255,20 @@ main {
     padding: 1.3rem 1rem;
 }
 
+.profile h4{
+    font-size: medium;
+}
+
+.user a span{
+    font-size: 30px; 
+    border-left: 1px solid #fff; 
+    padding-left:10px; 
+    color:#fff
+}
+
+.header-content span{
+    color: white;
+}
 /*media queries  */
 
 
