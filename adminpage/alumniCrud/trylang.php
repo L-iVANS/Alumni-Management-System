@@ -1,73 +1,72 @@
 <?php
+    session_start();
+
     $serername="localhost";
     $db_username="root";
     $db_password="";
     $db_name="alumni_management_system";
     $conn=mysqli_connect($serername, $db_username, $db_password, $db_name);
 
-    $coor_id ="";
     $fname ="";
     $mname ="";
     $lname ="";
     $contact ="";
     $email ="";
     $username ="";
+    $temp_password ="";
 
-    if($_SERVER['REQUEST_METHOD'] == 'GET'){
-        // Show the data of coordinator
-        if(!isset($_GET['id'])){
-            header("location: ../coordinator.php");
-            exit;
-        }
-        $coor_id = $_GET['id'];
-        
-        //read data from table alumni
-        $sql = "SELECT * FROM coordinator WHERE coor_id=$coor_id";
-        $result = $conn->query($sql);
-        $row = $result->fetch_assoc();
+    $errorMessage = "";
+    $successMessage = "";
 
-        if(!$row){
-            header("location: ../coordinator.php");
-            exit;
-        }
-
-        $fname = $row['fname'];
-        $mname = $row['mname'];
-        $lname = $row['lname'];
-        $contact = $row['contact'];
-        $email = $row['email'];
-        $username = $row['username'];
-        $file = $row['picture'];
-        
-
-    }else{
-        // POST method: update the data of alumni
-        $coor_id = $_POST['id'];
+    if($_SERVER['REQUEST_METHOD'] == 'POST' ){
         $fname = $_POST['fname'];
         $mname = $_POST['mname'];
         $lname = $_POST['lname'];
         $contact = $_POST['contact'];
         $email = $_POST['email'];
         $username = $_POST['username'];
-
+        $temp_password = $_POST['temp_pass'];
         // for image
         if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
             $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
-            $sql = "UPDATE coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email', username='$username', picture='$file' WHERE coor_id=$coor_id";
-            
-            
-        } 
-        else {
-            $sql = "UPDATE coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email', username='$username' WHERE coor_id=$coor_id";
         }
+         
+        $mail = "SELECT * FROM coordiantor WHERE email='$email'";
+        $user = "SELECT * FROM coordiantor WHERE username='$username'";
+        $resEmail = $conn->query($mail);
+        $resUser = $conn->query($user);
 
-        $result = $conn->query($sql);
+        if(mysqli_num_rows($resEmail) > 0){
+            $message = 'Email Already Exists';
+
+        }else if(mysqli_num_rows($resUser) > 0){
+            $message = 'Username Already Exists';
+
+        }else{
+        $sql = "INSERT INTO coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email', username='$username', password='$temp_password', picture='$file'";
+                $result = $conn->query($sql);
+
+        // $fname ="";
+        // $mname ="";
+        // $lname ="";
+        // $contact ="";
+        // $email ="";
+        // $username ="";
+        // $temp_password ="";
+
+        // echo
+        // "
+        //     <Script> 
+        //         alert('Coordinator Edited Successfully');
+        //     </Script>
+        // ";
         header("location: ../coordinator.php");
         exit;
-
+        }
     }
-
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,67 +75,73 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="//cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <title>Update Coordinator Info</title>
+    <title>Add New Coordinator</title>
 </head>
 <body>
     <div class="container my-5 " style="background-color: gainsboro; padding: 10px;">
-        <h2>Update Coordinator Info</h2>
+        <h2>TRY LANG</h2>
 
         <form action="" method="POST" enctype="multipart/form-data">
+           <!-- div for choose image file -->
             <div class="row mb-3">
                 <div class="col-sm-6">
-                    <input class="form-control" type="file" name="image" onchange="getImagePreview(event)">
+                    <input class="form-control" type="file" name="image" required onchange="getImagePreview(event)">
                 </div>
                 <div class="col-sm-6">
                     <!-- Preview image -->
                     <div class="form-control" style="width:225px;height:215px; border-radius: 100%;">
-                        <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" style="width:200px;height:200px; border-radius: 100%;">
+                        <img id="preview" src="../../profile_icon.jpg" style="width:200px;height:200px; border-radius: 100%;">
                     </div>
                 </div>
             </div>
 
-
-            <input type="hidden" name="id" value="<?php echo $coor_id; ?>">
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">First Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="fname" value="<?php echo $fname; ?>">
+                    <input type="text" class="form-control" name="fname" required value="<?php echo $lname; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Middle Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="mname" value="<?php echo $mname; ?>">
+                    <input type="text" class="form-control" name="mname" required value="<?php echo $mname; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Last Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="lname" value="<?php echo $lname; ?>">
+                    <input type="text" class="form-control" name="lname" required value="<?php echo $lname; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Contact</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="contact" value="<?php echo $contact; ?>">
+                    <input type="text" class="form-control" name="contact" required value="<?php echo $contact; ?>">
                 </div>
             </div>
             <div class="row mb-3">
-                <label class="col-sm-3 col-form-label" style="font-size: 20px;">Email</label>
+                <label class="col-sm-3 col-form-label" style="font-size: 20px;">email</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="email" value="<?php echo $email; ?>">
+                    <input type="text" class="form-control" name="email" required value="<?php echo $email; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Username</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="username" value="<?php echo $username; ?>">
+                    <input type="text" class="form-control" name="username" required value="<?php echo $username; ?>">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" style="font-size: 20px;">Temporary Password</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="temp_pass" required value="<?php echo $temp_password; ?>">
                 </div>
             </div>
 
+            <!-- div for submit button -->
             <div class="row mb-3">
                 <div class="offset-sm-3 col-sm-3 d-grid">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary" name="insert" id="insert" value="insert">Submit</button>
                 </div>
                 <div class="col-sm-3 d-grid">
                     <a class="btn btn-outline-primary" href="../coordinator.php">Cancel</a>
@@ -144,7 +149,6 @@
             </div>
         </form>
     </div>
-
     <!-- Script to display preview of selected image -->
     <script>
         function getImagePreview(event) {
@@ -174,6 +178,6 @@
             })
         });
     </Script>
-
+    <?php unset($_SESSION['email_alert']) ?>
 </body>
 </html>

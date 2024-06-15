@@ -58,9 +58,14 @@
                         $result = mysqli_query($conn, $query);
 
                         while ($row = mysqli_fetch_assoc($result)) {
+                            $fullname = $row["fname"] . " " . $row["mname"] . " " . $row["lname"];
+
+
                     echo "
                     <td>$row[coor_id]</td>
-                    <td>$row[name]</td>
+                    ";?>
+                    <td><?php echo htmlspecialchars($fullname)?></td>
+                    <?php echo "
                     <td>$row[contact]</td>
                     <td>$row[email]</td>
                     <td>$row[username]</td>
@@ -84,9 +89,6 @@
         <!-- script for table to access datatables -->
         <script>
             let table = new DataTable('#myTable');
-            // $(document).ready( function () {
-            //     $('#myTable').DataTable();
-            // });
         </script>
     </div>
 </body>

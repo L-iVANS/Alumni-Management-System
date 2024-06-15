@@ -5,7 +5,9 @@
     $db_name="alumni_management_system";
     $conn=mysqli_connect($serername, $db_username, $db_password, $db_name);
 
-    $name ="";
+    $fname ="";
+    $mname ="";
+    $lname ="";
     $contact ="";
     $email ="";
     $username ="";
@@ -15,57 +17,39 @@
     $successMessage = "";
 
     if($_SERVER['REQUEST_METHOD'] == 'POST' ){
-        $name = $_POST['name'];
+        $fname = $_POST['fname'];
+        $mname = $_POST['mname'];
+        $lname = $_POST['lname'];
         $contact = $_POST['contact'];
         $email = $_POST['email'];
         $username = $_POST['username'];
         $temp_password = $_POST['temp_pass'];
-
         // for image
-        $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
-
-        do{
-            // if(empty($name) || empty($course) || empty($batch) || empty($connected_to) || empty($contact) || empty($address) || empty($email) || empty($username) || empty($temp_password)){
-            //     $errorMessage = "All the field are required";
-            //     break;
-            // }
-                // query for insert image in database
-                // $insert_image = "INSERT INTO alumni SET picture ='$file'";
-                // if(mysqli_query($conn, $insert_image)){
-                //     echo'<script>alert("Image Inserted in database")</script>';
-                // }
-
-                // Add new client to the database
-                // $sql = "INSERT INTO alumni (alumni_name, course, batch, connected_to, contact, alumni_address, email, username, pass)" .
-                //        "VAlUE ($name, $course, $batch, $connected_to, $contact, $address, $email, $username, $temp_password)"; 
-                
-                $sql = "INSERT INTO coordinator SET name='$name', contact='$contact', email='$email', username='$username', password='$temp_password', picture='$file'";
+        if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
+            $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
+        }
         
+
+        $sql = "INSERT INTO coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email', username='$username', password='$temp_password', picture='$file'";
                 $result = $conn->query($sql);
 
-                if(!$result){
-                    $errorMessage = "Invalid Query: " . $conn->error;
-                    break;
-                }
+        // $fname ="";
+        // $mname ="";
+        // $lname ="";
+        // $contact ="";
+        // $email ="";
+        // $username ="";
+        // $temp_password ="";
 
-                $name ="";
-                $contact ="";
-                $email ="";
-                $username ="";
-                $temp_password ="";
-                $errorMessage = "";
+        // echo
+        // "
+        //     <Script> 
+        //         alert('Coordinator Edited Successfully');
+        //     </Script>
+        // ";
+        header("location: ../coordinator.php");
+        exit;
 
-                $successMessage = "Coordinator added sucessfully";
-                echo
-                "
-                    <Script> 
-                        alert('Coordinator Edited Successfully');
-                    </Script>
-                ";
-                header("location: ../coordinator.php");
-                exit;
-
-        }while(false);
     }
 ?>
 
@@ -82,36 +66,38 @@
 </head>
 <body>
     <div class="container my-5 " style="background-color: gainsboro; padding: 10px;">
-        <h2>Profile Coordinator</h2>
-
-        <?php
-            if(!empty($errorMessage)){
-                echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
-                    <strong>$errorMessage</strong>
-                    <button type='button' class='btn-close' data-bs-dismiss='alert' arial-label='Close'></button>
-                </div>";
-            } 
-        ?>
+        <h2>Add New Coordinator</h2>
 
         <form action="" method="POST" enctype="multipart/form-data">
            <!-- div for choose image file -->
             <div class="row mb-3">
                 <div class="col-sm-6">
-                    <input class="form-control"
-                           type="file" 
-                           name="image"
-                           id="image"
-                           onchange="getImagePreview(event)" required>
+                    <input class="form-control" type="file" name="image" required onchange="getImagePreview(event)">
                 </div>
                 <div class="col-sm-6">
-                    <!-- preview image -->
-                    <div id="preview" class="form-control"></div>
+                    <!-- Preview image -->
+                    <div class="form-control" style="width:225px;height:215px; border-radius: 100%;">
+                        <img id="preview" src="../../profile_icon.jpg" style="width:200px;height:200px; border-radius: 100%;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" style="font-size: 20px;">First Name</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="fname" required value="<?php echo $lname; ?>">
                 </div>
             </div>
             <div class="row mb-3">
-                <label class="col-sm-3 col-form-label" style="font-size: 20px;">Name</label>
+                <label class="col-sm-3 col-form-label" style="font-size: 20px;">Middle Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="name" required value="<?php echo $name; ?>">
+                    <input type="text" class="form-control" name="mname" required value="<?php echo $mname; ?>">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" style="font-size: 20px;">Last Name</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="lname" required value="<?php echo $lname; ?>">
                 </div>
             </div>
             <div class="row mb-3">
@@ -139,20 +125,6 @@
                 </div>
             </div>
 
-            <?php
-                if(!empty($successMessage)){
-                    echo "
-                        <div class='row mb-3'>
-                            <div class='offset-sm-3 col-sm-6'>
-                                <div class='alert alert-success alert-dismissible fade show' role='alert'>
-                                    <strong>$successMessage</strong>
-                                    <button type='button' class='btn-close' data-bs-dismiss='alert' arial-label='Close'></button>
-                                </div>
-                            </div>
-                        </div>
-                    ";
-                } 
-            ?>
             <!-- div for submit button -->
             <div class="row mb-3">
                 <div class="offset-sm-3 col-sm-3 d-grid">
@@ -165,17 +137,14 @@
         </form>
     </div>
     <!-- Script to display preview of selected image -->
-    <script type="text/javascript">
-         function getImagePreview(event)
-            {
-                var image=URL.createObjectURL(event.target.files[0]);
-                var imagediv= document.getElementById('preview');
-                var newimg=document.createElement('img');
-                imagediv.innerHTML='';
-                newimg.src=image;
-                newimg.width="300";
-                imagediv.appendChild(newimg);
-            }
+    <script>
+        function getImagePreview(event) {
+            var image = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById('preview');
+            preview.src = image;
+            preview.style.width = '200px';
+            preview.style.height = '200px';
+        }
     </script>
     <!-- script to insert image to database -->
     <Script>

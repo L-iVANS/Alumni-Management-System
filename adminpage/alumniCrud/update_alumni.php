@@ -6,7 +6,9 @@
     $conn=mysqli_connect($serername, $db_username, $db_password, $db_name);
 
     $alumni_id ="";
-    $name ="";
+    $fname ="";
+    $mname ="";
+    $lname ="";
     $course ="";
     $batch ="";
     $connected_to ="";
@@ -14,9 +16,6 @@
     $address ="";
     $email ="";
     $username ="";
-
-    $errorMessage = "";
-    $successMessage = "";
 
     if($_SERVER['REQUEST_METHOD'] == 'GET'){
         // Show the data of alumni
@@ -36,7 +35,9 @@
             exit;
         }
         // data from table alumni
-        $name = $row['name'];
+        $fname = $row['fname'];
+        $mname = $row['mname'];
+        $lname = $row['lname'];
         $course = $row['course'];
         $batch = $row['batch'];
         $connected_to =$row['connected_to'];
@@ -50,7 +51,9 @@
     }else{
         // POST method: update the data of alumni
         $alumni_id = $_POST['id'];
-        $name = $_POST['name'];
+        $fname = $_POST['fname'];
+        $mname = $_POST['mname'];
+        $lname = $_POST['lname'];
         $course = $_POST['course'];
         $batch = $_POST['batch'];
         $connected_to = $_POST['connected_to'];
@@ -60,31 +63,24 @@
         $username = $_POST['username'];
 
         // for image
-        $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
+        if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
+            $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
+            $sql = "UPDATE alumni SET fname='$fname', mname='$mname', lname='$lname', course='$course', batch='$batch', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', picture='$file' WHERE student_id=$alumni_id";
 
-        do{
-            // if(empty($alumni_id) || empty($name) || empty($course) || empty($batch) || empty($connected_to) || empty($contact) || empty($address) || empty($email) || empty($username)){
-            //     $errorMessage = "All the field are required";
-            //     break;
-            // }
-            // query for insert image in database
-            // $insert_image = "INSERT INTO alumni SET picture='$file'";
-            // if(mysqli_query($conn, $insert_image)){
-            //     echo'<script>alert("Image Inserted in database")</script>';
-            // }
+        } else {
+            // // No new image uploaded, keep the old one
+            // $sql = "SELECT picture FROM alumni WHERE student_id=$alumni_id";
+            // $result = $conn->query($sql);
+            // $row = $result->fetch_assoc();
+            // $file = $row['picture'];
+            $sql = "UPDATE alumni SET fname='$fname', mname='$mname', lname='$lname', course='$course', batch='$batch', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username' WHERE student_id=$alumni_id";
+        }
 
-            $sql = "UPDATE alumni SET name='$name', course='$course', batch='$batch', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', picture='$file' WHERE student_id=$alumni_id";
             $result = $conn->query($sql);
 
-            if(!$result){
-                $errorMessage = "Invalid Query: " . $conn->error;
-                break;
-            }
             $successMessage = "Alumni added sucessfully";
                 header("location: ../alumni.php");
                 exit;
-
-        }while(true);
     }
 
 ?>
@@ -112,32 +108,35 @@
         ?>
 
         <form action="" method="POST" enctype="multipart/form-data">
-        <div class="row mb-3">
+            <div class="row mb-3">
                 <div class="col-sm-6">
-                <input class="form-control"
-                           type="file" 
-                           name="image" required>
-                    <!-- <input class="form-control"
-                           type="hidden" 
-                           name="image"
-                           id="image"
-                           onchange="getImagePreview(event)"> -->
+                    <input class="form-control" type="file" name="image" onchange="getImagePreview(event)">
                 </div>
                 <div class="col-sm-6">
-                    <!-- preview image -->
-                    <div class="form-control">
-                    
-                    <?php echo '<img id="preview" src="data:image/jpeg;base64,'.base64_encode($row['picture']).'" style="width:200px;height:140px;">'; ?>
-                        <!-- <img id="preview" src="data:image/jpeg;base64,'.base64_encode($row['profile']).'"> -->
+                    <!-- Preview image -->
+                    <div class="form-control" style="width:225px;height:215px; border-radius: 100%;">
+                        <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" style="width:200px;height:200px; border-radius: 100%;">
                     </div>
                 </div>
             </div>
 
             <input type="hidden" name="id" value="<?php echo $alumni_id; ?>">
             <div class="row mb-3">
-                <label class="col-sm-3 col-form-label" style="font-size: 20px;">Name</label>
+                <label class="col-sm-3 col-form-label" style="font-size: 20px;">First Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="name" value="<?php echo $name; ?>">
+                    <input type="text" class="form-control" name="fname" value="<?php echo $fname; ?>">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" style="font-size: 20px;">Middle Name</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="mname" value="<?php echo $mname; ?>">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" style="font-size: 20px;">Last Name</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="lname" value="<?php echo $lname; ?>">
                 </div>
             </div>
             <div class="row mb-3">
@@ -210,17 +209,14 @@
     </div>
 
     <!-- Script to display preview of selected image -->
-    <script type="text/javascript">
-         function getImagePreview(event)
-            {
-                var image=URL.createObjectURL(event.target.files[0]);
-                var imagediv= document.getElementById('preview');
-                var newimg=document.createElement('img');
-                imagediv.innerHTML='';
-                newimg.src=image;
-                newimg.width="300";
-                imagediv.appendChild(newimg);
-            }
+    <script>
+        function getImagePreview(event) {
+            var image = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById('preview');
+            preview.src = image;
+            preview.style.width = '200px';
+            preview.style.height = '200px';
+        }
     </script>
     <!-- script to insert image to database -->
     <Script>

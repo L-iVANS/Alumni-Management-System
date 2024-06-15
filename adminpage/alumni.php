@@ -26,7 +26,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
-    <title>Profile</title>
+    <title>Alumni List</title>
 </head>
 
 <body style="margin: 100px;">
@@ -34,7 +34,10 @@
         <H3>Alumni List</H3>
         <hr>
         <!-- add new alumni -->
-        <a class="btn btn-primary btn-sm" href="alumniCrud/add_alumni.php">Add new</a>
+        
+        <div class="col-sm-3 d-grid">
+            <a class="btn btn-primary btn-sm" href="alumniCrud/add_alumni.php">Add new</a>
+        </div>
         <br>
         <!-- table -->
         <table id="myTable" class="table">
@@ -62,9 +65,13 @@
                         $result = mysqli_query($conn, $query);
 
                         while ($row = mysqli_fetch_assoc($result)) {
+                            $fullname = $row["fname"] . " " . $row["mname"] . " " . $row["lname"];
+
                     echo "
                     <td>$row[student_id]</td>
-                    <td>$row[name]</td>
+                    ";?>
+                    <td><?php echo htmlspecialchars($fullname)?></td>
+                    <?php echo "
                     <td>$row[course]</td>
                     <td>$row[batch]</td>
                     <td>$row[connected_to]</td>
@@ -83,6 +90,8 @@
             <?php
                 }
             ?>
+
+
             </tbody>
         </table>
         <br>

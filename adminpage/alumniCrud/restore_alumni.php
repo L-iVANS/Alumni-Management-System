@@ -14,8 +14,8 @@
         echo"Successfully Connected!";
     }
     //insert data into table alumni_archive from alumni
-    $sql_restore = "INSERT INTO alumni (student_id, name, course, batch, connected_to, contact, address, email, username, password, picture, date_created)" . 
-                   "SELECT student_id, name, course, batch, connected_to, contact, address, email, username, password, picture, date_created FROM alumni_archive WHERE student_id=$alumni_id";
+    $sql_restore = "INSERT INTO alumni (student_id, fname, mname, lname, course, batch, connected_to, contact, address, email, username, password, picture, date_created)" . 
+                   "SELECT student_id, fname, mname, lname, course, batch, connected_to, contact, address, email, username, password, picture, date_created FROM alumni_archive WHERE student_id=$alumni_id";
     $conn->query($sql_restore);
 
     //delete data in table alumni

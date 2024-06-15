@@ -44,7 +44,6 @@
                     <th>Email</th>
                     <th>username</th>
                     <th>Creation Date</th>
-                    <th>Archived Date</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -57,14 +56,17 @@
                         $result = mysqli_query($conn, $query);
 
                         while ($row = mysqli_fetch_assoc($result)) {
+                            $fullname = $row["fname"] . " " . $row["mname"] . " " . $row["lname"];
+
                     echo "
                     <td>$row[coor_id]</td>
-                    <td>$row[name]</td>
+                    ";?>
+                    <td><?php echo htmlspecialchars($fullname)?></td>
+                    <?php echo "
                     <td>$row[contact]</td>
                     <td>$row[email]</td>
                     <td>$row[username]</td>
                     <td>$row[date_created]</td>
-                    <td>$row[date_archived]</td>
                     <td>
 
                         <a class='btn btn-success btn-sm' href='coordinatorCrud/restore_coor.php?id=$row[coor_id]'>Restore</a>
@@ -83,9 +85,6 @@
         <!-- script for table to access datatables -->
         <script>
             let table = new DataTable('#myTable');
-            // $(document).ready( function () {
-            //     $('#myTable').DataTable();
-            // });
         </script>
     </div>
 </body>

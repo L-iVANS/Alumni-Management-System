@@ -33,7 +33,9 @@
     <div style="margin-left: 7%; margin-right: 7%;" >
         <H3>Alumni Archive List</H3>
         <hr>
-        <!-- add new alumni -->
+        <div class="col-sm-3 d-grid">
+            <a class="btn btn-outline-primary" href="alumni.php">Alumni List</a>
+        </div>
         <br>
         <!-- table -->
         <table id="myTable" class="table">
@@ -62,9 +64,13 @@
                         $result = mysqli_query($conn, $query);
 
                         while ($row = mysqli_fetch_assoc($result)) {
+                            $fullname = $row["fname"] . " " . $row["mname"] . " " . $row["lname"];
+
                     echo "
                     <td>$row[student_id]</td>
-                    <td>$row[name]</td>
+                    ";?>
+                    <td><?php echo htmlspecialchars($fullname)?></td>
+                    <?php echo "
                     <td>$row[course]</td>
                     <td>$row[batch]</td>
                     <td>$row[connected_to]</td>
@@ -92,9 +98,6 @@
         <!-- script for table to access datatables -->
         <script>
             let table = new DataTable('#myTable');
-            // $(document).ready( function () {
-            //     $('#myTable').DataTable();
-            // });
         </script>
     </div>
 </body>
