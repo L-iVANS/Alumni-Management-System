@@ -31,48 +31,29 @@
         $username = $_POST['username'];
         $temp_password = $_POST['temp_pass'];
         // for image
+        
         if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
             $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
             $sql = "INSERT INTO alumni SET fname='$fname', mname='$mname', lname='$lname', course='$course', batch='$batch', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', password='$temp_password', picture='$file'";
         } else {
-            // // Path to the image file
-            // $filePath = '../../profile_icon.jpg';
-            // // Read the image file into a variable
-            // $imageData = file_get_contents($filePath);
-            // // Escape special characters (optional, depends on usage)
-            // $imageDataEscaped = addslashes($imageData);
-            $sql = "INSERT INTO alumni SET fname='$fname', mname='$mname', lname='$lname', course='$course', batch='$batch', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', password='$temp_password'";
+            // Path to the image file
+            $filePath = '../../profile_icon.jpg';
+            // Read the image file into a variable
+            $imageData = file_get_contents($filePath);
+            // Escape special characters (optional, depends on usage)
+            $imageDataEscaped = addslashes($imageData);
+            $sql = "INSERT INTO alumni SET fname='$fname', mname='$mname', lname='$lname', course='$course', batch='$batch', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', password='$temp_password', picture='$imageDataEscaped'";
         }
 
-        do{
-                $result = $conn->query($sql);
-                if(!$result){
-                    $errorMessage = "Invalid Query: " . $conn->error;
-                    break;
-                }
-
-                $fname ="";
-                $mname ="";
-                $lname ="";
-                $course ="";
-                $batch ="";
-                $connected_to ="";
-                $contact ="";
-                $address ="";
-                $email ="";
-                $username ="";
-                $temp_password ="";
-
-                echo
+        $result = $conn->query($sql);
+         echo
                 "
-                    <Script> 
-                        alert('User Edited Successfully');
-                    </Script>
+                    <script>
+                        alert('Alumni Added Successfully');
+                        window.location.href = '../alumni.php';
+                    </script>
                 ";
-                header("location: ../alumni.php");
-                exit;
 
-        }while(false);
     }
 ?>
 
@@ -104,6 +85,11 @@
                 </div>
             </div>
             <div class="row mb-3">
+
+
+
+
+            
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">First Name</label>
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="fname" required value="<?php echo $fname; ?>">
@@ -124,13 +110,19 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Course</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="course" required value="<?php echo $course; ?>">
+                    <select name="course" id="course" required >
+                        <option value="" disabled selected>Select a Course</option>
+                        <option value="BSIT">BSIT</option>
+                        <option value="BSCS">BSCS</option>
+                        <option value="BSAB">BSAB</option>
+                        <option value="BSTM">BSTM</option>
+                    </select>
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Batch</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="batch" required value="<?php echo $batch; ?>">
+                <input type="text" class="form-control" name="batch" required value="<?php echo $batch; ?>">
                 </div>
             </div>
             <div class="row mb-3">
@@ -170,20 +162,6 @@
                 </div>
             </div>
 
-            <?php
-                if(!empty($successMessage)){
-                    echo "
-                        <div class='row mb-3'>
-                            <div class='offset-sm-3 col-sm-6'>
-                                <div class='alert alert-success alert-dismissible fade show' role='alert'>
-                                    <strong>$successMessage</strong>
-                                    <button type='button' class='btn-close' data-bs-dismiss='alert' arial-label='Close'></button>
-                                </div>
-                            </div>
-                        </div>
-                    ";
-                } 
-            ?>
             <!-- div for submit button -->
             <div class="row mb-3">
                 <div class="offset-sm-3 col-sm-3 d-grid">

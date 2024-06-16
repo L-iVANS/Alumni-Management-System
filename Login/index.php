@@ -20,20 +20,21 @@ session_start();
 if (isset($_SESSION['user_id'])) {
     // User is logged in, display session information
     $user_id = $_SESSION['user_id'];
+    $fullName = $_SESSION['name'];
     $username = $_SESSION['username'];
-    // $user_pass = $_SESSION['password'];
+    $user_pass = $_SESSION['password'];
     
     echo "User ID: $user_id<br>";
+    echo "Name: $fullName<br>";
     echo "Username: $username<br>";
-    // echo "Password: $user_pass<br>";
+    echo "Password: $user_pass<br>";
     // Note: Avoid displaying password for security reasons
     // echo "Password: {$_SESSION['password']}<br>";
 } else {
     // User is not logged in, redirect to login page
-    header("Location: plainText_login.php");
+    header("Location: login.php");
     exit();
 }
-
 ?>
 
 <!DOCTYPE html>

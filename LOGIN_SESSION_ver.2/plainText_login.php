@@ -23,20 +23,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Check in users table
     $user = check_login($conn, 'users', $username, $password);
+    $user_type = 'users';
     
     // Check in admin table if not found in users
     if (!$user) {
         $user = check_login($conn, 'admin', $username, $password);
+        $user_type = 'admin';
     }
     
     // Check in moderators table if not found in users and admin
     if (!$user) {
         $user = check_login($conn, 'moderators', $username, $password);
+        $user_type = 'moderators';
     }
 
     if ($user) {
         // Login success, set session variables
-        $_SESSION['user_id'] = $user['id'];
+        switch ($user_type) {
+            case 'users':
+                $_SESSION['user_id'] = $user['users_id'];
+                break;
+            case 'admin':
+                $_SESSION['user_id'] = $user['admin_id'];
+                break;
+            case 'moderators':
+                $_SESSION['user_id'] = $user['moderators_id'];
+                break;
+        }
         $_SESSION['username'] = $user['username'];
         $_SESSION['password'] = $user['password'];
         // Redirect to a different page

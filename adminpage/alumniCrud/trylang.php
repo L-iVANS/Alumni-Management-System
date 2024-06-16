@@ -1,11 +1,6 @@
 <?php
-    session_start();
 
-    $serername="localhost";
-    $db_username="root";
-    $db_password="";
-    $db_name="alumni_management_system";
-    $conn=mysqli_connect($serername, $db_username, $db_password, $db_name);
+    $conn=mysqli_connect("localhost", "root", "", "alumni_management_system");
 
     $fname ="";
     $mname ="";
@@ -26,40 +21,26 @@
         $email = $_POST['email'];
         $username = $_POST['username'];
         $temp_password = $_POST['temp_pass'];
+
+
+        $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
+        $usernameCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
+        
+        if(mysqli_num_rows($emailCheck) > 0){
+            $errorMessage = "Email Already Exist";
+
+        }else if(mysqli_num_rows($usernameCheck) > 0){
+            $errorMessage = "Username Already Exist";
+        }else{
+
         // for image
         if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
             $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
         }
-         
-        $mail = "SELECT * FROM coordiantor WHERE email='$email'";
-        $user = "SELECT * FROM coordiantor WHERE username='$username'";
-        $resEmail = $conn->query($mail);
-        $resUser = $conn->query($user);
 
-        if(mysqli_num_rows($resEmail) > 0){
-            $message = 'Email Already Exists';
-
-        }else if(mysqli_num_rows($resUser) > 0){
-            $message = 'Username Already Exists';
-
-        }else{
         $sql = "INSERT INTO coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email', username='$username', password='$temp_password', picture='$file'";
                 $result = $conn->query($sql);
 
-        // $fname ="";
-        // $mname ="";
-        // $lname ="";
-        // $contact ="";
-        // $email ="";
-        // $username ="";
-        // $temp_password ="";
-
-        // echo
-        // "
-        //     <Script> 
-        //         alert('Coordinator Edited Successfully');
-        //     </Script>
-        // ";
         header("location: ../coordinator.php");
         exit;
         }

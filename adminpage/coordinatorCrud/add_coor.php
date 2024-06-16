@@ -1,22 +1,22 @@
 <?php
-    $serername="localhost";
-    $db_username="root";
-    $db_password="";
-    $db_name="alumni_management_system";
-    $conn=mysqli_connect($serername, $db_username, $db_password, $db_name);
+    $servername = "localhost";
+    $db_username = "root";
+    $db_password = "";
+    $db_name = "alumni_management_system";
+    $conn = mysqli_connect($servername, $db_username, $db_password, $db_name);
 
-    $fname ="";
-    $mname ="";
-    $lname ="";
-    $contact ="";
-    $email ="";
-    $username ="";
-    $temp_password ="";
+    $fname = "";
+    $mname = "";
+    $lname = "";
+    $contact = "";
+    $email = "";
+    $username = "";
+    $temp_password = "";
 
     $errorMessage = "";
     $successMessage = "";
 
-    if($_SERVER['REQUEST_METHOD'] == 'POST' ){
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fname = $_POST['fname'];
         $mname = $_POST['mname'];
         $lname = $_POST['lname'];
@@ -24,35 +24,47 @@
         $email = $_POST['email'];
         $username = $_POST['username'];
         $temp_password = $_POST['temp_pass'];
-        // for image
-        if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
-            $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
+
+        $emailCheck = mysqli_query($conn, "SELECT * FROM coordinator WHERE email='$email'");
+        $usernameCheck = mysqli_query($conn, "SELECT * FROM coordinator WHERE username='$username'");
+
+        if (mysqli_num_rows($emailCheck) > 0) {
+            $errorMessage = "Email Already Exists";
+        } else if (mysqli_num_rows($usernameCheck) > 0) {
+            $errorMessage = "Username Already Exists";
+        } else {
+
+            // for image
+            if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
+                $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
+                $sql = "INSERT INTO coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email', username='$username', password='$temp_password', picture='$file'";
+            } else {
+                // Path to the image file
+                $filePath = '../../profile_icon.jpg';
+                // Read the image file into a variable
+                $imageData = file_get_contents($filePath);
+                // Escape special characters (optional, depends on usage)
+                $imageDataEscaped = addslashes($imageData);
+                $sql = "INSERT INTO coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email', username='$username', password='$temp_password', picture='$imageDataEscaped'";
+            }
+
+            $result = $conn->query($sql);
+
+            if ($result) {
+                $successMessage = "Coordinator Added Successfully";
+                echo "
+                    <script>
+                        setTimeout(function() {
+                            window.location.href = '../coordinator.php';
+                        }, 1500);
+                    </script>
+                ";
+            } else{
+                $errorMessage = "Error: " . $conn->error;
+            }
         }
-        
-
-        $sql = "INSERT INTO coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email', username='$username', password='$temp_password', picture='$file'";
-                $result = $conn->query($sql);
-
-        // $fname ="";
-        // $mname ="";
-        // $lname ="";
-        // $contact ="";
-        // $email ="";
-        // $username ="";
-        // $temp_password ="";
-
-        // echo
-        // "
-        //     <Script> 
-        //         alert('Coordinator Edited Successfully');
-        //     </Script>
-        // ";
-        header("location: ../coordinator.php");
-        exit;
-
     }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -65,14 +77,38 @@
     <title>Add New Coordinator</title>
 </head>
 <body>
-    <div class="container my-5 " style="background-color: gainsboro; padding: 10px;">
+    <div class="container my-5" style="background-color: gainsboro; padding: 10px;">
         <h2>Add New Coordinator</h2>
 
+        <?php
+            if (!empty($errorMessage)) {
+                echo "
+                    <div class='row mb-3'>
+                        <div class='offset-sm-3 col-sm-6'>
+                            <div class='alert alert-warning alert-dismissible fade show' role='alert'>
+                                <strong>$errorMessage</strong>
+                            </div>
+                        </div>
+                    </div>
+                ";
+            }
+            if (!empty($successMessage)) {
+                echo "
+                    <div class='row mb-3'>
+                        <div class='offset-sm-3 col-sm-6'>
+                            <div class='alert alert-success alert-dismissible fade show' role='alert'>
+                                <strong>$successMessage</strong>
+                            </div>
+                        </div>
+                    </div>
+                ";
+            }
+        ?>
         <form action="" method="POST" enctype="multipart/form-data">
            <!-- div for choose image file -->
             <div class="row mb-3">
                 <div class="col-sm-6">
-                    <input class="form-control" type="file" name="image" required onchange="getImagePreview(event)">
+                    <input class="form-control" type="file" name="image" onchange="getImagePreview(event)">
                 </div>
                 <div class="col-sm-6">
                     <!-- Preview image -->
@@ -85,7 +121,7 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">First Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="fname" required value="<?php echo $lname; ?>">
+                    <input type="text" class="form-control" name="fname" required value="<?php echo $fname; ?>">
                 </div>
             </div>
             <div class="row mb-3">
@@ -107,7 +143,7 @@
                 </div>
             </div>
             <div class="row mb-3">
-                <label class="col-sm-3 col-form-label" style="font-size: 20px;">email</label>
+                <label class="col-sm-3 col-form-label" style="font-size: 20px;">Email</label>
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="email" required value="<?php echo $email; ?>">
                 </div>
@@ -146,25 +182,5 @@
             preview.style.height = '200px';
         }
     </script>
-    <!-- script to insert image to database -->
-    <Script>
-        $(document).ready(function(){
-            $('#insert').click(function(){
-                var image_name = $('#image').val();
-                if(image_name == ''){
-                    alert("please Select Profile")
-                    return false;
-                }else{
-                    var extension = $('#image').val().split('.').pop().toLowerCase();
-                    if(jquery.inArray(extenssion,['gif','png','jpg','jpeg']) == -1){
-                        alert("Invalid Image File")
-                        $('#image').val('');
-                         return false;
-                    }
-                }
-            })
-        });
-    </Script>
-
 </body>
 </html>

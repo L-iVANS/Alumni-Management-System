@@ -1,11 +1,11 @@
 <?php
+
     $serername="localhost";
     $db_username="root";
     $db_password="";
     $db_name="alumni_management_system";
     $conn=mysqli_connect($serername, $db_username, $db_password, $db_name);
 
-    $alumni_id ="";
     $fname ="";
     $mname ="";
     $lname ="";
@@ -16,41 +16,13 @@
     $address ="";
     $email ="";
     $username ="";
+    $temp_password ="";
 
-    if($_SERVER['REQUEST_METHOD'] == 'GET'){
-        // Show the data of alumni
-        if(!isset($_GET['id'])){
-            header("location: ../alumni.php");
-            exit;
-        }
-        $alumni_id = $_GET['id'];
-        
-        //read data from table alumni
-        $sql = "SELECT * FROM alumni WHERE student_id=$alumni_id";
-        $result = $conn->query($sql);
-        $row = $result->fetch_assoc();
+    $errorMessage = "";
+    $successMessage = "";
 
-        if(!$row){
-            header("location: ../alumni.php");
-            exit;
-        }
-        // data from table alumni
-        $fname = $row['fname'];
-        $mname = $row['mname'];
-        $lname = $row['lname'];
-        $course = $row['course'];
-        $batch = $row['batch'];
-        $connected_to =$row['connected_to'];
-        $contact = $row['contact'];
-        $address = $row['address'];
-        $email = $row['email'];
-        $username = $row['username'];
-        $file = $row['picture'];
-        
-
-    }else{
-        // POST method: update the data of alumni
-        $alumni_id = $_POST['id'];
+    // get the data from form
+    if($_SERVER['REQUEST_METHOD'] == 'POST' ){
         $fname = $_POST['fname'];
         $mname = $_POST['mname'];
         $lname = $_POST['lname'];
@@ -61,35 +33,58 @@
         $address = $_POST['address'];
         $email = $_POST['email'];
         $username = $_POST['username'];
+        $temp_password = $_POST['temp_pass'];
 
-        // for image
-        if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
-            $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
-            $sql = "UPDATE alumni SET fname='$fname', mname='$mname', lname='$lname', course='$course', batch='$batch', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', picture='$file' WHERE student_id=$alumni_id";
+        // for add only
+        $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
+        $usernameCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE username='$username'");
 
-        } else {
-            // // No new image uploaded, keep the old one
-            // $sql = "SELECT picture FROM alumni WHERE student_id=$alumni_id";
-            // $result = $conn->query($sql);
-            // $row = $result->fetch_assoc();
-            // $file = $row['picture'];
-            $sql = "UPDATE alumni SET fname='$fname', mname='$mname', lname='$lname', course='$course', batch='$batch', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username' WHERE student_id=$alumni_id";
-        }
+        // for update only
+        // $alumni_id = $_POST['id'];
+        // $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email' AND != '$alumni_id'");
+        // $usernameCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE username='$username' AND != '$alumni_id'");
 
+
+            
+        if(mysqli_num_rows($emailCheck) > 0){
+            $errorMessage = "Email Already Exists";
+
+        }else if(mysqli_num_rows($usernameCheck) > 0){
+            $errorMessage = "Username Already Exists";
+
+        }else{
+            // for image
+            if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
+                $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
+                $sql = "INSERT INTO alumni SET fname='$fname', mname='$mname', lname='$lname', course='$course', batch='$batch', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', password='$temp_password', picture='$file'";
+            } else {
+                // Path to the image file
+                $filePath = '../../profile_icon.jpg';
+                // Read the image file into a variable
+                $imageData = file_get_contents($filePath);
+                // Escape special characters (optional, depends on usage)
+                $imageDataEscaped = addslashes($imageData);
+                $sql = "INSERT INTO alumni SET fname='$fname', mname='$mname', lname='$lname', course='$course', batch='$batch', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', password='$temp_password', picture='$imageDataEscaped'";
+            }
+            
             $result = $conn->query($sql);
-            echo
-                "
+            if ($result) {
+                $successMessage = "New Alumni Added Successfully";
+                echo "
                     <script>
-                        alert('Alumni Info Updated Successfully');
-                        window.location.href = '../alumni.php';
+                        setTimeout(function() {
+                            window.location.href = '../alumni.php';
+                        }, 2000);
                     </script>
                 ";
-            // $successMessage = "Alumni added sucessfully";
-            //     header("location: ../alumni.php");
-            //     exit;
+            } else{
+                $errorMessage = "Error: " . $conn->error;
+            }
+        }
     }
-
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -102,18 +97,37 @@
 </head>
 <body>
     <div class="container my-5 " style="background-color: gainsboro; padding: 10px;">
-        <h2>Update Alumni Info</h2>
-
+        <h2>Add New Alumni</h2>
+        <!-- DISPLAY DUPLICATES -->
         <?php
-            // if(!empty($errorMessage)){
-            //     echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
-            //         <strong>$errorMessage</strong>
-            //         <button type='button' class='btn-close' data-bs-dismiss='alert' arial-label='Close'></button>
-            //     </div>";
-            // } 
+            if (!empty($errorMessage)) {
+                echo "
+                    <div class='row mb-3'>
+                        <div class='offset-sm-3 col-sm-6'>
+                            <div class='alert alert-warning alert-dismissible fade show' role='alert'>
+                                <strong>$errorMessage</strong>
+                                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                            </div>
+                        </div>
+                    </div>
+                ";
+            }
+            if (!empty($successMessage)) {
+                echo "
+                    <div class='row mb-3'>
+                        <div class='offset-sm-3 col-sm-6'>
+                            <div class='alert alert-success alert-dismissible fade show' role='alert'>
+                                <strong>$successMessage</strong>
+                                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                            </div>
+                        </div>
+                    </div>
+                ";
+            }
         ?>
 
         <form action="" method="POST" enctype="multipart/form-data">
+           <!-- div for choose image file -->
             <div class="row mb-3">
                 <div class="col-sm-6">
                     <input class="form-control" type="file" name="image" onchange="getImagePreview(event)">
@@ -121,76 +135,74 @@
                 <div class="col-sm-6">
                     <!-- Preview image -->
                     <div class="form-control" style="width:225px;height:215px; border-radius: 100%;">
-                        <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" style="width:200px;height:200px; border-radius: 100%;">
+                        <img id="preview" src="../../profile_icon.jpg" style="width:200px;height:200px; border-radius: 100%;">
                     </div>
                 </div>
             </div>
-
-            <input type="hidden" name="id" value="<?php echo $alumni_id; ?>">
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">First Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="fname" value="<?php echo $fname; ?>">
+                    <input type="text" class="form-control" name="fname" required value="<?php echo $fname; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Middle Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="mname" value="<?php echo $mname; ?>">
+                    <input type="text" class="form-control" name="mname" required value="<?php echo $mname; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Last Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="lname" value="<?php echo $lname; ?>">
+                    <input type="text" class="form-control" name="lname" required value="<?php echo $lname; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Course</label>
                 <div class="col-sm-6">
-                <select name="course" id="course" required>
-                    <option value="<?php echo $course; ?>" disabled selected> <?php echo $course; ?> </option>
-                    <option value="BSIT">BSIT</option>
-                    <option value="BSCS">BSCS</option>
-                    <option value="BSAB">BSAB</option>
-                    <option value="BSTM">BSTM</option>
-                </select>
+                    <input type="text" class="form-control" name="course" required value="<?php echo $course; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Batch</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="batch" value="<?php echo $batch; ?>">
+                    <input type="text" class="form-control" name="batch" required value="<?php echo $batch; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Connected to</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="connected_to" value="<?php echo $connected_to; ?>">
+                    <input type="text" class="form-control" name="connected_to" required value="<?php echo $connected_to; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Contact</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="contact" value="<?php echo $contact; ?>">
+                    <input type="text" class="form-control" name="contact" required value="<?php echo $contact; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Address</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="address" value="<?php echo $address; ?>">
+                    <input type="text" class="form-control" name="address" required value="<?php echo $address; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">email</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="email" value="<?php echo $email; ?>">
+                    <input type="text" class="form-control" name="email" required value="<?php echo $email; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Username</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="username" value="<?php echo $username; ?>">
+                    <input type="text" class="form-control" name="username" required value="<?php echo $username; ?>">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label" style="font-size: 20px;">Temporary Password</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" name="temp_pass" required value="<?php echo $temp_password; ?>">
                 </div>
             </div>
 
@@ -208,10 +220,10 @@
                     ";
                 } 
             ?>
-
+            <!-- div for submit button -->
             <div class="row mb-3">
                 <div class="offset-sm-3 col-sm-3 d-grid">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary" name="insert" id="insert" value="insert">Submit</button>
                 </div>
                 <div class="col-sm-3 d-grid">
                     <a class="btn btn-outline-primary" href="../alumni.php">Cancel</a>
@@ -219,7 +231,6 @@
             </div>
         </form>
     </div>
-
     <!-- Script to display preview of selected image -->
     <script>
         function getImagePreview(event) {
