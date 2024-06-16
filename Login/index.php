@@ -29,7 +29,7 @@ if (isset($_SESSION['user_id'])) {
     echo "Username: $username<br>";
     echo "Password: $user_pass<br>";
     // Note: Avoid displaying password for security reasons
-    // echo "Password: {$_SESSION['password']}<br>";
+
 } else {
     // User is not logged in, redirect to login page
     header("Location: login.php");

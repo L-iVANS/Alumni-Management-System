@@ -22,8 +22,8 @@
         $fname = $_POST['fname'];
         $mname = $_POST['mname'];
         $lname = $_POST['lname'];
-        $course = $_POST['batch'];
-        $batch = $_POST['course'];
+        $course = $_POST['course'];
+        $batch = $_POST['batch'];
         $connected_to = $_POST['connected_to'];
         $contact = $_POST['contact'];
         $address = $_POST['address'];
@@ -46,13 +46,13 @@
         }
 
         $result = $conn->query($sql);
-         echo
-                "
-                    <script>
-                        alert('Alumni Added Successfully');
-                        window.location.href = '../alumni.php';
-                    </script>
-                ";
+        echo
+            "
+            <script>
+                alert('Alumni Added Successfully');
+                window.location.href = '../alumni.php';
+            </script>
+        ";
 
     }
 ?>
@@ -98,7 +98,7 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Middle Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="mname" required value="<?php echo $mname; ?>">
+                    <input type="text" class="form-control" name="mname" value="<?php echo $mname; ?>">
                 </div>
             </div>
             <div class="row mb-3">

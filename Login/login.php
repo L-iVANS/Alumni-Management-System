@@ -1,96 +1,129 @@
 <?php
-// Database configuration
-$servername = "localhost";
-$db_username = "root";
-$db_password = "";
-$dbname = "alumni_management_system";
+    // Database configuration
+    $servername = "localhost";
+    $db_username = "root";
+    $db_password = "";
+    $dbname = "alumni_management_system";
 
-// Create connection
-$conn = new mysqli($servername, $db_username, $db_password, $dbname);
+    // Create connection
+    $conn = new mysqli($servername, $db_username, $db_password, $dbname);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Start session
-session_start();
-
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    // Check in users table
-    $user = check_login($conn, 'alumni', $username, $password);
-    $user_type = 'alumni';
-
-    // Check in admin table if not found in users
-    if (!$user) {
-        $user = check_login($conn, 'admin', $username, $password);
-        $user_type = 'admin';
-    }
-    
-    // Check in moderators table if not found in users and admin
-    if (!$user) {
-        $user = check_login($conn, 'coordinator', $username, $password);
-        $user_type = 'coordinator';
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
     }
 
-    if ($user) {
-        // Login success, set session variables
-        switch ($user_type) {
-            case 'alumni':
-                $_SESSION['user_id'] = $user['student_id'];
-                break;
-            case 'admin':
-                $_SESSION['user_id'] = $user['admin_id'];
-                break;
-            case 'coordinator':
-                $_SESSION['user_id'] = $user['coor_id'];
-                break;
+    // Start session
+    session_start();
+
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_username']) && isset($_POST['log_password'])) {
+        $username = $_POST['log_username'];
+        $password = $_POST['log_password'];
+
+        // Check in users table
+        $user = check_login($conn, 'alumni', $username, $password);
+        $user_type = 'alumni';
+
+        // Check in admin table if not found in users
+        if (!$user) {
+            $user = check_login($conn, 'admin', $username, $password);
+            $user_type = 'admin';
         }
-        $_SESSION['name'] = $user["fname"] . " " . $user["mname"] . " " . $user["lname"];
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['password'] = $user['password'];
-        // Redirect to a different page
-        header("Location: index.php");
-        exit();
-    } else {
-        // Login failed
-        echo "
+        
+        // Check in moderators table if not found in users and admin
+        if (!$user) {
+            $user = check_login($conn, 'coordinator', $username, $password);
+            $user_type = 'coordinator';
+        }
+
+        if ($user) {
+            // Login success, set session variables
+            switch ($user_type) {
+                case 'alumni':
+                    $_SESSION['user_id'] = $user['student_id'];
+                    break;
+                case 'admin':
+                    $_SESSION['user_id'] = $user['admin_id'];
+                    break;
+                case 'coordinator':
+                    $_SESSION['user_id'] = $user['coor_id'];
+                    break;
+            }
+            $_SESSION['name'] = $user["fname"] . " " . $user["mname"] . " " . $user["lname"];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['password'] = $user['password'];
+            // Redirect to a different page
+            echo "
+                <script>
+                    alert('Login Succcessfully');
+                    window.location.href = 'index.php';
+                </script>
+            ";
+        } else {
+            // Login failed
+            echo "
+                <script>
+                    alert('Invalid Username and Password');
+                    window.location.href = 'login.php';
+                </script>
+            ";
+    } 
+    }else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+        $fname = $_POST['fname'];
+        $mname = $_POST['mname'];
+        $lname = $_POST['lname'];
+        $course = $_POST['course'];
+        $batch = $_POST['batch'];
+        $connected_to = $_POST['connected_to'];
+        $contact = $_POST['contact'];
+        $address = $_POST['address'];
+        $email = $_POST['email'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        $filePath = 'profile_icon.jpg';
+        // Read the image file into a variable
+        $imageData = file_get_contents($filePath);
+        // Escape special characters (optional, depends on usage)
+        $imageDataEscaped = addslashes($imageData);
+            
+        $sql = "INSERT INTO alumni SET fname='$fname', mname='$mname', lname='$lname', course='$course', batch='$batch', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', password='$password', picture='$imageDataEscaped'";
+        $result = $conn->query($sql);
+        echo
+            "
             <script>
-                alert('Invalid Username and Password');
+                alert('Alumni Added Successfully');
                 window.location.href = 'login.php';
             </script>
         ";
-    }
-}
 
-// Function to check login
-function check_login($conn, $table, $username, $password) {
-    // Prepare the SQL query
-    $sql = "SELECT * FROM $table WHERE username = ? AND password = ? LIMIT 1";
-    $stmt = $conn->prepare($sql);
-    
-    // Bind the username and password parameters to the query
-    $stmt->bind_param("ss", $username, $password);
-    
-    // Execute the query
-    $stmt->execute();
-    
-    // Get the result set from the query
-    $result = $stmt->get_result();
-    
-    // Check if a matching row was found
-    if ($result->num_rows > 0) {
-        // Fetch the row as an associative array
-        return $result->fetch_assoc();
     }
-    
-    // Return false if no match was found
-    return false;
-}
+
+    // Function to check login
+    function check_login($conn, $table, $username, $password) {
+        // Prepare the SQL query
+        $sql = "SELECT * FROM $table WHERE username = ? AND password = ? LIMIT 1";
+        $stmt = $conn->prepare($sql);
+        
+        // Bind the username and password parameters to the query
+        $stmt->bind_param("ss", $username, $password);
+        
+        // Execute the query
+        $stmt->execute();
+        
+        // Get the result set from the query
+        $result = $stmt->get_result();
+        
+        // Check if a matching row was found
+        if ($result->num_rows > 0) {
+            // Fetch the row as an associative array
+            return $result->fetch_assoc();
+        }
+        
+        // Return false if no match was found
+        return false;
+    }
 
 ?>
 
@@ -115,10 +148,10 @@ function check_login($conn, $table, $username, $password) {
 
     <div class="container" id="container">
         <div class="form-container sign-up-container">
-            <form action="#">
+            <form action="#" method="POST">
                 <h1>Sign Up</h1>
                 <div class="infield">
-                    <input type="text" placeholder="First Name"name="fname"  required/>
+                    <input type="text" placeholder="First Name" name="fname"  required/>
                     <label></label>
                 </div>
                 <div class="infield">
@@ -126,11 +159,11 @@ function check_login($conn, $table, $username, $password) {
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="text" placeholder=" Last Name"name="lname"  required/>
+                    <input type="text" placeholder="Last Name" name="lname"  required/>
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="text" placeholder="Username"name="username"  required/>
+                    <input type="text" placeholder="Username" name="username"  required/>
                     <label></label>
                 </div>
                 <div class="infield">
@@ -138,7 +171,7 @@ function check_login($conn, $table, $username, $password) {
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="password" placeholder="Password"name="course" name="course" required/>
+                    <input type="password" placeholder="Password" name="password" required/>
                     <label></label>
                 </div>
                 <div class="infield">
@@ -160,25 +193,25 @@ function check_login($conn, $table, $username, $password) {
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="text" placeholder="Contact"name="Contact"  required/>
+                    <input type="text" placeholder="Contact" name="contact"  required/>
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="text" placeholder="Address"name="Address"  required/>
+                    <input type="text" placeholder="Address" name="address"  required/>
                     <label></label>
                 </div>
-                <button>Sign Up</button>
+                <button type="submit" name="submit">Sign Up</button>
             </form>
         </div>
         <div class="form-container log-in-container">
             <form action="#" method="POST">
                 <h1>Log in</h1>
                 <div class="infield">
-                    <input type="text" placeholder="Username" name="username" required/>
+                    <input type="text" placeholder="Username" name="log_username" required/>
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="password" placeholder="Password" name="password" required/>
+                    <input type="password" placeholder="Password" name="log_password" required/>
                     <label></label>
                 </div>
                 <a href="#" class="forgot">Forgot your password?</a>

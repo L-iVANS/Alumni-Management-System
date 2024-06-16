@@ -130,7 +130,7 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">First Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="fname" value="<?php echo $fname; ?>">
+                    <input type="text" class="form-control" name="fname" required value="<?php echo $fname; ?>">
                 </div>
             </div>
             <div class="row mb-3">
@@ -142,7 +142,7 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Last Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="lname" value="<?php echo $lname; ?>">
+                    <input type="text" class="form-control" name="lname" required value="<?php echo $lname; ?>">
                 </div>
             </div>
             <div class="row mb-3">
@@ -160,37 +160,37 @@
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Batch</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="batch" value="<?php echo $batch; ?>">
+                    <input type="text" class="form-control" name="batch" required value="<?php echo $batch; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Connected to</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="connected_to" value="<?php echo $connected_to; ?>">
+                    <input type="text" class="form-control" name="connected_to" required value="<?php echo $connected_to; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Contact</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="contact" value="<?php echo $contact; ?>">
+                    <input type="text" class="form-control" name="contact" required value="<?php echo $contact; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Address</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="address" value="<?php echo $address; ?>">
+                    <input type="text" class="form-control" name="address" required value="<?php echo $address; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">email</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="email" value="<?php echo $email; ?>">
+                    <input type="text" class="form-control" name="email" required value="<?php echo $email; ?>">
                 </div>
             </div>
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 20px;">Username</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="username" value="<?php echo $username; ?>">
+                    <input type="text" class="form-control" name="username" required value="<?php echo $username; ?>">
                 </div>
             </div>
 
