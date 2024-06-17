@@ -63,7 +63,7 @@
                     </li>
                     <li>
                        <a href="../settings/about.php">
-                            <span class="las la-map" style="color:#fff"></span>
+                            <span class="las la-cog" style="color:#fff"></span>
                             <small>SETTINGS</small>
                         </a>
                     </li>
@@ -113,7 +113,7 @@
         <main>
             
             <div class="page-header">
-                <h1>Profile</h1> 
+            <h1><strong>Profile</strong></h1>
             </div>
             
     <div class="page-content">

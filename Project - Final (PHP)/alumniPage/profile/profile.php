@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
     <title>Alumni Profile</title>
-    <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
+    <link rel="shortcut icon" href="../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
 <body>
    <input type="checkbox" id="menu-toggle">
@@ -18,21 +19,21 @@
         <div class="side-content">
             <div class="profile">
                 <div class="profile-img bg-img" style="background-image: url(img/3.jpeg)"></div>
-                <h4>user</h4>
+                <h4>ALUMNI</h4>
                 <small style="color: white;">user@email.com</small>
             </div>
 
             <div class="side-menu">
                 <ul>
                     <li>
-                       <a href="../dashboard_user.php" >
+                       <a href="../dashboard_user.php">
                             <span class="las la-home" style="color:#fff"></span>
                             <small>DASHBOARD</small>
                         </a>
                     </li>
                     <li>
                        <a href="./profile.php" class="active">
-                            <span class="las la-calendar" style="color:#fff"></span>
+                            <span class="las la-user-alt" style="color:#fff"></span>
                             <small>PROFILE</small>
                         </a>
                     </li>
@@ -54,7 +55,7 @@
                 <label for="menu-toggle">
                     <span class="las la-bars"></span>
                 </label>
-                <span class="header-title">ALUMNI MANAGEMENT SYSTEM</span> 
+                <!-- <span class="header-title">ALUMNI MANAGEMENT SYSTEM</span>  -->
                 <div class="header-menu">
                     <label for="">
                     </label>
@@ -69,7 +70,7 @@
                         <div class="bg-img" style="background-image: url(img/1.jpeg)"></div>
                         
                         <a href="../logout.php">
-                        <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #899DC1; padding-left:10px"></span>
+                        <span class="las la-power-off"></span>
                         </a>
 
                     </div>
@@ -81,11 +82,12 @@
         <main>
             
             <div class="page-header">
-                <h1>Alumni List</h1>
+                <h1><strong>Profile</strong></h1>
             </div>
-            
+        </main>
             <div class="page-content">
                 <!--  -->
+            </div>
         
     </div>
 </body>

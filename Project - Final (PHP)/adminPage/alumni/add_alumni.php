@@ -20,7 +20,7 @@
         <div class="side-content">
             <div class="profile">
                 <div class="profile-img bg-img" style="background-image: url(img/3.jpeg)"></div>
-                <h4>ADMIN</h4><br>
+                <h4>ADMIN</h4>
                 <small style="color: white;">admin@email.com</small>
             </div>
 
@@ -100,7 +100,7 @@
 
         <main>
             <div class="page-header">
-                <h1>ALUMNI</h1> 
+                <h1><strong>Alumni</strong></h1> 
             </div>
         </main>
             <div class="container" id="container-full">

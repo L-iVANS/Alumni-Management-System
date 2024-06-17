@@ -19,7 +19,7 @@
         <div class="side-content">
             <div class="profile">
                 <div class="profile-img bg-img" style="background-image: url(img/3.jpeg)"></div>
-                <h4>user</h4>
+                <h4>ALUMNI</h4>
                 <small style="color: white;">user@email.com</small>
             </div>
 
@@ -33,7 +33,7 @@
                     </li>
                     <li>
                        <a href="../profile/profile.php">
-                            <span class="las la-calendar" style="color:#fff"></span>
+                            <span class="las la-user-alt" style="color:#fff"></span>
                             <small>PROFILE</small>
                         </a>
                     </li>
@@ -82,11 +82,12 @@
         <main>
             
             <div class="page-header">
-                <h1>Event</h1>
+                <h1><strong>Event</strong></h1>
             </div>
-            
+        </main> 
             <div class="page-content">
                 <!--  -->
+            </div>
         
     </div>
 </body>

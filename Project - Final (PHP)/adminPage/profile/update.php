@@ -21,7 +21,7 @@
         
         <div class="side-content">
             <div class="profile">
-               
+                <div class="profile-img bg-img" style="background-image: url(img/3.jpeg)"></div>
                 <h4>ADMIN</h4>
                 <small style="color: white;">admin@email.com</small>
             </div>
@@ -60,7 +60,7 @@
                     </li>
                     <li>
                        <a href="../settings/about.php">
-                            <span class="las la-map" style="color:#fff"></span>
+                            <span class="las la-cog" style="color:#fff"></span>
                             <small>SETTINGS</small>
                         </a>
                     </li>
@@ -110,7 +110,7 @@
         <main>
             
             <div class="page-header">
-                <h1>Profile</h1> 
+            <h1><strong>Profile</strong></h1> 
             </div>
             
     <div class="page-content">
@@ -167,7 +167,7 @@
             <div class="container-fluid">
                 <div class="buttons">
                     <a href=""><button type="button" class="btn" id="button1">UPDATE</button></a>
-                    <a href="profile.html"><button type="button" class="btn" id="button1">CANCEL</button></a>
+                    <a href="./profile.php"><button type="button" class="btn" id="button1">CANCEL</button></a>
                 </div>
             </div>
         </div>

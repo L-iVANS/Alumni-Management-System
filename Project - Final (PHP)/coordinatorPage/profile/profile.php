@@ -28,7 +28,7 @@
                     <li>
                        <a href="../dashboard_coor.php" >
                             <span class="las la-home" style="color:#fff"></span>
-                            <small>DASHBOARD"</small>
+                            <small>DASHBOARD</small>
                         </a>
                     </li>
                     <li>
@@ -51,7 +51,7 @@
                     </li>
                     <li>
                        <a href="../settings/about.php">
-                            <span class="las la-map" style="color:#fff"></span>
+                            <span class="las la-cog" style="color:#fff"></span>
                             <small>SETTINGS</small>
                         </a>
                     </li>
@@ -107,12 +107,12 @@
         <main>
             
             <div class="page-header">
-                <h1>Profile</h1>
+                <h1><strong>Profile</strong></h1>
             </div>
-            
+        </main>
             <div class="page-content">
                 <!--  -->
-        
+        </div>
     </div>
 </body>
 </html>

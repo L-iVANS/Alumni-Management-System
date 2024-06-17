@@ -57,7 +57,7 @@
                     </li>
                     <li>
                        <a href="./contact.php"class="active">
-                            <span class="las la-map" style="color:#fff"></span>
+                            <span class="las la-cog" style="color:#fff"></span>
                             <small>SETTINGS</small>
                         </a>
                     </li>
@@ -106,13 +106,13 @@
         <main>
             
             <div class="page-header">
-                <h1>Page</h1>
+                <h1><strong>Settings</strong></h1>
                
             </div>
-            
+            </main>
             <div class="page-content">
                 <!--  -->
-        
+        </div>
     </div>
 </body>
 </html>

@@ -51,7 +51,7 @@
                     </li>
                     <li>
                        <a href="../settings/about.php">
-                            <span class="las la-map" style="color:#fff"></span>
+                            <span class="las la-cog" style="color:#fff"></span>
                             <small>SETTINGS</small>
                         </a>
                     </li>
@@ -107,12 +107,12 @@
         <main>
             
             <div class="page-header">
-                <h1>Report</h1>
+                <h1><Strong>Reports</Strong></h1>
             </div>
-            
+        </main>
             <div class="page-content">
                 <!--  -->
-        
+            </div>
     </div>
 </body>
 </html>

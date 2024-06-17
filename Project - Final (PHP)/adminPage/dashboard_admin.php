@@ -57,8 +57,8 @@
                     </li>
                     <li>
                         <a href="./settings/about.php">
-                            <span class="las la-map" style="color:#fff"></span>
-                            <small>SETTING</small>
+                            <span class="las la-cog" style="color:#fff"></span>
+                            <small>SETTINGS</small>
                         </a>
                     </li>
                     <li>
@@ -106,7 +106,7 @@
         <main>
             
             <div class="page-header">
-                <h1>Dashboard</h1>
+                <h1><strong>Dashboard</strong></h1>
             </div>
             
             <div class="page-content">

@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Event Archive List</title>
+    <title>Alumni Archive</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="css/event_arc.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
 <body>
    <input type="checkbox" id="menu-toggle">
@@ -27,17 +28,17 @@
                     <li>
                        <a href="../dashboard_coor.php" >
                             <span class="las la-home" style="color:#fff"></span>
-                            <small>DASHBOARD"</small>
+                            <small>DASHBOARD</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../profile/profile.php">
+                       <a href="../profile/profile.php" >
                             <span class="las la-user-alt" style="color:#fff"></span>
                             <small>PROFILE</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../alumni/alumni.php">
+                       <a href="../profile/profile.php">
                             <span class="las la-th-list" style="color:#fff"></span>
                             <small>ALUMNI</small>
                         </a>
@@ -50,7 +51,7 @@
                     </li>
                     <li>
                        <a href="../settings/about.php">
-                            <span class="las la-map" style="color:#fff"></span>
+                            <span class="las la-cog" style="color:#fff"></span>
                             <small>SETTINGS</small>
                         </a>
                     </li>
@@ -106,12 +107,12 @@
         <main>
             
             <div class="page-header">
-                <h1>Alumni List</h1>
+                <h1><strong>Archive</strong></h1>
             </div>
-            
+        </main>
             <div class="page-content">
                 <!--  -->
-        
+        </div>
     </div>
 </body>
 </html>

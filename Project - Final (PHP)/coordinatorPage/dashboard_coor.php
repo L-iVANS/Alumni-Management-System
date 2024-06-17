@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Modern Admin Dashboard</title>
-    <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
+    <title>Coordinator Dashboard</title>
+    <link rel="shortcut icon" href="../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="dashboard.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
@@ -51,7 +51,7 @@
                     </li>
                     <li>
                        <a href="./settings/about.php">
-                            <span class="las la-map" style="color:#fff"></span>
+                            <span class="las la-cog" style="color:#fff"></span>
                             <small>SETTINGS</small>
                         </a>
                     </li>
@@ -94,7 +94,7 @@
                     <div class="user">
                         <div class="bg-img" style="background-image: url(img/1.jpeg)"></div>
                         
-                        <a href="../logout.php">
+                        <a href="./logout.php">
                         <span class="las la-power-off"></span>
                         </a>
 
@@ -107,12 +107,12 @@
         <main>
             
             <div class="page-header">
-                <h1>Dashboard</h1>
+                <h1><strong>Dashboard</strong></h1>
             </div>
-            
+        </main>
             <div class="page-content">
                 <!--  -->
-        
+        </div>
     </div>
 </body>
 </html>
