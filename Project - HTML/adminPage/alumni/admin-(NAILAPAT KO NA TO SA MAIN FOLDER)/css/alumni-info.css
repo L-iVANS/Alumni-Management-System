@@ -383,9 +383,7 @@ main {
     padding: 10px;
     /* border: #2a9134 1px solid; */
 }
-#container-full{
-    border: #dee2e8 0.5px solid;
-}
+
 
 #start{
     margin-top: 20px;
@@ -405,3 +403,13 @@ main {
     margin-bottom: 50px;
 }
 
+#content-container{
+    /* border:red 1px solid; */
+    margin-top: 30px;
+    background-color: #ffffff; /* White background */
+    border-radius: 15px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 20px; 
+    margin: 20px 0; 
+    transition: transform 0.2s; 
+}
