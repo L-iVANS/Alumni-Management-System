@@ -1,5 +1,7 @@
 
 
+
+
 @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;500;600&display=swap');
 
 :root {
@@ -83,9 +85,7 @@ font-weight: bold;
 }
 
 /* Handle on hover */
-.side-content::-webkit-scrollbar-thumb:hover {
-  background: #b30000; 
-}
+
 
 .sidebar ul li a:hover {
     color: #2a9134;
@@ -241,7 +241,7 @@ main {
 
 .page-header {
     padding: 1.3rem 1rem;
-    background: #E9edf2;
+    /* background: #E9edf2; */
     border-bottom: 1px solid #dee2e8;
 }
 
@@ -311,4 +311,9 @@ main {
     table {
         width: 900px;
     }
+}
+.side-content .profile i{
+    color: #fff;
+    font-size: 80px;
+    font-weight: lighter;
 }
