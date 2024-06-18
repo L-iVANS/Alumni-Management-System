@@ -347,7 +347,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* border: green 1px solid; */
+    /* border: green 1px solid;  */
 }
 
 #profile-pic{
@@ -395,5 +395,13 @@ main {
     justify-content: right;
     padding: 10px;
 }
-
+.side-content .profile i{
+    color: #fff;
+    font-size: 80px;
+    font-weight: lighter;
+}
+#content{
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
 
