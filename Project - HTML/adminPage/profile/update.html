@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +22,7 @@
         
         <div class="side-content">
             <div class="profile">
-                <div class="profile-img bg-img" style="background-image: url(img/3.jpeg)"></div>
+                <i class='bx bx-user bx-flip-horizontal'></i>
                 <h4>ADMIN</h4>
                 <small style="color: white;">admin@email.com</small>
             </div>
@@ -114,25 +115,12 @@
             </div>
             
     <div class="page-content">
-        <div class="row">
-            <div class="container-fluid">
-                <div class="content-header">
-                    <img src="user-circle-regular-168.png" id="profile-pic">
-                </div>
-            </div>
-        </div>
-    <div class="submit-form">
-        <div class="row">
-            <div class="container-fluid">
-                <label for="input-file"><h5>UPDATE IMAGE</h5></label>
-        <input type="file" accept="image/jpeg, image/jpg, image/png" id="input-file">
-            </div>
-        </div>
-    </div>
+        
         
 
         <div class="row">
-            <div class="container-fluid">
+            <div class="container-fluid" id="main-container">
+                <div class="container-fluid" id="content-container">
                 <div class="information">
                     <form>
                         <div class="mb-3">
@@ -168,20 +156,21 @@
                 <div class="buttons">
                     <a href=""><button type="button" class="btn" id="button1">UPDATE</button></a>
                     <a href="./profile.html"><button type="button" class="btn" id="button1">CANCEL</button></a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
     
-<script>
+<!-- <script>
     let profilePic = document.getElementById("profile-pic");
     let inputFile = document.getElementById("input-file");
 
     inputFile.onchange = function(){
         profilePic.src = URL.createObjectURL(inputFile.files[0]);
     }
-</script>
+</script> -->
 
 </body>
 </html>
