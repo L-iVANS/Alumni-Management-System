@@ -346,10 +346,41 @@ border-color: #fff;
     background-color: #f7b2058c;
 }
 
+.side-content .profile i{
+    color: #fff;
+    font-size: 80px;
+    font-weight: lighter;
+}
 
+#main-container{
+    /* border: #2a9134 1px solid; */
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 30px;
+}
 
+#column-header{
+    margin-top: 20px;
+}
 
+#content-container{
+    /* border:red 1px solid; */
+    margin-top: 30px;
+    background-color: #ffffff; /* White background */
+    border-radius: 15px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 20px; 
+    margin: 20px 0; 
+    transition: transform 0.2s; 
+}
 
-
-
+#add-btn{
+    display: flex;
+    justify-content: right;
+}
+#search{
+    
+    display: flex;
+    justify-content: left;
+}
 
