@@ -1,5 +1,6 @@
 
 
+
 @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;500;600&display=swap');
 
 :root {
@@ -242,7 +243,7 @@ main {
 
 .page-header {
     padding: 1.3rem 1rem;
-    background: #E9edf2 !important;
+    /* background: #E9edf2 !important; */
     border-bottom: 1px solid #dee2e8;
     min-width: 100% !important;
 }
@@ -363,4 +364,21 @@ main {
     .page-header{
         width: 100%;
     }
+}
+
+#content-container{
+    /* border:red 1px solid; */
+    margin-top: 30px;
+    background-color: #ffffff; /* White background */
+    border-radius: 15px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 20px; 
+    margin: 20px 0; 
+    transition: transform 0.2s; 
+}
+
+.side-content .profile i{
+    color: #fff;
+    font-size: 80px;
+    font-weight: lighter;
 }
