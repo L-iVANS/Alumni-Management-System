@@ -15,6 +15,7 @@
     list-style-type: none;
     box-sizing: border-box;
     font-family: 'Merriweather', sans-serif;
+/*     overflow-x: hidden; */
     scroll-behavior: smooth;
     }
 
@@ -274,7 +275,6 @@ main {
     }
 }
 
-
 @media only screen and (max-width: 768px) {
     
     
@@ -347,7 +347,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* border: green 1px solid; */
+    /* border: green 1px solid;  */
 }
 
 #profile-pic{
@@ -390,6 +390,18 @@ main {
 #start{
     margin-top: 20px;
 }
-
-
+#buttons{
+    display: flex;
+    justify-content: right;
+    padding: 10px;
+}
+.side-content .profile i{
+    color: #fff;
+    font-size: 80px;
+    font-weight: lighter;
+}
+#content{
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
 
