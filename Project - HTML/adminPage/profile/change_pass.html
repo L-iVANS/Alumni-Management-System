@@ -24,7 +24,7 @@
         
         <div class="side-content">
             <div class="profile">
-                <div class="profile-img bg-img" style="background-image: url(img/3.jpeg)"></div>
+                <i class='bx bx-user bx-flip-horizontal'></i>
                 <h4>ADMIN</h4>
                 <small style="color: white;">admin@email.com</small>
             </div>
@@ -116,15 +116,15 @@
             <h1><strong>Profile</strong></h1>
             </div>
             
-    <div class="page-content">
-       
+    <div class="container-fluid" id="page-content">
+            
                     <span>
                         <h2>CHANGE PASSWORD</h2>
                     </span>
             
         <div class="row">
-            <div class="container-fluid">
-                <div class="information">
+            <div class="container-fluid" id="main-container">
+                <div class="container-fluid" id="content-container">
                     <form>
                         <div class="mb-3">
                             <label for="formGroupExampleInput" class="form-label">Enter Current Password</label>
@@ -137,20 +137,20 @@
                           <div class="mb-3">
                             <label for="formGroupExampleInput2" class="form-label">Confirm Password</label>
                             <input type="password" class="form-control" id="formGroupExampleInput2" placeholder="">
-                          </div>    
+                          </div>
+                          <div class="row">
+                            <div class="container-fluid">
+                                <div class="buttons">
+                                    <button type="button" class="btn" id="button1">CHANGE PASSWORD</button>
+                                    <a href="./profile.html"><button type="button" class="btn" id="button2">CANCEL</button></a>
+                                </div>
+                            </div>
+                        </div>   
                     </form>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="container-fluid">
-                <div class="buttons">
-                    <button type="button" class="btn" id="button1">CHANGE PASSWORD</button>
-                    <a href="./profile.html"><button type="button" class="btn" id="button2">CANCEL</button></a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </body>
 </html>
