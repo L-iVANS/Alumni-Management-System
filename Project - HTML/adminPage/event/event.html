@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -105,15 +106,80 @@
         
         
         <main>
-            
+
             <div class="page-header">
                 <h1><strong>Event</strong></h1>
-               
             </div>
-           </main> 
-            <div class="page-content">
-                <!--  -->
+
+            <div class="container-fluid" id="page-content">
+                <div class="container-fluid" id="content-header">
+                    <span>
+                        <h2>EVENT INFO</h2>
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="container-fluid" id="main-container">
+                        <div class="container-fluid" id="content-container">
+                            <form>
+                                <fieldset disabled="disabled">
+                                <div class="mb-3">
+                                    <label for="formGroupExampleInput" class="form-label">EVENT TITLE</label>
+                                    <input type="text" class="form-control" id="formGroupExampleInput"
+                                        placeholder="Enter Event Title">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="formGroupExampleInput2" class="form-label">SCHEDULE</label>
+                                    <input type="date" class="form-control" id="formGroupExampleInput2" placeholder="">
+                                </div>
+                                <div class="row">
+                                    <div class="container-fluid">
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlTextarea1" class="form-label">Enter
+                                                Description</label>
+                                            <textarea class="form-control" id="exampleFormControlTextarea1"
+                                                rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="mb-3">
+                                                <label for="formFile" class="form-label"></label>
+                                                <input class="form-control" type="file" id="formFile">
+                                            </div>
+                                            <div class="col">
+                                                <img src="..." class="img-thumbnail" alt="..." id="event-pic">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+        </fieldset>
+                <div class="container-fluid" id="button-response">
+                    <div class="row">
+                        <div class="d-grid col-4 mx-auto">
+                            <button type="button" class="btn btn-warning">Update</button>
+
+                        </div>
+                        <div class="d-grid col-4 mx-auto"><button type="button" class="btn btn-danger">Remove</button>
+                        </div>
+                        <div class="d-grid col-4 mx-auto">
+                            <button class="btn btn-primary" type="button">Back</button>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </main>
     </div>
+    <script>
+        let eventPic = document.getElementById("event-pic");
+        let formFile = document.getElementById("formFile");
+
+        formFile.onchange = function () {
+            eventPic.src = URL.createObjectURL(formFile.files[0]);
+        }
+    </script>
 </body>
 </html>
