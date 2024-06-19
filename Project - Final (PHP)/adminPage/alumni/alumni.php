@@ -1,7 +1,67 @@
+<?php
+session_start();
 
+$serername = "localhost";
+$db_username = "root";
+$db_password = "";
+$db_name = "alumni_management_system";
+$conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
+
+// USER ACCOUNT DATA
+if (isset($_SESSION['user_id'])) {
+    $account = $_SESSION['user_id'];
+
+    $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ?");
+    $stmt->bind_param("s", $account); // "s" indicates the type is string
+    $stmt->execute();
+    $user_result = $stmt->get_result();
+
+    if ($user_result->num_rows > 0) {
+        $user = $user_result->fetch_assoc();
+    } else {
+        // No user found with the given admin_id
+    }
+
+    $stmt->close();
+} else {
+    echo "User not logged in.";
+}
+
+// Close the database connection if needed
+// $conn->close();
+
+
+// Pagination configuration
+$records_per_page = 5; // Number of records to display per page
+$current_page = isset($_GET['page']) ? $_GET['page'] : 1; // Get current page number, default to 1
+
+// Calculate the limit clause for SQL query
+$start_from = ($current_page - 1) * $records_per_page;
+
+// Initialize variables
+$sql = "SELECT * FROM alumni ";
+
+// Check if search query is provided
+if (isset($_GET['query']) && !empty($_GET['query'])) {
+    $search_query = $_GET['query'];
+    // Modify SQL query to include search filter
+    $sql .= "WHERE student_id like '%$search_query%' or fname LIKE '%$search_query%' or mname LIKE '%$search_query%' or lname LIKE '%$search_query' or address LIKE '%$search_query%' or email LIKE '%$search_query%' or (gender LIKE '%$search_query%' and gender != 'fe') ";
+}
+
+$sql .= "LIMIT $start_from, $records_per_page";
+
+$result = $conn->query($sql);
+
+// Count total number of records
+$total_records = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM alumni"));
+$total_pages = ceil($total_records / $records_per_page);
+
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
@@ -9,53 +69,115 @@
     <link rel="stylesheet" href="css/alumni.css">
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-    <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
+    <!-- FOR PAGINATION -->
+    <style>
+        /*  DESIGN FOR SEARCH BAR AND PAGINATION */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #368DB8;
+
+        }
+
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            background-color: #f1f1f1;
+            color: black;
+            border: 1px solid #ccc;
+            margin-right: 5px;
+            /* Added margin to separate buttons */
+        }
+
+        .pagination a.active {
+            background-color: #4CAF50;
+            color: white;
+            border: 1px solid #4CAF50;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
+
+        .pagination .prev :hover {
+            float: left;
+
+            /* Float left for "Previous" link */
+        }
+
+
+        .pagination .next {
+            float: right;
+            /* Float right for "Next" link */
+        }
+    </style>
+
 </head>
+
 <body>
-   <input type="checkbox" id="menu-toggle">
+    <input type="checkbox" id="menu-toggle">
     <div class="sidebar">
         <div class="side-header">
             <h3><img src="https://cvsu-imus.edu.ph/student-portal/assets/images/logo-mobile.png"></img><span>CVSU</span></h3>
         </div>
-        
+
         <div class="side-content">
             <div class="profile">
                 <i class='bx bx-user bx-flip-horizontal'></i>
                 <h4>ADMIN</h4>
                 <small style="color: white;">admin@email.com</small>
+
             </div>
 
             <div class="side-menu">
                 <ul>
                     <li>
-                       <a href="../dashboard_admin.php" >
+                        <a href="../dashboard_admin.php">
                             <span class="las la-home" style="color:#fff"></span>
                             <small>DASHBOARD</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../profile/profile.php">
+                        <a href="../profile/profile.php">
                             <span class="las la-user-alt" style="color:#fff"></span>
                             <small>PROFILE</small>
                         </a>
                     </li>
                     <li>
-                       <a href="./alumni.php"class="active">
+                        <a href="./alumni.php" class="active">
                             <span class="las la-th-list" style="color:#fff"></span>
                             <small>ALUMNI</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../coordinator/coordinator.php">
+                        <a href="../coordinator/coordinator.php">
                             <span class="las la-user-cog" style="color:#fff"></span>
                             <small>COORDINATOR</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../event/event.php">
+                        <a href="../event/event.php">
                             <span class="las la-calendar" style="color:#fff"></span>
                             <small>EVENT</small>
                         </a>
@@ -65,9 +187,9 @@
                             <span class="las la-cog" style="color:#fff"></span>
                             <small>SETTINGS</small>
                         </a>
-                    </li>                    
+                    </li>
                     <li>
-                       <a href="../report/report.php">
+                        <a href="../report/report.php">
                             <span class="las la-clipboard-check" style="color:#fff"></span>
                             <small>REPORT</small>
                         </a>
@@ -83,179 +205,139 @@
             </div>
         </div>
     </div>
-    
+
     <div class="main-content">
-        
+
         <header>
             <div class="header-content">
                 <label for="menu-toggle">
                     <span class="las la-bars bars" style="color: white;"></span>
                 </label>
-                
+
                 <div class="header-menu">
                     <label for="">
                     </label>
-                    
-                    <div class="user">
-                        
-                        
-                        <a href="../logout.php">
-                        <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
-                        </a>
 
+                    <div class="user">
+                        <a href="../logout.php">
+                            <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
+                        </a>
                     </div>
                 </div>
             </div>
         </header>
-        
-        
+
+
         <main>
             <div class="page-header">
                 <h1><strong>Alumni</strong></h1>
             </div>
 
-    <div class="container-fluid" id="main-container">
-        <div class="container-fluid" id="content-container">
-            <div class="congainer-fluid" id="column-header">
-                <div class="row">
-                    <div class="col" >
-                          <div class="search">
-                            
-                              <form class="d-flex" role="search"><div class="container-fluid" id="search">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                                <button class="btn btn-outline-success" type="submit">Search</button>
+            <div class="container-fluid" id="main-container">
+                <div class="container-fluid" id="content-container">
+                    <div class="congainer-fluid" id="column-header">
+                        <div class="row">
+                            <div class="col">
+                                <div class="search">
+
+                                    <form class="d-flex" role="search">
+                                        <div class="container-fluid" id="search">
+                                            <form action="" method="GET">
+                                                <input class="form-control me-2" type="search" name="query" placeholder="Search Records..." aria-label="Search" value="<?php echo isset($_GET['query']) ? $_GET['query'] : ''; ?>">
+                                                <button class="btn btn-outline-success" type="submit">Search</button>
+                                            </form>
+                                        </div>
+                                    </form>
+
+                                </div>
                             </div>
-                              </form>
-                            
-                          </div>
-                    </div>
-                    <div class="col" id="add-btn">
-                        <div class="add-button">
-                            <div class="span">
-                                <button id="add-new-btn">Add New +</button>
+                            <div class="col" id="add-btn">
+                                <div class="add-button">
+                                    <div class="span">
+                                        <a href='./add_alumni.php'>
+                                            <button id="add-new-btn">Add New +</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <div class="table-content">
+                        <table" class="table-responsive table table-striped table-hover ">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">NAME</th>
+                                    <th scope="col">GENDER</th>
+                                    <th scope="col">COURSE</th>
+                                    <th scope="col">BATCH</th>
+                                    <th scope="col">CURRENTLY CONNECTED TO</th>
+                                    <th scope="col">CONTACT</th>
+                                    <th scope="col">ADDRESS</th>
+                                    <th scope="col">EMAIL</th>
+                                    <th scope="col">USERNAME</th>
+                                    <th scope="col">DATE CREATION</th>
+                                    <th scope="col">ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        $fullname = $row["fname"] . " " . $row["mname"] . " " . $row["lname"];
+                                        $batch = $row["batch_startYear"] . " - " . $row["batch_endYear"];
+                                ?>
+                                        <tr>
+                                            <td><?php echo $row['student_id'] ?></td>
+                                            <td><?php echo htmlspecialchars($fullname) ?></td>
+                                            <td><?php echo $row['gender'] ?></td>
+                                            <td><?php echo $row['course'] ?></td>
+                                            <td><?php echo htmlspecialchars($fullname) ?></td>
+                                            <td><?php echo $row['connected_to'] ?></td>
+                                            <td><?php echo $row['contact'] ?></td>
+                                            <td><?php echo $row['address'] ?></td>
+                                            <td><?php echo $row['email'] ?></td>
+                                            <td><?php echo $row['username'] ?></td>
+                                            <td><?php echo $row['date_created'] ?></td>
+                                            <td>
+                                                <div class="button">
+                                                    <a href='./update_alumni.php?id=$row[student_id]'>
+                                                        <button type="button" class="btn btn-warning">Update</button>
+                                                    </a>
+                                                    <a href='./del_alumni.php?id=$row[student_id]'>
+                                                        <button type="button" class="btn btn-danger">Archive</button>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                <?php
+                                    }
+                                } else {
+                                    echo '<tr><td colspan="9">No records found</td></tr>';
+                                }
+                                ?>
+                            </tbody>
+                            </table>
+                            <div style="float:right; margin-right:5%;background-color:white; width:85%;border-radius:4px;">
+                                <!-- Pagination links -->
+                                <div class="pagination" style="float:right; margin-right:1.5%">
+                                    <!-- next and previous -->
+                                    <?php
+                                    if ($current_page > 1) : ?>
+                                        <a href="?page=<?= ($current_page - 1); ?>&query=<?php echo isset($_GET['query']) ? $_GET['query'] : ''; ?>" class="prev" style="border-radius:4px;background-color:#368DB8;color:white;margin-bottom:13px;">&laquo; Previous</a>
+                                    <?php endif; ?>
+
+                                    <?php if ($current_page < $total_pages) : ?>
+                                        <a href="?page=<?= ($current_page + 1); ?>&query=<?php echo isset($_GET['query']) ? $_GET['query'] : ''; ?>" class="next" style="border-radius:4px;background-color:#368DB8;color:white;margin-bottom:13px;">Next &raquo;</a>
+                                    <?php endif; ?>
+                                </div>
+                                <p style="margin-left:2%;margin-top:2.3%;">Page <?= $current_page ?> out of <?= $total_pages ?></p>
+                            </div>
+                    </div>
                 </div>
             </div>
-        </div>
-                <div class="table-content">
-                    <table" class="table-responsive table table-striped table-hover ">
-                              <tr>
-                                <th scope="col">I'D</th>
-                                <th scope="col">NAME</th>
-                                <th scope="col">STUDENT ID</th>
-                                <th scope="col">COURSE</th>
-                                <th scope="col">BATCH</th>
-                                <th scope="col">CURRENTLY CONNECTED TO</th>
-                                <th scope="col">CONTACT</th>
-                                <th scope="col">USERNAME</th>
-                                <th scope="col">EMAIL</th>
-                                <th scope="col">GENDER</th>
-                                <th scope="col">ACTION</th>
-                              </tr>
-                              <tr>
-                                <th scope="row">01</th>
-                                <td>John</td>
-                                <td>202210270</td>
-                                <td>BSIT</td>
-                                <td>2019-2020</td>
-                                <td>Oracle Corp</td>
-                                <td>09229265496</td>
-                                <td>user123</td>
-                                <td>john@gmail.com</td>
-                                <td>Male</td>
-                                <td>
-                                    <div class="button">
-                                        <button type="button" class="btn btn-warning">Update</button>
-                                        <button type="button" class="btn btn-danger">Archive</button>
-                                        <button type="button" class="btn btn-primary">View Details</button>
-                                    </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <th scope="row">02</th>
-                                <td>Mike</td>
-                                <td>202210271</td>
-                                <td>BSIT</td>
-                                <td>2019-2020</td>
-                                <td>Oracle Corp</td>
-                                <td>09229265496</td>
-                                <td>user123</td>
-                                <td>mike@gmail.com</td>
-                                <td>Male</td>
-                                <td>
-                                    <div class="button">
-                                        <button type="button" class="btn btn-warning">Update</button>
-                                        <button type="button" class="btn btn-danger">Archive</button>
-                                        <button type="button" class="btn btn-primary">View Details</button>
-                                    </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <th scope="row">03</th>
-                                <td>Jayp's</td>
-                                <td>202210272</td>
-                                <td>BSIT</td>
-                                <td>2019-2020</td>
-                                <td>Oracle Corp</td>
-                                <td>09229265496</td>
-                                <td>user123</td>
-                                <td>jayp's@gmail.com</td>
-                                <td>Male</td>
-                                <td>
-                                    <div class="button">
-                                        <button type="button" class="btn btn-warning">Update</button>
-                                        <button type="button" class="btn btn-danger">Archive</button>
-                                        <button type="button" class="btn btn-primary">View Details</button>
-                                    </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <th scope="row">04</th>
-                                <td>Jp</td>
-                                <td>202210273</td>
-                                <td>BSIT</td>
-                                <td>2019-2020</td>
-                                <td>Oracle Corp</td>
-                                <td>09229265496</td>
-                                <td>user123</td>
-                                <td>jp@gmail.com</td>
-                                <td>Male</td>
-                                <td>
-                                    <div class="button">
-                                        <button type="button" class="btn btn-warning">Update</button>
-                                        <button type="button" class="btn btn-danger">Archive</button>
-                                        <button type="button" class="btn btn-primary">View Details</button>
-                                    </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <th scope="row">05</th>
-                                <td>Marc</td>
-                                <td>202210274</td>
-                                <td>BSIT</td>
-                                <td>2019-2020</td>
-                                <td>Oracle Corp</td>
-                                <td>09229265496</td>
-                                <td>user123</td>
-                                <td>marc@gmail.com</td>
-                                <td>Male</td>
-                                <td>
-                                    <div class="button">
-                                        <button type="button" class="btn btn-warning">Update</button>
-                                        <button type="button" class="btn btn-danger">Archive</button>
-                                        <button type="button" class="btn btn-primary">View Details</button>
-                                    </div>
-                                </td>
-                              </tr>
-                          </table>
-                      </table>
-                    
-                </div>
-            </div>
-        </div>
-            
-        </main>
-        
+    </div>
+    </main>
 </body>
+
 </html>
