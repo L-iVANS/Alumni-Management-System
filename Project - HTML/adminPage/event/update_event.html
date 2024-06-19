@@ -86,57 +86,95 @@
             <div class="header-content">
                 <label for="menu-toggle">
                     <span class="las la-bars bars" style="color: white;"></span>
-                </label>            
+                </label>
+                
                 <div class="header-menu">
                     <label for="">
                     </label>
+                    
                     <div class="user">
+                        
+                        
                         <a href="../logout.html">
                         <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
                         </a>
+
                     </div>
                 </div>
             </div>
         </header>
+        
+        
         <main>
+            
             <div class="page-header">
-                <h1><strong>Event</strong></h1>
-                <hr>
+            <h1><strong>Event</strong></h1>
             </div>
-        </main>    
-            <div class="background-box">
-                <div class="alumni-container">
-                    <div class="alumni-info">
-                        <h3>Event Info</h3>
-                        <hr>
-                      </div>
-                  </div>
-              <br>
-            <div class="table">
-            <label for="name"><h3>Event Title</h3></label>
-                <input type="text" id="name" name="name"><br><br>
-                <form action="process.html" method="post">
-            <label for="date"><h3>Date:</h3></label>
-                <input type="date" id="date" name="date" required><br><br>
-            <label for="time"><h3>Time:</h3></label>
-                <input type="time" id="time" name="time" required><br><br>
-            <label for="name"><h3>Description</h3></label>
-                <input type="text" id="name" name="name"><br><br>
-                  
-            <div class="image-button-container">
-                <img src="https://cvsu-imus.edu.ph/student-portal/assets/images/logo-mobile.png" alt="Alumni Image">
-                <div class="choose-file-button">
-                    <button id="add-third-btn">Choose File</button>
-                    <input type="texts" name="your name" placeholder="File Patch">
+            
+    <div class="container-fluid" id="page-content">
+            <div class="container-fluid" id="content-header">
+                    <span>
+                        <h2>EVENT INFO</h2>
+                    </span>
+            </div>
+        <div class="row">
+            <div class="container-fluid" id="main-container">
+                <div class="container-fluid" id="content-container">
+                    <form>
+                        <div class="mb-3">
+                            <label for="formGroupExampleInput" class="form-label">EVENT TITLE</label>
+                            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter Event Title">
+                          </div>
+                          <div class="mb-3">
+                            <label for="formGroupExampleInput2" class="form-label">SCHEDULE</label>
+                            <input type="date" class="form-control" id="formGroupExampleInput2" placeholder="">
+                          </div>    
+                          <div class="row">
+                            <div class="container-fluid">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlTextarea1" class="form-label">Enter Description</label>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                  </div>
+                            </div>
+                            <div class="container-fluid">
+                            <div class="row">
+                                <div class="mb-3">
+                                    <label for="formFile" class="form-label"></label>
+                                    <input class="form-control" type="file" id="formFile">
+                        </div>
+                                    <div class="col">
+                                        <img src="..." class="img-thumbnail" alt="..."id="event-pic">
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>   
+                    </form>
+                    </div>
                 </div>
             </div>
-            </form>
-              <button id="add-new-btn">Update</button>
-              <button id="add-first-btn">Remove Event</button>
-              <button id="add-second-btn">Back</button>
-              </div>
+            <div class="container-fluid" id="button-response">
+                <div class="row">
+                    <div class="d-grid col-4 mx-auto">  
+                        <button type="button" class="btn btn-warning">Update</button>
+                        
+                    </div>
+                    <div class="d-grid col-4 mx-auto"><button type="button" class="btn btn-danger">Remove</button>
+                    </div>
+                    <div class="d-grid col-4 mx-auto">
+                        <button class="btn btn-primary" type="button">Back</button>
+                      </div>
+                </div>
             </div>
-            </div>  
+        </div>
+       
     </div>
+    <script>
+        let eventPic = document.getElementById("event-pic");
+        let formFile = document.getElementById("formFile");
+    
+        formFile.onchange = function(){
+            eventPic.src = URL.createObjectURL(formFile.files[0]);
+        }
+    </script>
 </body>
 </html>
