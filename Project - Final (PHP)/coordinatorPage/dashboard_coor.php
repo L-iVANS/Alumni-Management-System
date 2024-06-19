@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
     <title>Coordinator Dashboard</title>
     <link rel="shortcut icon" href="../assets/cvsu.png" type="image/svg+xml">
-    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="./dashboard.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -105,16 +105,74 @@
             </div>
         </header>
         
-        
-        <main>
+         
+            <main>
             
-            <div class="page-header">
-                <h1><strong>Dashboard</strong></h1>
-            </div>
-        </main>
-            <div class="page-content">
-                <!--  -->
-        </div>
+                <div class="page-header">
+                    <h1>Dashboard</h1>
+                </div>
+                
+                <div class="page-content">
+                    <!-- Dashboard Items Start -->
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card bg-primary text-white mb-4">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <i class="las la-user-graduate fa-3x"></i>
+                                            <div class="ml-4">
+                                                <h5>Alumni</h5>
+                                                <h2>1000</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a href="alumni-list.php" class="card-footer d-flex justify-content-between text-white">
+                                        <span>View Details</span>
+                                        <i class="las la-arrow-circle-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-warning text-white mb-4">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <i class="las la-calendar-alt fa-3x"></i>
+                                            <div class="ml-4">
+                                                <h5>Events</h5>
+                                                <h2>5</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a href="event.php" class="card-footer d-flex justify-content-between text-white">
+                                        <span>View Details</span>
+                                        <i class="las la-arrow-circle-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-danger text-white mb-4">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <i class="las la-users fa-3x"></i>
+                                            <div class="ml-4">
+                                                <h5>Total Visits</h5>
+                                                <h2>10,000</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a href="report.php" class="card-footer d-flex justify-content-between text-white">
+                                        <span>View Details</span>
+                                        <i class="las la-arrow-circle-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Dashboard Items End -->
+                </div>
+            
+            </main>
     </div>
 </body>
 </html>

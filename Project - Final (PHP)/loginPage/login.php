@@ -204,7 +204,7 @@
                 </div>
                 <div class="infield">
                         <select name="course" id="course"  required>
-                            <option value="" selected hidden disabled>SELECT A COURSE</option>
+                            <option value="" selected hidden disabled>Select a course</option>
                             <option value="BSIT">BSIT</option>
                             <option value="BSCS">BSCS</option>
                             <option value="BSAB">BSAB</option>

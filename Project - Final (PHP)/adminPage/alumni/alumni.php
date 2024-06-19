@@ -59,6 +59,7 @@ $total_pages = ceil($total_records / $records_per_page);
 
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -66,11 +67,13 @@ $total_pages = ceil($total_records / $records_per_page);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
     <title>Alumni List</title>
-    <link rel="stylesheet" href="css/alumni.css">
+    <link rel="stylesheet" href="./css/alumni.css">
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <script>
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    </script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <!-- FOR PAGINATION -->
@@ -145,9 +148,10 @@ $total_pages = ceil($total_records / $records_per_page);
         <div class="side-content">
             <div class="profile">
                 <i class='bx bx-user bx-flip-horizontal'></i>
-                <h4>ADMIN</h4>
-                <small style="color: white;">admin@email.com</small>
-
+                <h4><?php echo $user['fname']; ?></h4>
+                <small style="color: white;"><?php echo $user['email']; ?></small>
+                <!-- <h4>ADMIN</h4>
+                <small style="color: white;">admin@email.com</small> -->
             </div>
 
             <div class="side-menu">
@@ -219,9 +223,12 @@ $total_pages = ceil($total_records / $records_per_page);
                     </label>
 
                     <div class="user">
+
+
                         <a href="../logout.php">
                             <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
                         </a>
+
                     </div>
                 </div>
             </div>
@@ -242,10 +249,8 @@ $total_pages = ceil($total_records / $records_per_page);
 
                                     <form class="d-flex" role="search">
                                         <div class="container-fluid" id="search">
-                                            <form action="" method="GET">
-                                                <input class="form-control me-2" type="search" name="query" placeholder="Search Records..." aria-label="Search" value="<?php echo isset($_GET['query']) ? $_GET['query'] : ''; ?>">
-                                                <button class="btn btn-outline-success" type="submit">Search</button>
-                                            </form>
+                                            <input class="form-control me-2" type="search" name="query" placeholder="Search Records..." aria-label="Search" value="<?php echo isset($_GET['query']) ? $_GET['query'] : ''; ?>">
+                                            <button class="btn btn-outline-success" type="submit">Search</button>
                                         </div>
                                     </form>
 
@@ -263,15 +268,16 @@ $total_pages = ceil($total_records / $records_per_page);
                         </div>
                     </div>
                     <div class="table-content">
-                        <table" class="table-responsive table table-striped table-hover ">
+                        <table id="example" class="table-responsive table table-striped table-hover ">
                             <thead>
+
                                 <tr>
                                     <th scope="col">ID</th>
                                     <th scope="col">NAME</th>
                                     <th scope="col">GENDER</th>
                                     <th scope="col">COURSE</th>
                                     <th scope="col">BATCH</th>
-                                    <th scope="col">CURRENTLY CONNECTED TO</th>
+                                    <th scope="col">CONNECTED TO</th>
                                     <th scope="col">CONTACT</th>
                                     <th scope="col">ADDRESS</th>
                                     <th scope="col">EMAIL</th>
@@ -292,7 +298,7 @@ $total_pages = ceil($total_records / $records_per_page);
                                             <td><?php echo htmlspecialchars($fullname) ?></td>
                                             <td><?php echo $row['gender'] ?></td>
                                             <td><?php echo $row['course'] ?></td>
-                                            <td><?php echo htmlspecialchars($fullname) ?></td>
+                                            <td><?php echo htmlspecialchars($batch) ?></td>
                                             <td><?php echo $row['connected_to'] ?></td>
                                             <td><?php echo $row['contact'] ?></td>
                                             <td><?php echo $row['address'] ?></td>
@@ -301,43 +307,43 @@ $total_pages = ceil($total_records / $records_per_page);
                                             <td><?php echo $row['date_created'] ?></td>
                                             <td>
                                                 <div class="button">
-                                                    <a href='./update_alumni.php?id=$row[student_id]'>
-                                                        <button type="button" class="btn btn-warning">Update</button>
-                                                    </a>
-                                                    <a href='./del_alumni.php?id=$row[student_id]'>
-                                                        <button type="button" class="btn btn-danger">Archive</button>
-                                                    </a>
+                                                    <a class="btn btn-warning" href='./update_alumni.php?id=$row[student_id]'>Update</a>
+                                                    <a class="btn btn-danger" href='./del_alumni.php?id=$row[student_id]'>Archive</a>
                                                 </div>
                                             </td>
                                         </tr>
                                 <?php
                                     }
                                 } else {
-                                    echo '<tr><td colspan="9">No records found</td></tr>';
+                                    echo '<tr><td colspan="12">No records found</td></tr>';
                                 }
                                 ?>
                             </tbody>
-                            </table>
-                            <div style="float:right; margin-right:5%;background-color:white; width:85%;border-radius:4px;">
-                                <!-- Pagination links -->
-                                <div class="pagination" style="float:right; margin-right:1.5%">
-                                    <!-- next and previous -->
-                                    <?php
-                                    if ($current_page > 1) : ?>
-                                        <a href="?page=<?= ($current_page - 1); ?>&query=<?php echo isset($_GET['query']) ? $_GET['query'] : ''; ?>" class="prev" style="border-radius:4px;background-color:#368DB8;color:white;margin-bottom:13px;">&laquo; Previous</a>
-                                    <?php endif; ?>
+                        </table>
 
-                                    <?php if ($current_page < $total_pages) : ?>
-                                        <a href="?page=<?= ($current_page + 1); ?>&query=<?php echo isset($_GET['query']) ? $_GET['query'] : ''; ?>" class="next" style="border-radius:4px;background-color:#368DB8;color:white;margin-bottom:13px;">Next &raquo;</a>
-                                    <?php endif; ?>
-                                </div>
-                                <p style="margin-left:2%;margin-top:2.3%;">Page <?= $current_page ?> out of <?= $total_pages ?></p>
-                            </div>
                     </div>
                 </div>
             </div>
-    </div>
-    </main>
+            <div class="container-fluid" id="main-container">
+                <div class="container-fluid" id="content-container">
+                    <div style="float:right; margin-right:5%;background-color:white; width:85%;border-radius:4px;">
+                        <!-- Pagination links -->
+                        <div class="pagination" style="float:right; margin-right:1.5%">
+                            <!-- next and previous -->
+                            <?php
+                            if ($current_page > 1) : ?>
+                                <a href="?page=<?= ($current_page - 1); ?>&query=<?php echo isset($_GET['query']) ? $_GET['query'] : ''; ?>" class="prev" style="border-radius:4px;background-color:#368DB8;color:white;margin-bottom:13px;">&laquo; Previous</a>
+                            <?php endif; ?>
+
+                            <?php if ($current_page < $total_pages) : ?>
+                                <a href="?page=<?= ($current_page + 1); ?>&query=<?php echo isset($_GET['query']) ? $_GET['query'] : ''; ?>" class="next" style="border-radius:4px;background-color:#368DB8;color:white;margin-bottom:13px;">Next &raquo;</a>
+                            <?php endif; ?>
+                        </div>
+                        <p style="margin-left:2%;margin-top:2.3%;">Page <?= $current_page ?> out of <?= $total_pages ?></p>
+                    </div>
+                </div>
+            </div>
+        </main>
 </body>
 
 </html>
