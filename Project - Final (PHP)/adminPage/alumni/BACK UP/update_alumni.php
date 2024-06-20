@@ -43,10 +43,42 @@ $contact = "";
 $address = "";
 $email = "";
 $username = "";
-$temp_password = "";
 
-// get the data from form
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    // Show the data of alumni
+    if (!isset($_GET['id'])) {
+        header("location: ./alumni.php");
+        exit;
+    }
+    $alumni_id = $_GET['id'];
+
+    //read data from table alumni
+    $sql = "SELECT * FROM alumni WHERE alumni_id=$alumni_id";
+    $result = $conn->query($sql);
+    $row = $result->fetch_assoc();
+
+    if (!$row) {
+        header("location: ./alumni.php");
+        exit;
+    }
+    // data from table alumni where student_id = $alumni_id = $_GET['id']; get from alumni list update
+    $stud_id = $row['student_id'];
+    $fname = $row['fname'];
+    $mname = $row['mname'];
+    $lname = $row['lname'];
+    $gender = $row['gender'];
+    $course = $row['course'];
+    $fromYear = $row['batch_startYear'];
+    $toYear = $row['batch_endYear'];
+    $connected_to = $row['connected_to'];
+    $contact = $row['contact'];
+    $address = $row['address'];
+    $email = $row['email'];
+    $username = $row['username'];
+    $file = $row['picture'];
+} else {
+    // get the data from form
+    $alumni_id = $_POST['id'];
     $stud_id = $_POST['student_id'];
     $fname = ucwords($_POST['fname']);
     $mname = ucwords($_POST['mname']);
@@ -60,41 +92,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $address = ucwords($_POST['address']);
     $email = $_POST['email'];
     $username = $_POST['username'];
-    $temp_password = $_POST['temp_pass'];
 
-
-    // email and user existing check
-    $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
-    $usernameCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE username='$username'");
-
-    if (mysqli_num_rows($emailCheck) > 0) {
-        $errorMessage = "Email Already Exists";
-        // echo "
-        //         <script>
-        //             alert('Email Already Exist!!!');
-        //             window.location.href = '../coordinator.php';
-        //         </script>
-        //     ";
-    } else if (mysqli_num_rows($usernameCheck) > 0) {
-        $errorMessage = "Username Already Exists";
-        // echo "
-        //         <script>
-        //             alert('Username Already Exist!!!');
-        //             window.location.href = '../coordinator.php';
-        //         </script>
-        //     ";
+    // for image
+    if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
+        $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
+        $sql = "UPDATE alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', picture='$file' WHERE alumni_id=$alumni_id";
     } else {
+        // Path to the image file
+        // $filePath = '../../profile_icon.jpg';
+        // // Read the image file into a variable
+        // $imageData = file_get_contents($filePath);
+        // // Escape special characters (optional, depends on usage)
+        // $imageDataEscaped = addslashes($imageData);
+        $sql = "UPDATE alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username' WHERE alumni_id=$alumni_id";
+    }
 
-        $sql = "INSERT INTO alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', password='$temp_password'";
-        $result = $conn->query($sql);
-        echo
-        "
+    $result = $conn->query($sql);
+    echo
+    "
         <script>
-            alert('Alumni Added Successfully');
+            alert('Alumni Info Updated Successfully');
             window.location.href = './alumni.php';
         </script>
     ";
-    }
 }
 ?>
 
@@ -104,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Add New Alumni</title>
+    <title>Update Alumni Info</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="css/add_alumni.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
@@ -128,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <div class="side-menu">
-            <ul>
+                <ul>
                     <li>
                         <a href="../dashboard_admin.php">
                             <span class="las la-home" style="color:#fff"></span>
@@ -142,13 +162,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </a>
                     </li>
                     <li>
-                        <a href="../alumni/alumni.php" >
+                        <a href="./update_alumni.php" class="active">
                             <span class="las la-th-list" style="color:#fff"></span>
                             <small>ALUMNI</small>
                         </a>
                     </li>
                     <li>
-                        <a href="./add_coor.php" class="active">
+                        <a href="../coordinator/coordinator.php">
                             <span class="las la-user-cog" style="color:#fff"></span>
                             <small>COORDINATOR</small>
                         </a>
@@ -177,7 +197,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <small>ARCHIVE</small>
                         </a>
                     </li>
-
                 </ul>
             </div>
         </div>
@@ -210,21 +229,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="container" id="container-full">
             <div class="container" id="content-container">
                 <div class="container-title">
-                    <span>ADD ALUMNI</span>
+                    <span>Update Alumni Info</span>
                 </div>
-
-                <?php
-                if (!empty($errorMessage)) {
-                    echo "<script>alert('$errorMessage');</script>";
-                }
-                ?>
-
                 <div class="container" id="content">
+                    <!-- PROFILE -->
                     <form action="" method="POST" enctype="multipart/form-data">
+                        <div class="container text-center" id="start">
+                            <div class="row align-items-end">
+                                <div class="col">
+                                    <!-- Preview image -->
+                                    <div class="form-control" style="width:225px;height:215px; border-radius: 100%;">
+                                        <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" style="width:200px;height:200px; border-radius: 100%;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="container text-center" id="start">
+                            <div class="row align-items-end">
+                                <div class="col">
+                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="first-name">Profile Picture :</label>
+                                </div>
+                                <div class="col">
+                                    <input class="form-control" type="file" name="image" onchange="getImagePreview(event)">
+                                </div>
+                            </div>
+                        </div>
+
+
                         <div class="container">
                             <div class="row align-items-end">
                                 <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="Student ID">Student ID:</label>
+                                    <input type="hidden" name="id" value="<?php echo $alumni_id; ?>">
+                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="first-name">Student ID:</label>
                                 </div>
 
                                 <div class="col">
@@ -234,6 +271,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                         <div class="container">
                             <div class="row align-items-end">
+
                                 <div class="col">
                                     <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="first-name">First Name:</label>
                                 </div>
@@ -271,9 +309,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                                 <div class="col">
                                     <select class="form-control" name="gender" id="gender" required>
-                                        <option value="" selected hidden disabled>Select a Gender</option>
-                                        <option value="Male" <?php echo ($gender == 'Male') ? 'selected' : ''; ?>>Male</option>
-                                        <option value="Female" <?php echo ($gender == 'Female') ? 'selected' : ''; ?>>Female</option>
+                                        <option value="<?php echo $gender; ?>" selecte> <?php echo $gender; ?> </option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
                                     </select>
                                 </div>
                             </div>
@@ -285,17 +323,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                                 <div class="col">
                                     <select class="form-control" name="course" id="course" required>
-                                        <option value="" selected hidden disabled>Select a course</option>
-                                        <option value="BAJ" <?php echo ($course == 'BAJ') ? 'selected' : ''; ?>>BAJ</option>
-                                        <option value="BECEd" <?php echo ($course == 'BECEd') ? 'selected' : ''; ?>>BECEd</option>
-                                        <option value="BEEd" <?php echo ($course == 'BEEd') ? 'selected' : ''; ?>>BEEd</option>
-                                        <option value="BSBM" <?php echo ($course == 'BSBM') ? 'selected' : ''; ?>>BSBM</option>
-                                        <option value="BSOA" <?php echo ($course == 'BSOA') ? 'selected' : ''; ?>>BSOA</option>
-                                        <option value="BSEntrep" <?php echo ($course == 'BSEntrep') ? 'selected' : ''; ?>>BSEntrep</option>
-                                        <option value="BSHM" <?php echo ($course == 'BSHM') ? 'selected' : ''; ?>>BSHM</option>
-                                        <option value="BSIT" <?php echo ($course == 'BSIT') ? 'selected' : ''; ?>>BSIT</option>
-                                        <option value="BSCS" <?php echo ($course == 'BSCS') ? 'selected' : ''; ?>>BSCS</option>
-                                        <option value="BSc(Psych)" <?php echo ($course == 'BSc(Psych)') ? 'selected' : ''; ?>>BSc(Psych)</option>
+                                        <option value="<?php echo $course; ?>" selected><?php echo $course; ?></option>
+                                        <option value="BAJ">BAJ</option>
+                                        <option value="BECEd">BECEd</option>
+                                        <option value="BEEd">BEEd</option>
+                                        <option value="BSBM">BSBM</option>
+                                        <option value="BSOA">BSOA</option>
+                                        <option value="BSEntrep">BSEntrep</option>
+                                        <option value="BSHM">BSHM</option>
+                                        <option value="BSIT">BSIT</option>
+                                        <option value="BSCS">BSCS</option>
+                                        <option value="BSc(Psych)">BSc(Psych)</option>
                                     </select>
                                 </div>
                             </div>
@@ -309,7 +347,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                                 <div class="col" id="batch">
                                     <select class="form-control" name="startYear" id="startYear" required>
-                                        <option value="" selected hidden disabled>Batch: From Year</option>
+                                        <option value="<?php echo $fromYear; ?>" selected><?php echo $fromYear; ?></option>
                                         <?php
                                         // Get the current year
                                         $currentYear = date('Y');
@@ -317,18 +355,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         // Number of years to include before and after the current year
                                         $yearRange = 21; // Adjust this number as needed
 
-                                        // Preserve the selected value after form submission
-                                        $selectedYear = isset($_POST['startYear']) ? $_POST['startYear'] : '';
-
                                         // Generate options for years, from current year minus $yearRange to current year plus $yearRange
                                         for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
-                                            $selected = ($year == $selectedYear) ? 'selected' : '';
-                                            echo "<option value=\"$year\" $selected>$year</option>";
+                                            echo "<option value=\"$year\">$year</option>";
                                         }
                                         ?>
                                     </select>
+
                                     <select class="form-control" name="endYear" id="endYear" required>
-                                        <option value="" selected hidden disabled>Batch: To Year</option>
+                                        <option value="<?php echo $toYear; ?>" selected><?php echo $toYear; ?></option>
                                         <?php
                                         // Get the current year
                                         $currentYear = date('Y');
@@ -336,13 +371,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         // Number of years to include before and after the current year
                                         $yearRange = 21; // Adjust this number as needed
 
-                                        // Preserve the selected value after form submission
-                                        $selectedEndYear = isset($_POST['endYear']) ? $_POST['endYear'] : '';
-
                                         // Generate options for years, from current year minus $yearRange to current year plus $yearRange
                                         for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
-                                            $selected = ($year == $selectedEndYear) ? 'selected' : '';
-                                            echo "<option value=\"$year\" $selected>$year</option>";
+                                            echo "<option value=\"$year\">$year</option>";
                                         }
                                         ?>
                                     </select>
@@ -401,30 +432,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                         </div>
                         <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="username">Temporary Password:</label>
-                                </div>
-                                <div class="col">
-                                    <input class="form-control" type="text" id="temp_pass" name="temp_pass" placeholder="Enter Password" required value="<?php echo $temp_password; ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
                             <div class="row" style="margin-top:20px;">
                                 <div class="col" id="buttons">
                                     <div class="button">
-                                        <button type="submit" class="btn btn-warning" name="insert" id="insert" value="insert">Add new</button>
+                                        <button type="submit" class="btn btn-warning" name="insert" id="insert" value="insert">Update</button>
                                         <a class="btn btn-danger" href="./alumni.php">Cancel</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
                 </div>
+                </form>
             </div>
         </div>
     </div>
+
+    <!-- Script to display preview of selected image -->
+    <script>
+        function getImagePreview(event) {
+            var image = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById('preview');
+            preview.src = image;
+            preview.style.width = '200px';
+            preview.style.height = '200px';
+        }
+    </script>
+    <!-- script to insert image to database -->
+    <Script>
+        $(document).ready(function() {
+            $('#insert').click(function() {
+                var image_name = $('#image').val();
+                if (image_name == '') {
+                    alert("please Select Profile")
+                    return false;
+                } else {
+                    var extension = $('#image').val().split('.').pop().toLowerCase();
+                    if (jquery.inArray(extenssion, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                        alert("Invalid Image File")
+                        $('#image').val('');
+                        return false;
+                    }
+                }
+            })
+        });
+    </Script>
 </body>
 
 </html>

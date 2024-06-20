@@ -85,7 +85,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         //     ";
     } else {
 
-        $sql = "INSERT INTO alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', password='$temp_password'";
+        // for image
+        if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
+            $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
+            $sql = "INSERT INTO alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', password='$temp_password', picture='$file'";
+        } else {
+            // Path to the image file
+            $filePath = '../../assets/profile_icon.jpg';
+            // Read the image file into a variable
+            $imageData = file_get_contents($filePath);
+            // Escape special characters (optional, depends on usage)
+            $imageDataEscaped = addslashes($imageData);
+            $sql = "INSERT INTO alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', password='$temp_password', picture='$imageDataEscaped'";
+        }
+
         $result = $conn->query($sql);
         echo
         "
@@ -128,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <div class="side-menu">
-            <ul>
+                <ul>
                     <li>
                         <a href="../dashboard_admin.php">
                             <span class="las la-home" style="color:#fff"></span>
@@ -142,13 +155,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </a>
                     </li>
                     <li>
-                        <a href="../alumni/alumni.php" >
+                        <a href="./add_alumni.php" class="active">
                             <span class="las la-th-list" style="color:#fff"></span>
                             <small>ALUMNI</small>
                         </a>
                     </li>
                     <li>
-                        <a href="./add_coor.php" class="active">
+                        <a href="../coordinator/coordinator.php">
                             <span class="las la-user-cog" style="color:#fff"></span>
                             <small>COORDINATOR</small>
                         </a>
@@ -177,7 +190,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <small>ARCHIVE</small>
                         </a>
                     </li>
-
                 </ul>
             </div>
         </div>
@@ -220,7 +232,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 ?>
 
                 <div class="container" id="content">
+                    <!-- PROFILE -->
                     <form action="" method="POST" enctype="multipart/form-data">
+                        <div class="container text-center" id="start">
+                            <div class="row align-items-end">
+                                <div class="col">
+                                    <div class="form-control" style="width:225px;height:215px; border-radius: 100%;">
+                                        <img id="preview" src="../../assets/profile_icon.jpg" style="width:200px;height:200px; border-radius: 100%;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="container text-center" id="start">
+                            <div class="row align-items-end">
+                                <div class="col">
+                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="first-name">Profile Picture :</label>
+                                </div>
+                                <div class="col">
+                                    <input class="form-control" type="file" name="image" onchange="getImagePreview(event)">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="container">
                             <div class="row align-items-end">
                                 <div class="col">
@@ -420,11 +454,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                             </div>
                         </div>
-                    </form>
                 </div>
+                </form>
             </div>
         </div>
     </div>
+
+    <!-- Script to display preview of selected image -->
+    <script>
+        function getImagePreview(event) {
+            var image = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById('preview');
+            preview.src = image;
+            preview.style.width = '200px';
+            preview.style.height = '200px';
+        }
+    </script>
+    <!-- script to insert image to database -->
+    <Script>
+        $(document).ready(function() {
+            $('#insert').click(function() {
+                var image_name = $('#image').val();
+                if (image_name == '') {
+                    alert("please Select Profile")
+                    return false;
+                } else {
+                    var extension = $('#image').val().split('.').pop().toLowerCase();
+                    if (jquery.inArray(extenssion, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                        alert("Invalid Image File")
+                        $('#image').val('');
+                        return false;
+                    }
+                }
+            })
+        });
+    </Script>
 </body>
 
 </html>
