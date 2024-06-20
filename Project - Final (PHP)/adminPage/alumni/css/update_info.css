@@ -1,3 +1,5 @@
+
+
 @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;500;600&display=swap');
 
 :root {
@@ -14,7 +16,7 @@
     box-sizing: border-box;
     font-family: 'Merriweather', sans-serif;
     overflow-x: hidden;
-    
+    scroll-behavior: smooth;
     }
 
 #menu-toggle {
@@ -32,6 +34,7 @@
     background: #2a9134;
     box-shadow: 0px 5px 5px 5px rgb(0 0 0 0.2);
     transition: left 300ms;
+    
 }
 
 .side-header span{
@@ -122,6 +125,9 @@ font-weight: bold;
     font-weight: 600;
 }
 
+.sidebar {
+    overflow-y: auto;
+}
 
 .side-menu ul {
     text-align: center;
@@ -263,6 +269,11 @@ main {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+@media only screen and (min-width: 425px) {
+    *{
+        overflow-x: hidden;
+    }
+}
 
 @media only screen and (max-width: 768px) {
     
@@ -309,52 +320,88 @@ main {
     
     
 }
+
+.alumni-info{
+    margin-top: 30px;
+}
 .container{
-    /* border: red 1px solid; */
-    justify-content: center;
+    margin-top: 30px;
+    display: block;
+    /* border: 1px solid red; */
+    unicode-bidi: isolate;
+}
+#profile-pic{
     display: flex;
+    justify-items: center;
+    margin-bottom: 30px;
+
 }
-.table-content{
-    margin-top: 50px;
+.container-title span{
+    font-size: large;
+    font-weight: bold;
+}
+.container-title{
+    border-bottom: #dee2e8 1px solid;
+}
+.col{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* border: green 1px solid;  */
+}
+
+#profile-pic{
+    max-width: 100%;
+    border-radius: 50%;
+    width: 150px;
+}
+#name{
     width: 100%;
-    overflow-y: hidden;
-    overflow-x: auto;
 }
-#add-new-btn{
-background-color: #f7b205;
-border-radius: 15px;
-padding: 5px 20px;
-font-size: 16px;
-font-family: Arial, sans-serif;
-cursor: pointer;
-margin-right: 0px;
-margin-bottom: 10px;
-border-color: #fff;
+#course{
+    width: 100%;
 }
-
-#add-new-btn:hover{
-    background-color: #f7b2058c;
+#batch{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    justify-content: space-evenly;
+}
+#address{
+    width: 100%;
 }
 
+#email{
+    width: 100%;
+}
+#username{
+    width: 100%;
+}
+#button{
+    display: flex;
+    justify-content: right;
+    padding: 10px;
+    /* border: #2a9134 1px solid; */
+}
+
+#start{
+    margin-top: 20px;
+}
+#buttons{
+    display: flex;
+    justify-content: right;
+    padding: 10px;
+}
 .side-content .profile i{
     color: #fff;
     font-size: 80px;
     font-weight: lighter;
 }
-
-#main-container{
-    /* border: #2a9134 1px solid; */
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-bottom: 30px;
+#content{
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
-
-#column-header{
-    margin-top: 20px;
-}
-
 #content-container{
-    /* border:red 1px solid; */
     margin-top: 30px;
     background-color: #ffffff; /* White background */
     border-radius: 15px; 
@@ -362,14 +409,4 @@ border-color: #fff;
     padding: 20px; 
     margin: 20px 0; 
     transition: transform 0.2s; 
-}
-
-#add-btn{
-    display: flex;
-    justify-content: right;
-}
-#search{
-    
-    display: flex;
-    justify-content: left;
 }

@@ -27,10 +27,6 @@ if (isset($_SESSION['user_id'])) {
     echo "User not logged in.";
 }
 
-// Close the database connection if needed
-// $conn->close();
-
-
 // Pagination configuration
 $records_per_page = 4; // Number of records to display per page
 $current_page = isset($_GET['page']) ? $_GET['page'] : 1; // Get current page number, default to 1
@@ -45,7 +41,13 @@ $sql = "SELECT * FROM alumni ";
 if (isset($_GET['query']) && !empty($_GET['query'])) {
     $search_query = $_GET['query'];
     // Modify SQL query to include search filter
-    $sql .= "WHERE alumni_id like '%$search_query%' or fname LIKE '%$search_query%' or mname LIKE '%$search_query%' or lname LIKE '%$search_query' or address LIKE '%$search_query%' or email LIKE '%$search_query%' or (gender LIKE '%$search_query%' and gender != 'fe') ";
+    $sql .= "WHERE alumni_id LIKE '%$search_query%' 
+            OR fname LIKE '%$search_query%' 
+            OR mname LIKE '%$search_query%' 
+            OR lname LIKE '%$search_query%' 
+            OR address LIKE '%$search_query%' 
+            OR email LIKE '%$search_query%' 
+            OR (gender LIKE '%$search_query%' AND gender != 'fe') ";
 }
 
 $sql .= "LIMIT $start_from, $records_per_page";
@@ -53,7 +55,20 @@ $sql .= "LIMIT $start_from, $records_per_page";
 $result = $conn->query($sql);
 
 // Count total number of records
-$total_records = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM alumni"));
+$total_records_query = "SELECT COUNT(*) FROM alumni";
+if (isset($_GET['query']) && !empty($_GET['query'])) {
+    $total_records_query .= " WHERE alumni_id LIKE '%$search_query%' 
+                              OR fname LIKE '%$search_query%' 
+                              OR mname LIKE '%$search_query%' 
+                              OR lname LIKE '%$search_query%' 
+                              OR address LIKE '%$search_query%' 
+                              OR email LIKE '%$search_query%' 
+                              OR (gender LIKE '%$search_query%' AND gender != 'fe')";
+}
+$total_records_result = mysqli_query($conn, $total_records_query);
+$total_records_row = mysqli_fetch_array($total_records_result);
+$total_records = $total_records_row[0];
+
 $total_pages = ceil($total_records / $records_per_page);
 
 
@@ -71,7 +86,9 @@ $total_pages = ceil($total_records / $records_per_page);
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <script>"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"</script>
+    <script>
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    </script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <!-- FOR PAGINATION -->
@@ -87,6 +104,7 @@ $total_pages = ceil($total_records / $records_per_page);
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
+            
         }
 
         th {
@@ -333,7 +351,7 @@ $total_pages = ceil($total_records / $records_per_page);
                 <div class="container-fluid" id="content-container">
                     <div style="float:right; margin-right:5%;background-color:white; width:85%;border-radius:4px;">
                         <!-- Pagination links -->
-                        <div class="pagination" style="float:right; margin-right:1.5%">
+                        <div class="pagination" id="content" style="float:right; margin-right:1.5%">
                             <!-- next and previous -->
                             <?php
                             if ($current_page > 1) : ?>
@@ -349,6 +367,33 @@ $total_pages = ceil($total_records / $records_per_page);
                 </div>
             </div>
         </main>
+        <script>
+            document.addEventListener('DOMContentLoaded', (event) => {
+                let currentPage = 1;
+
+                function loadPage(page) {
+                    // Simulate an AJAX request to get page content
+                    const contentDiv = document.getElementById('content');
+                    contentDiv.innerHTML = `Content for page ${page}`; // Replace with actual AJAX call
+                    currentPage = page;
+                }
+
+                document.getElementById('prevPage').addEventListener('click', (event) => {
+                    event.preventDefault();
+                    if (currentPage > 1) {
+                        loadPage(currentPage - 1);
+                    }
+                });
+
+                document.getElementById('nextPage').addEventListener('click', (event) => {
+                    event.preventDefault();
+                    loadPage(currentPage + 1);
+                });
+
+                // Initial load
+                loadPage(currentPage);
+            });
+        </script>
 </body>
 
 </html>

@@ -86,9 +86,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Update Alumni Info</title>
+    <title>Alumni Info</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
-    <link rel="stylesheet" href="css/add_alumni.css">
+    <link rel="stylesheet" href="./css/alumni_info.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
@@ -191,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         <div class="container" id="container-full">
             <div class="container" id="content-container">
                 <div class="container-title">
-                    <span>Update Alumni Info</span>
+                    <span>Information</span>
                 </div>
                 <div class="container" id="content">
                     <!-- PROFILE -->
@@ -349,6 +349,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     echo "
                                         <a class='btn btn-warning' href='./update_profile.php?id=$row[alumni_id]'>Change Picture</a>
                                         <a class='btn btn-warning' href='./update_info.php?id=$row[alumni_id]'>Update Info</a>
+                                        <a class='btn btn-danger' href='./del_alumni.php?id=$row[alumni_id]'>Archive</a>
                                         <a class='btn btn-danger' href='./alumni.php'>Cancel</a>
                                     ";?>
                                 </div>

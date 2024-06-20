@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
     <title>Update Alumni Info</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
-    <link rel="stylesheet" href="css/add_alumni.css">
+    <link rel="stylesheet" href="./css/update_profile.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">

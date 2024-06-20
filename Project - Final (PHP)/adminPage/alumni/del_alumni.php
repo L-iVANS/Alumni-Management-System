@@ -33,11 +33,6 @@ if (isset($_GET['id'])) {
     // Close the database connection if needed
     // $conn->close();
 
-    if (mysqli_connect_errno()) {
-        die("" . mysqli_connect_error());
-    } else {
-        echo "Successfully Connected!";
-    }
     //insert data into table alumni_archive from alumni
     $sql_archive = "INSERT INTO alumni_archive (alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, connected_to, contact, address, email, username, password, picture, date_created)" .
         "SELECT alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, connected_to, contact, address, email, username, password, picture, date_created FROM alumni WHERE alumni_id=$alumni_id";
