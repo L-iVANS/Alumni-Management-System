@@ -193,15 +193,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             <div class="row align-items-end">
                                 <div class="col">
                                     <!-- Preview image -->
-                                    <div class="form-control" style="width:525px;height:515px; border-radius: 100%;">
-                                        <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" style="width:500px;height:500px; border-radius: 100%;">
+                                    <div class="form-control" style="width:445px;height:435px; border-radius: 100%;">
+                                        <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" style="width:420px;height:420px; border-radius: 100%;">
                                     </div>
                                 </div>
                             </div>
                             <div class="row align-items-end" style="margin-top:5%;">
                                 <div class="col">
                                     <input type="hidden" name="id" value="<?php echo $alumni_id; ?>">
-                                    <input class="form-control" type="file" name="image" onchange="getImagePreview(event)">
+                                    <input class="form-control" type="file" name="image" required onchange="getImagePreview(event)">
                                 </div>
                                 <div class="col">
                                     <button type="submit" class="btn btn-warning" name="insert" id="insert" value="insert" style="padding-left: 70px; padding-right: 70px; margin-right: 7%;">Update</button>
@@ -225,8 +225,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             var image = URL.createObjectURL(event.target.files[0]);
             var preview = document.getElementById('preview');
             preview.src = image;
-            preview.style.width = '500px';
-            preview.style.height = '500px';
+            preview.style.width = '420px';
+            preview.style.height = '420px';
         }
     </script>
     <!-- script to insert image to database -->

@@ -28,7 +28,7 @@ if (isset($_SESSION['user_id'])) {
 }
 
 // Pagination configuration
-$records_per_page = 4; // Number of records to display per page
+$records_per_page = 6; // Number of records to display per page
 $current_page = isset($_GET['page']) ? $_GET['page'] : 1; // Get current page number, default to 1
 
 // Calculate the limit clause for SQL query
@@ -44,8 +44,8 @@ if (isset($_GET['query']) && !empty($_GET['query'])) {
     $sql .= "WHERE alumni_id LIKE '%$search_query%' 
             OR fname LIKE '%$search_query%' 
             OR mname LIKE '%$search_query%' 
-            OR lname LIKE '%$search_query%' 
-            OR address LIKE '%$search_query%' 
+            OR lname LIKE '%$search_query%'
+            OR address LIKE '%$search_query%'
             OR email LIKE '%$search_query%' 
             OR (gender LIKE '%$search_query%' AND gender != 'fe') ";
 }
@@ -61,7 +61,7 @@ if (isset($_GET['query']) && !empty($_GET['query'])) {
                               OR fname LIKE '%$search_query%' 
                               OR mname LIKE '%$search_query%' 
                               OR lname LIKE '%$search_query%' 
-                              OR address LIKE '%$search_query%' 
+                              OR address LIKE '%$search_query%'
                               OR email LIKE '%$search_query%' 
                               OR (gender LIKE '%$search_query%' AND gender != 'fe')";
 }
@@ -99,17 +99,34 @@ $total_pages = ceil($total_records / $records_per_page);
             border-collapse: collapse;
         }
 
-        th,
-        td {
-            border: 1px solid #dddddd;
+        td{
             text-align: left;
+        }
+
+        .inline {
+            border: 1px solid #dddddd;
             padding: 8px;
-            
+            font-size: 12px;
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+            overflow: hidden;
+            /* Hide overflowing content */
+            text-overflow: ellipsis;
+            /* Display ellipsis for truncated text */
+            max-width: 125px;
+            /* Set a max-width to control truncation */
+
+        }
+
+        .act {
+            max-width: 235px;
+            /* Set a max-width to control truncation */
         }
 
         th {
             background-color: #368DB8;
-
+            font-weight: bold;
+            text-align: center;
         }
 
         .pagination {
@@ -291,19 +308,17 @@ $total_pages = ceil($total_records / $records_per_page);
                             <thead>
 
                                 <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">STUDENT ID</th>
-                                    <th scope="col">NAME</th>
-                                    <th scope="col">GENDER</th>
-                                    <th scope="col">COURSE</th>
-                                    <th scope="col">BATCH</th>
-                                    <th scope="col">CONNECTED TO</th>
-                                    <th scope="col">CONTACT</th>
-                                    <th scope="col">ADDRESS</th>
-                                    <th scope="col">EMAIL</th>
-                                    <th scope="col">USERNAME</th>
-                                    <th scope="col">DATE CREATION</th>
-                                    <th scope="col">ACTION</th>
+                                    <th scope="col" class="inline">ID</th>
+                                    <th scope="col" class="inline">STUDENT ID</th>
+                                    <th scope="col" class="inline">NAME</th>
+                                    <th scope="col" class="inline">GENDER</th>
+                                    <th scope="col" class="inline">COURSE</th>
+                                    <th scope="col" class="inline">BATCH</th>
+                                    <th scope="col" class="inline">CONTACT</th>
+                                    <th scope="col" class="inline">ADDRESS</th>
+                                    <th scope="col" class="inline">EMAIL</th>
+                                    <th scope="col" class="inline">DATE CREATION</th>
+                                    <th scope="col" class="inline">ACTION</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -314,42 +329,38 @@ $total_pages = ceil($total_records / $records_per_page);
                                         $batch = $row["batch_startYear"] . " - " . $row["batch_endYear"];
                                 ?>
                                         <tr>
-                                            <td><?php echo $row['alumni_id'] ?></td>
-                                            <td><?php echo $row['student_id'] ?></td>
-                                            <td><?php echo htmlspecialchars($fullname) ?></td>
-                                            <td><?php echo $row['gender'] ?></td>
-                                            <td><?php echo $row['course'] ?></td>
-                                            <td><?php echo htmlspecialchars($batch) ?></td>
-                                            <td><?php echo $row['connected_to'] ?></td>
-                                            <td><?php echo $row['contact'] ?></td>
-                                            <td><?php echo $row['address'] ?></td>
-                                            <td><?php echo $row['email'] ?></td>
-                                            <td><?php echo $row['username'] ?></td>
-                                            <td><?php echo $row['date_created'] ?></td>
+                                            <td class="inline"><?php echo $row['alumni_id'] ?></td>
+                                            <td class="inline"><?php echo $row['student_id'] ?></td>
+                                            <td class="inline"><?php echo htmlspecialchars($fullname) ?></td>
+                                            <td class="inline"><?php echo $row['gender'] ?></td>
+                                            <td class="inline"><?php echo $row['course'] ?></td>
+                                            <td class="inline"><?php echo htmlspecialchars($batch) ?></td>
+                                            <td class="inline"><?php echo $row['contact'] ?></td>
+                                            <td class="inline"><?php echo $row['address'] ?></td>
+                                            <td class="inline"><?php echo $row['email'] ?></td>
+                                            <td class="inline"><?php echo $row['date_created'] ?></td>
                                             <?php
                                             echo "
-                                                <td>
-                                                    <a class='btn btn-warning' href='./update_info.php?id=$row[alumni_id]'>Update</a>
-                                                    <a class='btn btn-danger' href='./del_alumni.php?id=$row[alumni_id]'>Archive</a>
-                                                    <a class='btn btn-primary' href='./alumni_info.php?id=$row[alumni_id]'>More Details</a>
+                                                <td class='inline act'>
+                                                    <a class='btn btn-warning btn-sm' href='./update_info.php?id=$row[alumni_id]' style='font-size: 11.8px;'>Update</a>
+                                                    <a class='btn btn-danger btn-sm' href='./del_alumni.php?id=$row[alumni_id]' style='font-size: 11.8px;'>Archive</a>
+                                                    <a class='btn btn-info btn-sm' href='./alumni_info.php?id=$row[alumni_id]' style='font-size: 11.8px;'>More Info</a>
                                                 </td>
                                             "; ?>
                                         </tr>
                                 <?php
                                     }
                                 } else {
-                                    echo '<tr><td colspan="12">No records found</td></tr>';
+                                    $current_page = 0;
+                                    echo '<tr><td colspan="12" style="text-align: center;">No records found</td></tr>';
                                 }
                                 ?>
                             </tbody>
                         </table>
 
                     </div>
-                </div>
-            </div>
-            <div class="container-fluid" id="main-container">
-                <div class="container-fluid" id="content-container">
-                    <div style="float:right; margin-right:5%;background-color:white; width:85%;border-radius:4px;">
+
+                    <div>
                         <!-- Pagination links -->
                         <div class="pagination" id="content" style="float:right; margin-right:1.5%">
                             <!-- next and previous -->
@@ -366,6 +377,11 @@ $total_pages = ceil($total_records / $records_per_page);
                     </div>
                 </div>
             </div>
+            <!-- <div class="container-fluid" id="main-container">
+                <div class="container-fluid" id="content-container">
+                    
+                </div>
+            </div> -->
         </main>
         <script>
             document.addEventListener('DOMContentLoaded', (event) => {

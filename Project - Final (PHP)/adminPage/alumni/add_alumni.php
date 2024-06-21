@@ -38,11 +38,9 @@ $gender = "";
 $course = "";
 $fromYear = "";
 $toYear = "";
-$connected_to = "";
 $contact = "";
 $address = "";
 $email = "";
-$username = "";
 $temp_password = "";
 
 // get the data from form
@@ -55,28 +53,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $course = $_POST['course'];
     $fromYear = $_POST['startYear'];
     $toYear = $_POST['endYear'];
-    $connected_to = ucwords($_POST['connected_to']);
     $contact = $_POST['contact'];
-    $address = ucwords($_POST['address']);
+    $address = $_POST['address'];
     $email = $_POST['email'];
-    $username = $_POST['username'];
     $temp_password = $_POST['temp_pass'];
 
 
     // email and user existing check
     $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
-    $usernameCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE username='$username'");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
-        // echo "
-        //         <script>
-        //             alert('Email Already Exist!!!');
-        //             window.location.href = '../coordinator.php';
-        //         </script>
-        //     ";
-    } else if (mysqli_num_rows($usernameCheck) > 0) {
-        $errorMessage = "Username Already Exists";
         // echo "
         //         <script>
         //             alert('Username Already Exist!!!');
@@ -85,7 +72,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         //     ";
     } else {
 
-        $sql = "INSERT INTO alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', password='$temp_password'";
+        $filePath = '../../assets/profile_icon.jpg';
+        // Read the image file into a variable
+        $imageData = file_get_contents($filePath);
+        // Escape special characters (optional, depends on usage)
+        $imageDataEscaped = addslashes($imageData);
+
+        $sql = "INSERT INTO alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email', password='$password', picture='$imageDataEscaped'";
         $result = $conn->query($sql);
         echo
         "
@@ -307,55 +300,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
 
                                 <div class="col" id="batch">
-                                    <select class="form-control" name="startYear" id="startYear" required>
-                                        <option value="" selected hidden disabled>Batch: From Year</option>
-                                        <?php
-                                        // Get the current year
-                                        $currentYear = date('Y');
+                                    <?php
+                                    $fromYear = isset($_POST['startYear']) ? $_POST['startYear'] : '';
+                                    $toYear = isset($_POST['endYear']) ? $_POST['endYear'] : '';
+                                    ?>
 
-                                        // Number of years to include before and after the current year
-                                        $yearRange = 21; // Adjust this number as needed
+                                    <form method="post" action="">
+                                        <select class="form-control" name="startYear" id="startYear" required>
+                                            <option value="" selected hidden disabled>Batch: From Year</option>
+                                            <?php
+                                            // Get the current year
+                                            $currentYear = date('Y');
 
-                                        // Preserve the selected value after form submission
-                                        $selectedYear = isset($_POST['startYear']) ? $_POST['startYear'] : '';
+                                            // Number of years to include before and after the current year
+                                            $yearRange = 21; // Adjust this number as needed
 
-                                        // Generate options for years, from current year minus $yearRange to current year plus $yearRange
-                                        for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
-                                            $selected = ($year == $selectedYear) ? 'selected' : '';
-                                            echo "<option value=\"$year\" $selected>$year</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                    <select class="form-control" name="endYear" id="endYear" required>
-                                        <option value="" selected hidden disabled>Batch: To Year</option>
-                                        <?php
-                                        // Get the current year
-                                        $currentYear = date('Y');
+                                            // Generate options for years, from current year minus $yearRange to current year plus $yearRange
+                                            for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
+                                                $selected = ($year == $fromYear) ? 'selected' : '';
+                                                echo "<option value=\"$year\" $selected>$year</option>";
+                                            }
+                                            ?>
+                                        </select>
 
-                                        // Number of years to include before and after the current year
-                                        $yearRange = 21; // Adjust this number as needed
+                                        <select class="form-control" name="endYear" id="endYear" required>
+                                            <option value="" selected hidden disabled>Batch: To Year</option>
+                                            <?php
+                                            if ($fromYear) {
+                                                // Generate options for endYear starting from startYear + 1
+                                                for ($year = $fromYear + 1; $year <= $currentYear + $yearRange; $year++) {
+                                                    $selected = ($year == $toYear) ? 'selected' : '';
+                                                    echo "<option value=\"$year\" $selected>$year</option>";
+                                                }
+                                            }
+                                            ?>
+                                        </select>
 
-                                        // Preserve the selected value after form submission
-                                        $selectedEndYear = isset($_POST['endYear']) ? $_POST['endYear'] : '';
+                                        <button type="submit">Submit</button>
+                                    </form>
 
-                                        // Generate options for years, from current year minus $yearRange to current year plus $yearRange
-                                        for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
-                                            $selected = ($year == $selectedEndYear) ? 'selected' : '';
-                                            echo "<option value=\"$year\" $selected>$year</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Connected to:</label>
-                                </div>
-
-                                <div class="col">
-                                    <input class="form-control" class="form-control" type="text" id="name" name="connected_to" placeholder="Company" required value="<?php echo $connected_to; ?>">
                                 </div>
                             </div>
                         </div>
@@ -375,7 +358,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Address:</label>
                                 </div>
                                 <div class="col">
-                                    <input class="form-control" type="address" id="address" name="address" placeholder="Enter Address" required value="<?php echo $address; ?>">
+                                    <input class="form-control" type="number" id="name" name="address" placeholder="Enter Phone No." required value="<?php echo $address; ?>">
                                 </div>
                             </div>
                         </div>
@@ -386,16 +369,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                                 <div class="col">
                                     <input class="form-control" type="email" id="email" name="email" placeholder="Enter Email" required value="<?php echo $email; ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="username">Username:</label>
-                                </div>
-                                <div class="col">
-                                    <input class="form-control" type="text" id="username" name="username" placeholder="Enter Username" required value="<?php echo $username; ?>">
                                 </div>
                             </div>
                         </div>
@@ -413,7 +386,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="row" style="margin-top:20px;">
                                 <div class="col" id="buttons">
                                     <div class="button">
-                                        <button type="submit" class="btn btn-warning" name="insert" id="insert" value="insert">Add new</button>
+                                        <button type="submit" class="btn btn-warning" name="submit" id="insert" value="submit">Add new</button>
                                         <a class="btn btn-danger" href="./alumni.php">Cancel</a>
                                     </div>
                                 </div>
@@ -424,6 +397,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
+
+    <!-- SCRIPT FOR DATCH SELECTOR -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startYearSelect = document.getElementById('startYear');
+            const endYearSelect = document.getElementById('endYear');
+
+            // Disable endYear select by default if no start year is selected
+            if (!startYearSelect.value) {
+                endYearSelect.disabled = true;
+            } else {
+                populateEndYearOptions(parseInt(startYearSelect.value));
+            }
+
+            startYearSelect.addEventListener('change', function() {
+                const selectedStartYear = parseInt(this.value);
+                endYearSelect.disabled = false;
+
+                populateEndYearOptions(selectedStartYear);
+            });
+
+            function populateEndYearOptions(selectedStartYear) {
+                const currentYear = new Date().getFullYear();
+                const yearRange = 21; // Adjust this number as needed
+                const selectedEndYear = endYearSelect.getAttribute('data-selected'); // Get the selected end year
+
+                // Clear current endYear options
+                endYearSelect.innerHTML = '<option value="" selected hidden disabled>Batch: To Year</option>';
+
+                // Generate new options for endYear
+                for (let year = selectedStartYear + 1; year <= currentYear + yearRange; year++) {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    if (year == selectedEndYear) {
+                        option.selected = true; // Preserve the selected end year
+                    }
+                    endYearSelect.appendChild(option);
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

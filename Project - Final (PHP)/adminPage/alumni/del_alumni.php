@@ -34,8 +34,8 @@ if (isset($_GET['id'])) {
     // $conn->close();
 
     //insert data into table alumni_archive from alumni
-    $sql_archive = "INSERT INTO alumni_archive (alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, connected_to, contact, address, email, username, password, picture, date_created)" .
-        "SELECT alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, connected_to, contact, address, email, username, password, picture, date_created FROM alumni WHERE alumni_id=$alumni_id";
+    $sql_archive = "INSERT INTO alumni_archive (alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created)" .
+        "SELECT alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created FROM alumni WHERE alumni_id=$alumni_id";
     $conn->query($sql_archive);
 
     //delete data in table alumni

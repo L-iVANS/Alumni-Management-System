@@ -315,7 +315,7 @@ main {
     display: flex;
 }
 .table-content{
-    margin-top: 50px;
+    margin-top: 20px;
     width: 100%;
     overflow-y: hidden;
     overflow-x: auto;
@@ -346,7 +346,6 @@ border-color: #fff;
     /* border: #2a9134 1px solid; */
     padding-left: 30px;
     padding-right: 30px;
-    padding-bottom: 30px;
 }
 
 #column-header{

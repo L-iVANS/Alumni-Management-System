@@ -38,11 +38,10 @@ $gender = "";
 $course = "";
 $fromYear = "";
 $toYear = "";
-$connected_to = "";
 $contact = "";
 $address = "";
 $email = "";
-$username = "";
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Show the data of alumni
@@ -69,11 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $lname = $row['lname'];
     $gender = $row['gender'];
     $course = $row['course'];
-    $connected_to = $row['connected_to'];
     $contact = $row['contact'];
     $address = $row['address'];
     $email = $row['email'];
-    $username = $row['username'];
     $file = $row['picture'];
 
     $batch = $row["batch_startYear"] . " - " . $row["batch_endYear"];
@@ -292,17 +289,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     <div class="container">
                         <div class="row align-items-end">
                             <div class="col">
-                                <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Connected to:</label>
-                            </div>
-
-                            <div class="col">
-                                <input class="form-control" class="form-control" type="text" id="name" name="connected_to" disabled value="<?php echo $connected_to; ?>">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container">
-                        <div class="row align-items-end">
-                            <div class="col">
                                 <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Contact:</label>
                             </div>
                             <div class="col">
@@ -313,10 +299,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     <div class="container">
                         <div class="row align-items-end">
                             <div class="col">
-                                <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Address:</label>
+                                <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="address">Address:</label>
                             </div>
                             <div class="col">
-                                <input class="form-control" type="address" id="address" name="address" disabled value="<?php echo $address; ?>">
+                                <input class="form-control" type="text" id="username" name="address" disabled value="<?php echo $address; ?>">
                             </div>
                         </div>
                     </div>
@@ -327,16 +313,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             </div>
                             <div class="col">
                                 <input class="form-control" type="email" id="email" name="email" disabled value="<?php echo $email; ?>">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container">
-                        <div class="row align-items-end">
-                            <div class="col">
-                                <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="username">Username:</label>
-                            </div>
-                            <div class="col">
-                                <input class="form-control" type="text" id="username" name="username" disabled value="<?php echo $username; ?>">
                             </div>
                         </div>
                     </div>

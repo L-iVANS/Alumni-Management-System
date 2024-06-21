@@ -38,11 +38,9 @@ $gender = "";
 $course = "";
 $fromYear = "";
 $toYear = "";
-$connected_to = "";
 $contact = "";
 $address = "";
 $email = "";
-$username = "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Show the data of alumni
@@ -62,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         exit;
     }
     // data from table alumni where student_id = $alumni_id = $_GET['id']; get from alumni list update
+    $alumni_id = $row['alumni_id'];
     $stud_id = $row['student_id'];
     $fname = $row['fname'];
     $mname = $row['mname'];
@@ -70,11 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $course = $row['course'];
     $fromYear = $row['batch_startYear'];
     $toYear = $row['batch_endYear'];
-    $connected_to = $row['connected_to'];
     $contact = $row['contact'];
     $address = $row['address'];
     $email = $row['email'];
-    $username = $row['username'];
 } else {
     // get the data from form
     $alumni_id = $_POST['id'];
@@ -86,26 +83,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $course = $_POST['course'];
     $fromYear = $_POST['startYear'];
     $toYear = $_POST['endYear'];
-    $connected_to = ucwords($_POST['connected_to']);
     $contact = $_POST['contact'];
-    $address = ucwords($_POST['address']);
+    $address = $_POST['address'];
     $email = $_POST['email'];
-    $username = $_POST['username'];
+
+
 
     // email and user existing check
     $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email' AND alumni_id != $alumni_id");
-    $usernameCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE username='$username' AND alumni_id != $alumni_id");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
-        // echo "
-        //         <script>
-        //             alert('Email Already Exist!!!');
-        //             window.location.href = '../coordinator.php';
-        //         </script>
-        //     ";
-    } else if (mysqli_num_rows($usernameCheck) > 0) {
-        $errorMessage = "Username Already Exists";
         // echo "
         //         <script>
         //             alert('Username Already Exist!!!');
@@ -114,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         //     ";
     } else {
 
-        $sql = "UPDATE alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username' WHERE alumni_id=$alumni_id";
+        $sql = "UPDATE alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email' WHERE alumni_id=$alumni_id";
         $result = $conn->query($sql);
         echo
         "
@@ -337,105 +325,85 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                 </div>
 
                                 <div class="col" id="batch">
-                                    <select class="form-control" name="startYear" id="startYear" required>
-                                        <option value="<?php echo $fromYear; ?>" selected><?php echo $fromYear; ?></option>
-                                        <?php
-                                        // Get the current year
-                                        $currentYear = date('Y');
+                                    <div class="col" id="batch">
+                                        <select class="form-control" name="startYear" id="startYear" required>
+                                            <option value="<?php echo $fromYear; ?>" selected><?php echo $fromYear; ?></option>
+                                            <?php
+                                            // Get the current year
+                                            $currentYear = date('Y');
 
-                                        // Number of years to include before and after the current year
-                                        $yearRange = 21; // Adjust this number as needed
+                                            // Number of years to include before and after the current year
+                                            $yearRange = 21; // Adjust this number as needed
 
-                                        // Generate options for years, from current year minus $yearRange to current year plus $yearRange
-                                        for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
-                                            echo "<option value=\"$year\">$year</option>";
-                                        }
-                                        ?>
-                                    </select>
+                                            // Generate options for years, from current year minus $yearRange to current year plus $yearRange
+                                            for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
+                                                echo "<option value=\"$year\">$year</option>";
+                                            }
+                                            ?>
+                                        </select>
 
-                                    <select class="form-control" name="endYear" id="endYear" required>
-                                        <option value="<?php echo $toYear; ?>" selected><?php echo $toYear; ?></option>
-                                        <?php
-                                        // Get the current year
-                                        $currentYear = date('Y');
+                                        <select class="form-control" name="endYear" id="endYear" required>
+                                            <option value="<?php echo $toYear; ?>" selected><?php echo $toYear; ?></option>
+                                            <?php
+                                            // Get the current year
+                                            $currentYear = date('Y');
 
-                                        // Number of years to include before and after the current year
-                                        $yearRange = 21; // Adjust this number as needed
+                                            // Number of years to include before and after the current year
+                                            $yearRange = 21; // Adjust this number as needed
 
-                                        // Generate options for years, from current year minus $yearRange to current year plus $yearRange
-                                        for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
-                                            echo "<option value=\"$year\">$year</option>";
-                                        }
-                                        ?>
-                                    </select>
+                                            // Generate options for years, from current year minus $yearRange to current year plus $yearRange
+                                            for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
+                                                echo "<option value=\"$year\">$year</option>";
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Connected to:</label>
-                                </div>
-
-                                <div class="col">
-                                    <input class="form-control" class="form-control" type="text" id="name" name="connected_to" placeholder="Company" required value="<?php echo $connected_to; ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Contact:</label>
-                                </div>
-                                <div class="col">
-                                    <input class="form-control" type="number" id="name" name="contact" placeholder="Enter Phone No." required value="<?php echo $contact; ?>">
+                            <div class="container">
+                                <div class="row align-items-end">
+                                    <div class="col">
+                                        <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Contact:</label>
+                                    </div>
+                                    <div class="col">
+                                        <input class="form-control" type="number" id="name" name="contact" placeholder="Enter Phone No." required value="<?php echo $contact; ?>">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Address:</label>
-                                </div>
-                                <div class="col">
-                                    <input class="form-control" type="address" id="address" name="address" placeholder="Enter Address" required value="<?php echo $address; ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Email:</label>
-                                </div>
-                                <div class="col">
-                                    <input class="form-control" type="email" id="email" name="email" placeholder="Enter Email" required value="<?php echo $email; ?>">
+                            <div class="container">
+                                <div class="row align-items-end">
+                                    <div class="col">
+                                        <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="address">Address:</label>
+                                    </div>
+                                    <div class="col">
+                                        <input class="form-control" type="text" id="address" name="address" placeholder="Enter Address" required value="<?php echo $address; ?>">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="username">Username:</label>
-                                </div>
-                                <div class="col">
-                                    <input class="form-control" type="text" id="username" name="username" placeholder="Enter Username" required value="<?php echo $username; ?>">
+                            <div class="container">
+                                <div class="row align-items-end">
+                                    <div class="col">
+                                        <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Email:</label>
+                                    </div>
+                                    <div class="col">
+                                        <input class="form-control" type="email" id="email" name="email" placeholder="Enter Email" required value="<?php echo $email; ?>">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="container">
-                            <div class="row" style="margin-top:20px;">
-                                <div class="col" id="buttons">
-                                    <div class="button">
-                                        <button type="submit" class="btn btn-warning" name="insert" id="insert" value="insert" >Update</button>
-                                        <?php
-                                        echo "
-                                        <a class='btn btn-danger' href='./alumni_info.php?id=$row[alumni_id]'>Cancel</a>
-                                        ";?>
+                            <div class="container">
+                                <div class="row" style="margin-top:20px;">
+                                    <div class="col" id="buttons">
+                                        <div class="button">
+                                            <button type="submit" class="btn btn-warning" name="inser" id="insert" value="insert">Update</button>
+                                            <?php
+                                            echo "
+                                                <a class='btn btn-danger' href='./alumni_info.php'>Cancel</a>
+                                            "; ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                 </form>
             </div>
         </div>

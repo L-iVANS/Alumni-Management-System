@@ -17,40 +17,39 @@ if ($conn->connect_error) {
 session_start();
 
 
-    $stud_id = "";
-    $fname = "";
-    $mname = "";
-    $lname = "";
-    $gender = "";
-    $course = "";
-    $fromYear = "";
-    $toYear = "";
-    $connected_to = "";
-    $contact = "";
-    $address = "";
-    $email = "";
-    $username = "";
-    $login_identifier = "";
-    $pass = "";
-    $password = "";
+$stud_id = "";
+$fname = "";
+$mname = "";
+$lname = "";
+$gender = "";
+$course = "";
+$fromYear = "";
+$toYear = "";
+$contact = "";
+$address = "";
+$email = "";
+$username = "";
+$log_email = "";
+$pass = "";
+$password = "";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_username']) && isset($_POST['log_password'])) {
-    $login_identifier = $_POST['log_username'];
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset($_POST['log_password'])) {
+    $log_email = $_POST['log_email'];
     $pass = $_POST['log_password'];
 
     // Check in users table
-    $user = check_login($conn, 'alumni', $login_identifier, $pass);
+    $user = check_login($conn, 'alumni', $log_email, $pass);
     $user_type = 'alumni';
 
     // Check in admin table if not found in users
     if (!$user) {
-        $user = check_login($conn, 'admin', $login_identifier, $pass);
+        $user = check_login($conn, 'admin', $log_email, $pass);
         $user_type = 'admin';
     }
 
     // Check in moderators table if not found in users and admin
     if (!$user) {
-        $user = check_login($conn, 'coordinator', $login_identifier, $pass);
+        $user = check_login($conn, 'coordinator', $log_email, $pass);
         $user_type = 'coordinator';
     }
 
@@ -111,26 +110,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_username']) && iss
     $course = $_POST['course'];
     $fromYear = $_POST['startYear'];
     $toYear = $_POST['endYear'];
-    $connected_to = ucwords($_POST['connected_to']);
     $contact = $_POST['contact'];
-    $address = ucwords($_POST['address']);
+    $address = $_POST['address'];
     $email = $_POST['email'];
-    $username = $_POST['username'];
     $password = $_POST['password'];
 
     // email and user existing check
     $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
-    $usernameCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE username='$username'");
 
-    if (mysqli_num_rows($usernameCheck) > 0) {
-        $errorMessage = "Username Already Exists";
-        // echo "
-        //         <script>
-        //             alert('Email Already Exist!!!');
-        //             window.location.href = '../coordinator.php';
-        //         </script>
-        //     ";
-    } else if (mysqli_num_rows($emailCheck) > 0) {
+    if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
         // echo "
         //         <script>
@@ -146,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_username']) && iss
         // Escape special characters (optional, depends on usage)
         $imageDataEscaped = addslashes($imageData);
 
-        $sql = "INSERT INTO alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', password='$password', picture='$imageDataEscaped'";
+        $sql = "INSERT INTO alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email', password='$password', picture='$imageDataEscaped'";
         $result = $conn->query($sql);
 
         if ($result) {
@@ -174,11 +162,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_username']) && iss
 function check_login($conn, $table, $identifier, $password)
 {
     // Prepare the SQL query
-    $sql = "SELECT * FROM $table WHERE (username = ? OR email = ?) AND password = ? LIMIT 1";
+    $sql = "SELECT * FROM $table WHERE email = ? AND password = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
 
     // Bind the identifier (username or email) and password parameters to the query
-    $stmt->bind_param("sss", $identifier, $identifier, $password);
+    $stmt->bind_param("ss", $identifier, $password);
 
     // Execute the query
     $stmt->execute();
@@ -227,10 +215,6 @@ function check_login($conn, $table, $identifier, $password)
                 ?>
 
                 <div class="infield">
-                    <input type="text" placeholder="Username" name="username" value="<?php echo htmlspecialchars($username); ?>" required />
-                    <label></label>
-                </div>
-                <div class="infield">
                     <input type="email" placeholder="Email" name="email" value="<?php echo htmlspecialchars($email); ?>" required />
                     <label></label>
                 </div>
@@ -277,7 +261,7 @@ function check_login($conn, $table, $identifier, $password)
                     </select>
                 </div>
                 <div class="infield">
-                    <select name="startYear" id="startYear" required>
+                    <select class="form-control" name="startYear" id="startYear" required>
                         <option value="" selected hidden disabled>Batch: From Year</option>
                         <?php
                         // Get the current year
@@ -296,36 +280,30 @@ function check_login($conn, $table, $identifier, $password)
                         }
                         ?>
                     </select>
-                    <select name="endYear" id="endYear" required>
+                </div>
+                <div class="infield">
+                    <select class="form-control" name="endYear" id="endYear" required data-selected="<?php echo isset($_POST['endYear']) ? $_POST['endYear'] : ''; ?>">
                         <option value="" selected hidden disabled>Batch: To Year</option>
                         <?php
-                        // Get the current year
-                        $currentYear = date('Y');
+                        if (isset($_POST['startYear'])) {
+                            $startYear = $_POST['startYear'];
+                            $selectedEndYear = isset($_POST['endYear']) ? $_POST['endYear'] : '';
 
-                        // Number of years to include before and after the current year
-                        $yearRange = 21; // Adjust this number as needed
-
-                        // Preserve the selected value after form submission
-                        $selectedEndYear = isset($_POST['endYear']) ? $_POST['endYear'] : '';
-
-                        // Generate options for years, from current year minus $yearRange to current year plus $yearRange
-                        for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
-                            $selected = ($year == $selectedEndYear) ? 'selected' : '';
-                            echo "<option value=\"$year\" $selected>$year</option>";
+                            // Generate options for endYear starting from startYear + 1
+                            for ($year = $startYear + 1; $year <= $currentYear + $yearRange; $year++) {
+                                $selected = ($year == $selectedEndYear) ? 'selected' : '';
+                                echo "<option value=\"$year\" $selected>$year</option>";
+                            }
                         }
                         ?>
                     </select>
-                </div>
-                <div class="infield">
-                    <input type="text" placeholder="Currently connected to" name="connected_to" value="<?php echo htmlspecialchars($connected_to); ?>" required />
-                    <label></label>
                 </div>
                 <div class="infield">
                     <input type="number" placeholder="Contact" name="contact" value="<?php echo htmlspecialchars($contact); ?>" required />
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="text" placeholder="Address" name="address" value="<?php echo htmlspecialchars($address); ?>" required />
+                    <input type="text" placeholder="Last Name" name="address" value="<?php echo htmlspecialchars($address); ?>" required />
                     <label></label>
                 </div>
                 <button type="submit" name="submit">Sign Up</button>
@@ -335,7 +313,7 @@ function check_login($conn, $table, $identifier, $password)
             <form action="#" method="POST">
                 <h1>Log in</h1>
                 <div class="infield">
-                    <input type="text" placeholder="Username or Email" name="log_username" value="<?php echo htmlspecialchars($login_identifier); ?>" required />
+                    <input type="text" placeholder="Email" name="log_email" value="<?php echo htmlspecialchars($log_email); ?>" required />
                     <label></label>
                 </div>
                 <div class="infield">
@@ -416,7 +394,46 @@ function check_login($conn, $table, $identifier, $password)
             });
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startYearSelect = document.getElementById('startYear');
+            const endYearSelect = document.getElementById('endYear');
 
+            // Disable endYear select by default if no start year is selected
+            if (!startYearSelect.value) {
+                endYearSelect.disabled = true;
+            } else {
+                populateEndYearOptions(parseInt(startYearSelect.value));
+            }
+
+            startYearSelect.addEventListener('change', function() {
+                const selectedStartYear = parseInt(this.value);
+                endYearSelect.disabled = false;
+
+                populateEndYearOptions(selectedStartYear);
+            });
+
+            function populateEndYearOptions(selectedStartYear) {
+                const currentYear = new Date().getFullYear();
+                const yearRange = 21; // Adjust this number as needed
+                const selectedEndYear = endYearSelect.getAttribute('data-selected'); // Get the selected end year
+
+                // Clear current endYear options
+                endYearSelect.innerHTML = '<option value="" selected hidden disabled>Batch: To Year</option>';
+
+                // Generate new options for endYear
+                for (let year = selectedStartYear + 1; year <= currentYear + yearRange; year++) {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    if (year == selectedEndYear) {
+                        option.selected = true; // Preserve the selected end year
+                    }
+                    endYearSelect.appendChild(option);
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
