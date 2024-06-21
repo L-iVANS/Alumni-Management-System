@@ -27,25 +27,25 @@ if (isset($_SESSION['user_id'])) {
     echo "User not logged in.";
 }
 
-// Close the database connection if needed
-// $conn->close();
-
-
 // Pagination configuration
-$records_per_page = 4; // Number of records to display per page
+$records_per_page = 6; // Number of records to display per page
 $current_page = isset($_GET['page']) ? $_GET['page'] : 1; // Get current page number, default to 1
 
 // Calculate the limit clause for SQL query
 $start_from = ($current_page - 1) * $records_per_page;
 
 // Initialize variables
-$sql = "SELECT * FROM alumni ";
+$sql = "SELECT * FROM coordinator ";
 
 // Check if search query is provided
 if (isset($_GET['query']) && !empty($_GET['query'])) {
     $search_query = $_GET['query'];
     // Modify SQL query to include search filter
-    $sql .= "WHERE alumni_id like '%$search_query%' or fname LIKE '%$search_query%' or mname LIKE '%$search_query%' or lname LIKE '%$search_query' or address LIKE '%$search_query%' or email LIKE '%$search_query%' or (gender LIKE '%$search_query%' and gender != 'fe') ";
+    $sql .= "WHERE alumni_id LIKE '%$search_query%' 
+            OR fname LIKE '%$search_query%' 
+            OR mname LIKE '%$search_query%' 
+            OR lname LIKE '%$search_query%'
+            OR email LIKE '%$search_query%'";
 }
 
 $sql .= "LIMIT $start_from, $records_per_page";
@@ -53,7 +53,18 @@ $sql .= "LIMIT $start_from, $records_per_page";
 $result = $conn->query($sql);
 
 // Count total number of records
-$total_records = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM alumni"));
+$total_records_query = "SELECT COUNT(*) FROM coordinator";
+if (isset($_GET['query']) && !empty($_GET['query'])) {
+    $total_records_query .= " WHERE alumni_id LIKE '%$search_query%' 
+                              OR fname LIKE '%$search_query%' 
+                              OR mname LIKE '%$search_query%' 
+                              OR lname LIKE '%$search_query%'
+                              OR email LIKE '%$search_query%' ";
+}
+$total_records_result = mysqli_query($conn, $total_records_query);
+$total_records_row = mysqli_fetch_array($total_records_result);
+$total_records = $total_records_row[0];
+
 $total_pages = ceil($total_records / $records_per_page);
 
 
@@ -66,13 +77,16 @@ $total_pages = ceil($total_records / $records_per_page);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Alumni List</title>
+    <title>Coordinator List</title>
     <link rel="stylesheet" href="./css/alumni.css">
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <script>"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"</script>
+    <script>
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    </script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- FOR PAGINATION -->
     <style>
@@ -82,16 +96,35 @@ $total_pages = ceil($total_records / $records_per_page);
             border-collapse: collapse;
         }
 
-        th,
-        td {
-            border: 1px solid #dddddd;
+        td{
             text-align: left;
+        }
+
+        .inline {
+            border: 1px solid #dddddd;
             padding: 8px;
+            font-size: 12px;
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+            overflow: hidden;
+            /* Hide overflowing content */
+            text-overflow: ellipsis;
+            /* Display ellipsis for truncated text */
+            max-width: 125px;
+            /* Set a max-width to control truncation */
+
+        }
+
+        .act {
+            max-width: 235px;
+            text-align: center;
+            /* Set a max-width to control truncation */
         }
 
         th {
             background-color: #368DB8;
-
+            font-weight: bold;
+            text-align: center;
         }
 
         .pagination {
@@ -145,7 +178,7 @@ $total_pages = ceil($total_records / $records_per_page);
 
         <div class="side-content">
             <div class="profile">
-                <i class='bx bx-user bx-flip-horizontal'></i>
+            <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
                 <!-- <h4>ADMIN</h4>
@@ -235,7 +268,7 @@ $total_pages = ceil($total_records / $records_per_page);
 
         <main>
             <div class="page-header">
-                <h1><strong>Alumni</strong></h1>
+                <h1><strong>Coordinator</strong></h1>
             </div>
 
             <div class="container-fluid" id="main-container">
@@ -273,19 +306,12 @@ $total_pages = ceil($total_records / $records_per_page);
                             <thead>
 
                                 <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">STUDENT ID</th>
-                                    <th scope="col">NAME</th>
-                                    <th scope="col">GENDER</th>
-                                    <th scope="col">COURSE</th>
-                                    <th scope="col">BATCH</th>
-                                    <th scope="col">CONNECTED TO</th>
-                                    <th scope="col">CONTACT</th>
-                                    <th scope="col">ADDRESS</th>
-                                    <th scope="col">EMAIL</th>
-                                    <th scope="col">USERNAME</th>
-                                    <th scope="col">DATE CREATION</th>
-                                    <th scope="col" style="width:10%;">ACTION</th>
+                                    <th scope="col" class="inline">ID</th>
+                                    <th scope="col" class="inline">NAME</th>
+                                    <th scope="col" class="inline">CONTACT</th>
+                                    <th scope="col" class="inline">EMAIL</th>
+                                    <th scope="col" class="inline">DATE CREATION</th>
+                                    <th scope="col" class="inline">ACTION</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -293,46 +319,37 @@ $total_pages = ceil($total_records / $records_per_page);
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
                                         $fullname = $row["fname"] . " " . $row["mname"] . " " . $row["lname"];
-                                        $batch = $row["batch_startYear"] . " - " . $row["batch_endYear"];
+                                        
                                 ?>
                                         <tr>
-                                            <td><?php echo $row['alumni_id'] ?></td>
-                                            <td><?php echo $row['student_id'] ?></td>
-                                            <td><?php echo htmlspecialchars($fullname) ?></td>
-                                            <td><?php echo $row['gender'] ?></td>
-                                            <td><?php echo $row['course'] ?></td>
-                                            <td><?php echo htmlspecialchars($batch) ?></td>
-                                            <td><?php echo $row['connected_to'] ?></td>
-                                            <td><?php echo $row['contact'] ?></td>
-                                            <td><?php echo $row['address'] ?></td>
-                                            <td><?php echo $row['email'] ?></td>
-                                            <td><?php echo $row['username'] ?></td>
-                                            <td><?php echo $row['date_created'] ?></td>
+                                            <td class="inline"><?php echo $row['coor_id'] ?></td>
+                                            <td class="inline"><?php echo htmlspecialchars($fullname) ?></td>
+                                            <td class="inline"><?php echo $row['contact'] ?></td>
+                                            <td class="inline"><?php echo $row['email'] ?></td>
+                                            <td class="inline"><?php echo $row['date_created'] ?></td>
                                             <?php
                                             echo "
-                                                <td style='width:10%;'>
-                                                    <a class='btn btn-warning' href='./update_coor.php?id=$row[alumni_id]'>Update</a>
-                                                    <a class='btn btn-danger' href='./del_coor.php?id=$row[alumni_id]'>Archive</a>
+                                                <td class='inline act'>
+                                                    <a class='btn btn-warning btn-sm' href='./update_coor.php?id=$row[coor_id]' style='font-size: 11.8px;'>Update</a>
+                                                    <a class='btn btn-danger btn-sm' href='./del_coor.php?id=$row[coor_id]' style='font-size: 11.8px;'>Archive</a>
                                                 </td>
                                             "; ?>
                                         </tr>
                                 <?php
                                     }
                                 } else {
-                                    echo '<tr><td colspan="12">No records found</td></tr>';
+                                    $current_page = 0;
+                                    echo '<tr><td colspan="12" style="text-align: center;">No records found</td></tr>';
                                 }
                                 ?>
                             </tbody>
                         </table>
 
                     </div>
-                </div>
-            </div>
-            <div class="container-fluid" id="main-container">
-                <div class="container-fluid" id="content-container">
-                    <div style="float:right; margin-right:5%;background-color:white; width:85%;border-radius:4px;">
+
+                    <div>
                         <!-- Pagination links -->
-                        <div class="pagination" style="float:right; margin-right:1.5%">
+                        <div class="pagination" id="content" style="float:right; margin-right:1.5%">
                             <!-- next and previous -->
                             <?php
                             if ($current_page > 1) : ?>
@@ -347,7 +364,39 @@ $total_pages = ceil($total_records / $records_per_page);
                     </div>
                 </div>
             </div>
+            <!-- <div class="container-fluid" id="main-container">
+                <div class="container-fluid" id="content-container">
+                    
+                </div>
+            </div> -->
         </main>
+        <script>
+            document.addEventListener('DOMContentLoaded', (event) => {
+                let currentPage = 1;
+
+                function loadPage(page) {
+                    // Simulate an AJAX request to get page content
+                    const contentDiv = document.getElementById('content');
+                    contentDiv.innerHTML = `Content for page ${page}`; // Replace with actual AJAX call
+                    currentPage = page;
+                }
+
+                document.getElementById('prevPage').addEventListener('click', (event) => {
+                    event.preventDefault();
+                    if (currentPage > 1) {
+                        loadPage(currentPage - 1);
+                    }
+                });
+
+                document.getElementById('nextPage').addEventListener('click', (event) => {
+                    event.preventDefault();
+                    loadPage(currentPage + 1);
+                });
+
+                // Initial load
+                loadPage(currentPage);
+            });
+        </script>
 </body>
 
 </html>

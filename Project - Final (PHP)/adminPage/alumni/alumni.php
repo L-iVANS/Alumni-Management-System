@@ -90,6 +90,7 @@ $total_pages = ceil($total_records / $records_per_page);
         "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     </script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- FOR PAGINATION -->
     <style>
@@ -120,6 +121,7 @@ $total_pages = ceil($total_records / $records_per_page);
 
         .act {
             max-width: 235px;
+            text-align: center;
             /* Set a max-width to control truncation */
         }
 
@@ -180,7 +182,7 @@ $total_pages = ceil($total_records / $records_per_page);
 
         <div class="side-content">
             <div class="profile">
-                <i class='bx bx-user bx-flip-horizontal'></i>
+            <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
                 <!-- <h4>ADMIN</h4>

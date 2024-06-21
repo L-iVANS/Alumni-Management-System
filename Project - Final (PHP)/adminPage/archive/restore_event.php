@@ -28,6 +28,9 @@ if (isset($_GET['id'])) {
         $stmt->close();
     } else {
         echo "User not logged in.";
+        echo "User not logged in.";
+        header("location: ../../loginPage/login.php");
+        exit;
     }
 
     // Close the database connection if needed
@@ -46,7 +49,7 @@ if (isset($_GET['id'])) {
 echo
 "
         <script>
-            alert('Alumni Acccount Archived Successfully ');
+            alert('Event Restored Successfully ');
             window.location.href = './event_archive.php';
         </script>
     ";

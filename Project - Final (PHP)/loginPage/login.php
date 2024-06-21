@@ -34,7 +34,7 @@ $pass = "";
 $password = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset($_POST['log_password'])) {
-    $log_email = $_POST['log_email'];
+    $log_email = strtolower($_POST['log_email']);
     $pass = $_POST['log_password'];
 
     // Check in users table
@@ -111,8 +111,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
     $fromYear = $_POST['startYear'];
     $toYear = $_POST['endYear'];
     $contact = $_POST['contact'];
-    $address = $_POST['address'];
-    $email = $_POST['email'];
+    $address = ucwords($_POST['address']);
+    $email = strtolower($_POST['email']);
     $password = $_POST['password'];
 
     // email and user existing check

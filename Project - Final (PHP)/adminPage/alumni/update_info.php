@@ -84,8 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $fromYear = $_POST['startYear'];
     $toYear = $_POST['endYear'];
     $contact = $_POST['contact'];
-    $address = $_POST['address'];
-    $email = $_POST['email'];
+    $address = ucwords($_POST['address']);
+    $email = strtolower($_POST['email']);
 
 
 
@@ -128,6 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 
 <body>
@@ -139,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         <div class="side-content">
             <div class="profile">
-                <i class='bx bx-user bx-flip-horizontal'></i>
+            <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
             </div>
@@ -225,7 +226,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         <div class="container" id="container-full">
             <div class="container" id="content-container">
                 <div class="container-title">
-                    <span>Update Alumni Info</span>
+                    <span>Update Info</span>
                 </div>
 
                 <?php

@@ -45,7 +45,9 @@ if (isset($_GET['query']) && !empty($_GET['query'])) {
             OR fname LIKE '%$search_query%' 
             OR mname LIKE '%$search_query%' 
             OR lname LIKE '%$search_query%'
-            OR email LIKE '%$search_query%'";
+            OR address LIKE '%$search_query%'
+            OR email LIKE '%$search_query%' 
+            OR (gender LIKE '%$search_query%' AND gender != 'fe') ";
 }
 
 $sql .= "LIMIT $start_from, $records_per_page";
@@ -53,13 +55,15 @@ $sql .= "LIMIT $start_from, $records_per_page";
 $result = $conn->query($sql);
 
 // Count total number of records
-$total_records_query = "SELECT COUNT(*) FROM alumni";
+$total_records_query = "SELECT COUNT(*) FROM alumni_archive";
 if (isset($_GET['query']) && !empty($_GET['query'])) {
     $total_records_query .= " WHERE alumni_id LIKE '%$search_query%' 
                               OR fname LIKE '%$search_query%' 
                               OR mname LIKE '%$search_query%' 
-                              OR lname LIKE '%$search_query%'
-                              OR email LIKE '%$search_query%'";
+                              OR lname LIKE '%$search_query%' 
+                              OR address LIKE '%$search_query%'
+                              OR email LIKE '%$search_query%' 
+                              OR (gender LIKE '%$search_query%' AND gender != 'fe')";
 }
 $total_records_result = mysqli_query($conn, $total_records_query);
 $total_records_row = mysqli_fetch_array($total_records_result);
@@ -77,7 +81,7 @@ $total_pages = ceil($total_records / $records_per_page);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Alumni List</title>
+    <title>Archive List</title>
     <link rel="stylesheet" href="./css/alumni_arc.css">
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
@@ -86,6 +90,7 @@ $total_pages = ceil($total_records / $records_per_page);
         "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     </script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- FOR PAGINATION -->
     <style>
@@ -95,7 +100,7 @@ $total_pages = ceil($total_records / $records_per_page);
             border-collapse: collapse;
         }
 
-        td{
+        td {
             text-align: left;
         }
 
@@ -116,6 +121,7 @@ $total_pages = ceil($total_records / $records_per_page);
 
         .act {
             max-width: 235px;
+            text-align: center;
             /* Set a max-width to control truncation */
         }
 
@@ -176,7 +182,7 @@ $total_pages = ceil($total_records / $records_per_page);
 
         <div class="side-content">
             <div class="profile">
-                <i class='bx bx-user bx-flip-horizontal'></i>
+            <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
                 <!-- <h4>ADMIN</h4>
@@ -266,7 +272,7 @@ $total_pages = ceil($total_records / $records_per_page);
 
         <main>
             <div class="page-header">
-                <h1><strong>Alumni</strong></h1>
+                <h1><strong>Archive</strong></h1>
             </div>
 
             <div class="container-fluid" id="main-container">
@@ -336,9 +342,9 @@ $total_pages = ceil($total_records / $records_per_page);
                                             <?php
                                             echo "
                                                 <td class='inline act'>
-                                                    <a class='btn btn-warning btn-sm' href='./update_info.php?id=$row[alumni_id]' style='font-size: 11.8px;'>Update</a>
-                                                    <a class='btn btn-danger btn-sm' href='./del_alumni.php?id=$row[alumni_id]' style='font-size: 11.8px;'>Archive</a>
-                                                    <a class='btn btn-info btn-sm' href='./alumni_info.php?id=$row[alumni_id]' style='font-size: 11.8px;'>More Info</a>
+                                                    <div class='button'>
+                                                        <a class='btn btn-success btn-sm' href='./restore_alumni.php?id=$row[alumni_id]' style='font-size: 11.8px;'>Restore</a>
+                                                    </div>
                                                 </td>
                                             "; ?>
                                         </tr>

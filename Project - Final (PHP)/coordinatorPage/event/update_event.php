@@ -1,3 +1,35 @@
+<?php
+session_start();
+
+$serername = "localhost";
+$db_username = "root";
+$db_password = "";
+$db_name = "alumni_management_system";
+$conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
+
+// USER ACCOUNT DATA
+if (isset($_SESSION['user_id'])) {
+    $account = $_SESSION['user_id'];
+
+    $stmt = $conn->prepare("SELECT * FROM coordinator WHERE coor_id = ?");
+    $stmt->bind_param("s", $account); // "s" indicates the type is string
+    $stmt->execute();
+    $user_result = $stmt->get_result();
+
+    if ($user_result->num_rows > 0) {
+        $user = $user_result->fetch_assoc();
+    } else {
+        // No user found with the given admin_id
+    }
+
+    $stmt->close();
+} else {
+    echo "User not logged in.";
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,9 +38,10 @@
     <title>Update Event Info</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="css/update_event.css">
-    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
    <input type="checkbox" id="menu-toggle">
@@ -19,17 +52,17 @@
         
         <div class="side-content">
             <div class="profile">
-                <i class='bx bx-user bx-flip-horizontal'></i>
-                <h4>COORDINATOR</h4>
-                <small style="color: white;">coordinator@email.com</small>
+            <i class="bi bi-person-circle"></i>
+                <h4><?php echo $user['fname']; ?></h4>
+                <small style="color: white;"><?php echo $user['email']; ?></small>
             </div>
 
             <div class="side-menu">
-                <ul>
+            <ul>
                     <li>
-                       <a href="../dashboard_coor.php" >
+                       <a href="../dashboard_admin.php" >
                             <span class="las la-home" style="color:#fff"></span>
-                            <small>DASHBOARD"</small>
+                            <small>DASHBOARD</small>
                         </a>
                     </li>
                     <li>
@@ -45,7 +78,7 @@
                         </a>
                     </li>
                     <li>
-                       <a href="./update_event.php" class="active">
+                       <a href="./update_event.php"class="active">
                             <span class="las la-calendar" style="color:#fff"></span>
                             <small>EVENT</small>
                         </a>
@@ -63,12 +96,11 @@
                         </a>
                     </li>
                     <li>
-                        <a href="../archive/alumni_archive.php" >
-                             <span class="las la-clipboard-check" style="color:#fff"></span>
+                        <a href="../archive/alumni_archive.php">
+                             <span class="las la-archive" style="color:#fff"></span>
                              <small>ARCHIVE</small>
                          </a>
                      </li>
-
                 </ul>
             </div>
         </div>
@@ -79,41 +111,58 @@
         <header>
             <div class="header-content">
                 <label for="menu-toggle">
-                    <span class="las la-bars"></span>
-                </label>
-                
+                    <span class="las la-bars bars" style="color: white;"></span>
+                </label>            
                 <div class="header-menu">
                     <label for="">
                     </label>
-                    
-                    <div class="notify-icon">
-                    </div>
-                    
-                    <div class="notify-icon">   
-                    </div>
-                    
                     <div class="user">
-                        <div class="bg-img" style="background-image: url(img/1.jpeg)"></div>
-                        
                         <a href="../logout.php">
-                        <span class="las la-power-off"></span>
+                        <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
                         </a>
-
                     </div>
                 </div>
             </div>
         </header>
-        
-        
         <main>
-            
             <div class="page-header">
-                <h1><Strong>Event</Strong></h1>
+                <h1><strong>Event</strong></h1>
+                <hr>
             </div>
-        </main>
-            <div class="page-content">
-                <!--  -->
-        </div>
+        </main>    
+            <div class="background-box">
+                <div class="alumni-container">
+                    <div class="alumni-info">
+                        <h3>Event Info</h3>
+                        <hr>
+                      </div>
+                  </div>
+              <br>
+            <div class="table">
+            <label for="name"><h3>Event Title</h3></label>
+                <input type="text" id="name" name="name"><br><br>
+                <form action="process.php" method="post">
+            <label for="date"><h3>Date:</h3></label>
+                <input type="date" id="date" name="date" required><br><br>
+            <label for="time"><h3>Time:</h3></label>
+                <input type="time" id="time" name="time" required><br><br>
+            <label for="name"><h3>Description</h3></label>
+                <input type="text" id="name" name="name"><br><br>
+                  
+            <div class="image-button-container">
+                <img src="https://cvsu-imus.edu.ph/student-portal/assets/images/logo-mobile.png" alt="Alumni Image">
+                <div class="choose-file-button">
+                    <button id="add-third-btn">Choose File</button>
+                    <input type="texts" name="your name" placeholder="File Patch">
+                </div>
+            </div>
+            </form>
+              <button id="add-new-btn">Update</button>
+              <button id="add-first-btn">Remove Event</button>
+              <button id="add-second-btn">Back</button>
+              </div>
+            </div>
+            </div>  
     </div>
 </body>
 </html>

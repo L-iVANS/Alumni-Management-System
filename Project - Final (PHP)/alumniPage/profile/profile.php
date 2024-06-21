@@ -1,3 +1,42 @@
+<?php
+session_start();
+
+$serername = "localhost";
+$db_username = "root";
+$db_password = "";
+$db_name = "alumni_management_system";
+$conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
+
+// USER ACCOUNT DATA
+if (isset($_SESSION['user_id'])) {
+    $account = $_SESSION['user_id'];
+
+    $stmt = $conn->prepare("SELECT * FROM alumni WHERE alumni_id = ?");
+    $stmt->bind_param("s", $account); // "s" indicates the type is string
+    $stmt->execute();
+    $user_result = $stmt->get_result();
+
+    if ($user_result->num_rows > 0) {
+        $user = $user_result->fetch_assoc();
+    } else {
+        // No user found with the given admin_id
+    }
+
+    $stmt->close();
+} else {
+    echo "User not logged in.";
+}
+
+
+//read data from table alumni
+$sql = "SELECT * FROM alumni WHERE alumni_id=$account";
+$result = $conn->query($sql);
+$row = $result->fetch_assoc();
+
+$file = $row['picture'];
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,9 +58,11 @@
         
         <div class="side-content">
             <div class="profile">
-                <i class='bx bx-user bx-flip-horizontal'></i>
-                <h4>ALUMNI</h4>
-                <small style="color: white;">user@email.com</small>
+            <div>
+                    <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" style="width:83px;height:83px; border-radius: 100%;border: 2px solid white;">
+                </div>
+                <h4><?php echo $user['fname']; ?></h4>
+                <small style="color: white;"><?php echo $user['email']; ?></small>
             </div>
 
             <div class="side-menu">
@@ -91,5 +132,15 @@
             </div>
         
     </div>
+    <!-- Script to display preview of selected image -->
+    <script>
+        function getImagePreview(event) {
+            var image = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById('preview');
+            preview.src = image;
+            preview.style.width = '83px';
+            preview.style.height = '83px';
+        }
+    </script>
 </body>
 </html>

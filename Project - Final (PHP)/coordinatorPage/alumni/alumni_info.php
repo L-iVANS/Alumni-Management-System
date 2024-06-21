@@ -11,7 +11,7 @@ $conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
 if (isset($_SESSION['user_id'])) {
     $account = $_SESSION['user_id'];
 
-    $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ?");
+    $stmt = $conn->prepare("SELECT * FROM coordinator WHERE coor_id = ?");
     $stmt->bind_param("s", $account); // "s" indicates the type is string
     $stmt->execute();
     $user_result = $stmt->get_result();
@@ -125,12 +125,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         <a href="./alumni_info.php" class="active">
                             <span class="las la-th-list" style="color:#fff"></span>
                             <small>ALUMNI</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../coordinator/coordinator.php">
-                            <span class="las la-user-cog" style="color:#fff"></span>
-                            <small>COORDINATOR</small>
                         </a>
                     </li>
                     <li>

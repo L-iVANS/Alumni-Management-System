@@ -54,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $fromYear = $_POST['startYear'];
     $toYear = $_POST['endYear'];
     $contact = $_POST['contact'];
-    $address = $_POST['address'];
-    $email = $_POST['email'];
+    $address = ucwords($_POST['address']);
+    $email = strtolower($_POST['email']);
     $temp_password = $_POST['temp_pass'];
 
 
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Escape special characters (optional, depends on usage)
         $imageDataEscaped = addslashes($imageData);
 
-        $sql = "INSERT INTO alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email', password='$password', picture='$imageDataEscaped'";
+        $sql = "INSERT INTO alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email', password='$temp_password', picture='$imageDataEscaped'";
         $result = $conn->query($sql);
         echo
         "
@@ -104,6 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 
 <body>
@@ -115,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div class="side-content">
             <div class="profile">
-                <i class='bx bx-user bx-flip-horizontal'></i>
+            <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
             </div>
@@ -202,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="container" id="container-full">
             <div class="container" id="content-container">
                 <div class="container-title">
-                    <span>ADD ALUMNI</span>
+                    <span>Add New Account</span>
                 </div>
 
                 <?php
@@ -212,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 ?>
 
                 <div class="container" id="content">
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form action="" method="POST">
                         <div class="container">
                             <div class="row align-items-end">
                                 <div class="col">
@@ -305,40 +306,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     $toYear = isset($_POST['endYear']) ? $_POST['endYear'] : '';
                                     ?>
 
-                                    <form method="post" action="">
-                                        <select class="form-control" name="startYear" id="startYear" required>
-                                            <option value="" selected hidden disabled>Batch: From Year</option>
-                                            <?php
-                                            // Get the current year
-                                            $currentYear = date('Y');
+                                    <select class="form-control" name="startYear" id="startYear" required>
+                                        <option value="" selected hidden disabled>Batch: From Year</option>
+                                        <?php
+                                        // Get the current year
+                                        $currentYear = date('Y');
 
-                                            // Number of years to include before and after the current year
-                                            $yearRange = 21; // Adjust this number as needed
+                                        // Number of years to include before and after the current year
+                                        $yearRange = 21; // Adjust this number as needed
 
-                                            // Generate options for years, from current year minus $yearRange to current year plus $yearRange
-                                            for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
-                                                $selected = ($year == $fromYear) ? 'selected' : '';
+                                        // Generate options for years, from current year minus $yearRange to current year plus $yearRange
+                                        for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
+                                            $selected = ($year == $fromYear) ? 'selected' : '';
+                                            echo "<option value=\"$year\" $selected>$year</option>";
+                                        }
+                                        ?>
+                                    </select>
+
+                                    <select class="form-control" name="endYear" id="endYear" required>
+                                        <option value="" selected hidden disabled>Batch: To Year</option>
+                                        <?php
+                                        if ($fromYear) {
+                                            // Generate options for endYear starting from startYear + 1
+                                            for ($year = $fromYear + 1; $year <= $currentYear + $yearRange; $year++) {
+                                                $selected = ($year == $toYear) ? 'selected' : '';
                                                 echo "<option value=\"$year\" $selected>$year</option>";
                                             }
-                                            ?>
-                                        </select>
-
-                                        <select class="form-control" name="endYear" id="endYear" required>
-                                            <option value="" selected hidden disabled>Batch: To Year</option>
-                                            <?php
-                                            if ($fromYear) {
-                                                // Generate options for endYear starting from startYear + 1
-                                                for ($year = $fromYear + 1; $year <= $currentYear + $yearRange; $year++) {
-                                                    $selected = ($year == $toYear) ? 'selected' : '';
-                                                    echo "<option value=\"$year\" $selected>$year</option>";
-                                                }
-                                            }
-                                            ?>
-                                        </select>
-
-                                        <button type="submit">Submit</button>
-                                    </form>
-
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -358,7 +354,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Address:</label>
                                 </div>
                                 <div class="col">
-                                    <input class="form-control" type="number" id="name" name="address" placeholder="Enter Phone No." required value="<?php echo $address; ?>">
+                                    <input class="form-control" type="text" id="name" name="address" placeholder="Enter Address" required value="<?php echo $address; ?>">
                                 </div>
                             </div>
                         </div>

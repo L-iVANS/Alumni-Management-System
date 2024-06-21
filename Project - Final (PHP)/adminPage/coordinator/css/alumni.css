@@ -326,7 +326,7 @@ main {
     display: flex;
 }
 .table-content{
-    margin-top: 50px;
+    margin-top: 20px;
     width: 100%;
     overflow-y: hidden;
 }

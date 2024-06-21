@@ -30,53 +30,28 @@ if (isset($_SESSION['user_id'])) {
 // Close the database connection if needed
 // $conn->close();
 
-$stud_id = "";
 $fname = "";
 $mname = "";
 $lname = "";
-$gender = "";
-$course = "";
-$fromYear = "";
-$toYear = "";
-$connected_to = "";
 $contact = "";
-$address = "";
 $email = "";
-$username = "";
 $temp_password = "";
 
 // get the data from form
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $stud_id = $_POST['student_id'];
     $fname = ucwords($_POST['fname']);
     $mname = ucwords($_POST['mname']);
     $lname = ucwords($_POST['lname']);
-    $gender = $_POST['gender'];
-    $course = $_POST['course'];
-    $fromYear = $_POST['startYear'];
-    $toYear = $_POST['endYear'];
-    $connected_to = ucwords($_POST['connected_to']);
     $contact = $_POST['contact'];
-    $address = ucwords($_POST['address']);
     $email = $_POST['email'];
-    $username = $_POST['username'];
     $temp_password = $_POST['temp_pass'];
 
 
     // email and user existing check
-    $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
-    $usernameCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE username='$username'");
+    $emailCheck = mysqli_query($conn, "SELECT * FROM coordinator WHERE email='$email'");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
-        // echo "
-        //         <script>
-        //             alert('Email Already Exist!!!');
-        //             window.location.href = '../coordinator.php';
-        //         </script>
-        //     ";
-    } else if (mysqli_num_rows($usernameCheck) > 0) {
-        $errorMessage = "Username Already Exists";
         // echo "
         //         <script>
         //             alert('Username Already Exist!!!');
@@ -84,14 +59,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         //         </script>
         //     ";
     } else {
-
-        $sql = "INSERT INTO alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', connected_to='$connected_to', contact='$contact', address='$address', email='$email', username='$username', password='$temp_password'";
+        $sql = "INSERT INTO coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email', password='$temp_password'";
         $result = $conn->query($sql);
         echo
         "
         <script>
             alert('Alumni Added Successfully');
-            window.location.href = './alumni.php';
+            window.location.href = './coordinator.php';
         </script>
     ";
     }
@@ -104,13 +78,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Add New Alumni</title>
+    <title>Add New Coordinator</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
-    <link rel="stylesheet" href="css/add_alumni.css">
+    <link rel="stylesheet" href="./css/add_coor.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 
 <body>
@@ -122,13 +97,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div class="side-content">
             <div class="profile">
-                <i class='bx bx-user bx-flip-horizontal'></i>
+            <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
             </div>
 
             <div class="side-menu">
-            <ul>
+                <ul>
                     <li>
                         <a href="../dashboard_admin.php">
                             <span class="las la-home" style="color:#fff"></span>
@@ -142,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </a>
                     </li>
                     <li>
-                        <a href="../alumni/alumni.php" >
+                        <a href="../alumni/alumni.php">
                             <span class="las la-th-list" style="color:#fff"></span>
                             <small>ALUMNI</small>
                         </a>
@@ -177,14 +152,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <small>ARCHIVE</small>
                         </a>
                     </li>
-
                 </ul>
             </div>
         </div>
     </div>
-
     <div class="main-content">
-
         <header>
             <div class="header-content">
                 <label for="menu-toggle">
@@ -204,13 +176,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <main>
             <div class="page-header">
-                <h1><strong>Alumni</strong></h1>
+                <h1><strong>Coordinator</strong></h1>
             </div>
         </main>
         <div class="container" id="container-full">
             <div class="container" id="content-container">
                 <div class="container-title">
-                    <span>ADD ALUMNI</span>
+                    <span>Add New Account</span>
                 </div>
 
                 <?php
@@ -221,17 +193,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <div class="container" id="content">
                     <form action="" method="POST" enctype="multipart/form-data">
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="Student ID">Student ID:</label>
-                                </div>
-
-                                <div class="col">
-                                    <input class="form-control" type="number" id="name" name="student_id" placeholder="Student ID" required value="<?php echo $stud_id; ?>">
-                                </div>
-                            </div>
-                        </div>
                         <div class="container">
                             <div class="row align-items-end">
                                 <div class="col">
@@ -267,102 +228,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="container">
                             <div class="row align-items-end">
                                 <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Gender:</label>
-                                </div>
-                                <div class="col">
-                                    <select class="form-control" name="gender" id="gender" required>
-                                        <option value="" selected hidden disabled>Select a Gender</option>
-                                        <option value="Male" <?php echo ($gender == 'Male') ? 'selected' : ''; ?>>Male</option>
-                                        <option value="Female" <?php echo ($gender == 'Female') ? 'selected' : ''; ?>>Female</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Course:</label>
-                                </div>
-                                <div class="col">
-                                    <select class="form-control" name="course" id="course" required>
-                                        <option value="" selected hidden disabled>Select a course</option>
-                                        <option value="BAJ" <?php echo ($course == 'BAJ') ? 'selected' : ''; ?>>BAJ</option>
-                                        <option value="BECEd" <?php echo ($course == 'BECEd') ? 'selected' : ''; ?>>BECEd</option>
-                                        <option value="BEEd" <?php echo ($course == 'BEEd') ? 'selected' : ''; ?>>BEEd</option>
-                                        <option value="BSBM" <?php echo ($course == 'BSBM') ? 'selected' : ''; ?>>BSBM</option>
-                                        <option value="BSOA" <?php echo ($course == 'BSOA') ? 'selected' : ''; ?>>BSOA</option>
-                                        <option value="BSEntrep" <?php echo ($course == 'BSEntrep') ? 'selected' : ''; ?>>BSEntrep</option>
-                                        <option value="BSHM" <?php echo ($course == 'BSHM') ? 'selected' : ''; ?>>BSHM</option>
-                                        <option value="BSIT" <?php echo ($course == 'BSIT') ? 'selected' : ''; ?>>BSIT</option>
-                                        <option value="BSCS" <?php echo ($course == 'BSCS') ? 'selected' : ''; ?>>BSCS</option>
-                                        <option value="BSc(Psych)" <?php echo ($course == 'BSc(Psych)') ? 'selected' : ''; ?>>BSc(Psych)</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col" id="calendar">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="phone"><span>Batch:</span></label>
-                                </div>
-
-                                <div class="col" id="batch">
-                                    <select class="form-control" name="startYear" id="startYear" required>
-                                        <option value="" selected hidden disabled>Batch: From Year</option>
-                                        <?php
-                                        // Get the current year
-                                        $currentYear = date('Y');
-
-                                        // Number of years to include before and after the current year
-                                        $yearRange = 21; // Adjust this number as needed
-
-                                        // Preserve the selected value after form submission
-                                        $selectedYear = isset($_POST['startYear']) ? $_POST['startYear'] : '';
-
-                                        // Generate options for years, from current year minus $yearRange to current year plus $yearRange
-                                        for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
-                                            $selected = ($year == $selectedYear) ? 'selected' : '';
-                                            echo "<option value=\"$year\" $selected>$year</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                    <select class="form-control" name="endYear" id="endYear" required>
-                                        <option value="" selected hidden disabled>Batch: To Year</option>
-                                        <?php
-                                        // Get the current year
-                                        $currentYear = date('Y');
-
-                                        // Number of years to include before and after the current year
-                                        $yearRange = 21; // Adjust this number as needed
-
-                                        // Preserve the selected value after form submission
-                                        $selectedEndYear = isset($_POST['endYear']) ? $_POST['endYear'] : '';
-
-                                        // Generate options for years, from current year minus $yearRange to current year plus $yearRange
-                                        for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
-                                            $selected = ($year == $selectedEndYear) ? 'selected' : '';
-                                            echo "<option value=\"$year\" $selected>$year</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Connected to:</label>
-                                </div>
-
-                                <div class="col">
-                                    <input class="form-control" class="form-control" type="text" id="name" name="connected_to" placeholder="Company" required value="<?php echo $connected_to; ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
                                     <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Contact:</label>
                                 </div>
                                 <div class="col">
@@ -373,30 +238,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="container">
                             <div class="row align-items-end">
                                 <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Address:</label>
-                                </div>
-                                <div class="col">
-                                    <input class="form-control" type="address" id="address" name="address" placeholder="Enter Address" required value="<?php echo $address; ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
                                     <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Email:</label>
                                 </div>
                                 <div class="col">
                                     <input class="form-control" type="email" id="email" name="email" placeholder="Enter Email" required value="<?php echo $email; ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="username">Username:</label>
-                                </div>
-                                <div class="col">
-                                    <input class="form-control" type="text" id="username" name="username" placeholder="Enter Username" required value="<?php echo $username; ?>">
                                 </div>
                             </div>
                         </div>
@@ -414,8 +259,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="row" style="margin-top:20px;">
                                 <div class="col" id="buttons">
                                     <div class="button">
-                                        <button type="submit" class="btn btn-warning" name="insert" id="insert" value="insert">Add new</button>
-                                        <a class="btn btn-danger" href="./alumni.php">Cancel</a>
+                                        <button type="submit" class="btn btn-warning" name="submit" id="insert" value="submit">Add new</button>
+                                        <a class="btn btn-danger" href="./coordinator.php">Cancel</a>
                                     </div>
                                 </div>
                             </div>
@@ -425,6 +270,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
+
+    <!-- SCRIPT FOR DATCH SELECTOR -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startYearSelect = document.getElementById('startYear');
+            const endYearSelect = document.getElementById('endYear');
+
+            // Disable endYear select by default if no start year is selected
+            if (!startYearSelect.value) {
+                endYearSelect.disabled = true;
+            } else {
+                populateEndYearOptions(parseInt(startYearSelect.value));
+            }
+
+            startYearSelect.addEventListener('change', function() {
+                const selectedStartYear = parseInt(this.value);
+                endYearSelect.disabled = false;
+
+                populateEndYearOptions(selectedStartYear);
+            });
+
+            function populateEndYearOptions(selectedStartYear) {
+                const currentYear = new Date().getFullYear();
+                const yearRange = 21; // Adjust this number as needed
+                const selectedEndYear = endYearSelect.getAttribute('data-selected'); // Get the selected end year
+
+                // Clear current endYear options
+                endYearSelect.innerHTML = '<option value="" selected hidden disabled>Batch: To Year</option>';
+
+                // Generate new options for endYear
+                for (let year = selectedStartYear + 1; year <= currentYear + yearRange; year++) {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    if (year == selectedEndYear) {
+                        option.selected = true; // Preserve the selected end year
+                    }
+                    endYearSelect.appendChild(option);
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

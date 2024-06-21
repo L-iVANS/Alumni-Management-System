@@ -1,3 +1,35 @@
+<?php
+session_start();
+
+$serername = "localhost";
+$db_username = "root";
+$db_password = "";
+$db_name = "alumni_management_system";
+$conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
+
+// USER ACCOUNT DATA
+if (isset($_SESSION['user_id'])) {
+    $account = $_SESSION['user_id'];
+
+    $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ?");
+    $stmt->bind_param("s", $account); // "s" indicates the type is string
+    $stmt->execute();
+    $user_result = $stmt->get_result();
+
+    if ($user_result->num_rows > 0) {
+        $user = $user_result->fetch_assoc();
+    } else {
+        // No user found with the given admin_id
+    }
+
+    $stmt->close();
+} else {
+    echo "User not logged in.";
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +42,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
 </head>
 <body>
@@ -21,9 +54,9 @@
         
         <div class="side-content">
             <div class="profile">
-                <i class='bx bx-user bx-flip-horizontal'></i>
-                <h4>ADMIN</h4>
-                <small style="color: white;">admin@email.com</small>
+            <i class="bi bi-person-circle"></i>
+                <h4><?php echo $user['fname']; ?></h4>
+                <small style="color: white;"><?php echo $user['email']; ?></small>
             </div>
 
             <div class="side-menu">

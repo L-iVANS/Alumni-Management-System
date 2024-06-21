@@ -28,6 +28,9 @@ if (isset($_GET['id'])) {
         $stmt->close();
     } else {
         echo "User not logged in.";
+        echo "User not logged in.";
+        header("location: ../../loginPage/login.php");
+        exit;
     }
 
     // Close the database connection if needed
@@ -35,8 +38,8 @@ if (isset($_GET['id'])) {
 
 
     //insert data into table alumni_archive from alumni
-    $sql_archive = "INSERT INTO coordinator (coor_id, fname, mname, lname, contact, email, username, password, date_created)" .
-        "SELECT coor_id, fname, mname, lname, contact, email, username, password, date_created FROM coordinator_archive WHERE coor_id=$coor_id";
+    $sql_archive = "INSERT INTO coordinator (coor_id, fname, mname, lname, contact, email, password, date_created)" .
+        "SELECT coor_id, fname, mname, lname, contact, email, password, date_created FROM coordinator_archive WHERE coor_id=$coor_id";
     $conn->query($sql_archive);
 
     //delete data in table alumni
@@ -46,7 +49,7 @@ if (isset($_GET['id'])) {
 echo
 "
         <script>
-            alert('Alumni Acccount Archived Successfully ');
+            alert('Coordinator Acccount Restored Successfully ');
             window.location.href = './coor_archive.php';
         </script>
     ";

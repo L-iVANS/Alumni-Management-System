@@ -11,7 +11,7 @@ $conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
 if (isset($_SESSION['user_id'])) {
     $account = $_SESSION['user_id'];
 
-    $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ?");
+    $stmt = $conn->prepare("SELECT * FROM coordinator WHERE coor_id = ?");
     $stmt->bind_param("s", $account); // "s" indicates the type is string
     $stmt->execute();
     $user_result = $stmt->get_result();
@@ -30,69 +30,46 @@ if (isset($_SESSION['user_id'])) {
 // Close the database connection if needed
 // $conn->close();
 
-$fname = "";
-$mname = "";
-$lname = "";
-$contact = "";
-$email = "";
+$file = "";
+$myId = "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Show the data of alumni
     if (!isset($_GET['id'])) {
-        header("location: ./coordinator.php");
+        header("location: ./alumni.php");
         exit;
     }
-    $coor_id = $_GET['id'];
+    $alumni_id = $_GET['id'];
 
     //read data from table alumni
-    $sql = "SELECT * FROM coordinator WHERE coor_id=$coor_id";
+    $sql = "SELECT * FROM alumni WHERE alumni_id=$alumni_id";
     $result = $conn->query($sql);
     $row = $result->fetch_assoc();
 
     if (!$row) {
-        header("location: ./coordinator.php");
+        header("location: ./alumni.php");
         exit;
     }
     // data from table alumni where student_id = $alumni_id = $_GET['id']; get from alumni list update
-    $fname = $row['fname'];
-    $mname = $row['mname'];
-    $lname = $row['lname'];
-    $contact = $row['contact'];
-    $email = $row['email'];
+    $file = $row['picture'];
+
 } else {
-    // get the data from form
-    $coor_id = $_POST['id'];
-    $fname = ucwords($_POST['fname']);
-    $mname = ucwords($_POST['mname']);
-    $lname = ucwords($_POST['lname']);
-    $contact = $_POST['contact'];
-    $email = strtolower($_POST['email']);
 
+    $alumni_id = $_POST['id'];
+    // for image
+    if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
+        $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
+        $sql = "UPDATE alumni SET picture='$file' WHERE alumni_id=$alumni_id";
+    }
 
-
-    // email and user existing check
-    $emailCheck = mysqli_query($conn, "SELECT * FROM coordinator WHERE email='$email' AND coor_id != $coor_id");
-
-    if (mysqli_num_rows($emailCheck) > 0) {
-        $errorMessage = "Email Already Exists";
-        // echo "
-        //         <script>
-        //             alert('Username Already Exist!!!');
-        //             window.location.href = '../coordinator.php';
-        //         </script>
-        //     ";
-    } else {
-
-        $sql = "UPDATE coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email' WHERE coor_id=$coor_id";
-        $result = $conn->query($sql);
-        echo
-        "
+    $result = $conn->query($sql);
+    echo
+    "
         <script>
-            alert('Coordinator Info Updated Successfully');
-            window.location.href = './coordinator.php';
+            alert('Alumni Info Updated Successfully');
+            window.location.href = './alumni_info.php?id=$alumni_id';
         </script>
     ";
-    }
 }
 ?>
 
@@ -102,9 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Update Coordinator Info</title>
+    <title>Update Alumni Profile</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
-    <link rel="stylesheet" href="./css/update_coor.css">
+    <link rel="stylesheet" href="./css/update_profile.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
@@ -141,15 +118,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         </a>
                     </li>
                     <li>
-                        <a href="../alumni/alumni.php">
+                        <a href="./update_profile.php" class="active">
                             <span class="las la-th-list" style="color:#fff"></span>
                             <small>ALUMNI</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./update_coor.php" class="active">
-                            <span class="las la-user-cog" style="color:#fff"></span>
-                            <small>COORDINATOR</small>
                         </a>
                     </li>
                     <li>
@@ -182,6 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     </div>
 
     <div class="main-content">
+
         <header>
             <div class="header-content">
                 <label for="menu-toggle">
@@ -201,86 +173,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         <main>
             <div class="page-header">
-                <h1><strong>Coordinator</strong></h1>
+                <h1><strong>Alumni</strong></h1>
             </div>
         </main>
         <div class="container" id="container-full">
             <div class="container" id="content-container">
                 <div class="container-title">
-                    <span>Update Info</span>
+                    <span>Update Profile</span>
                 </div>
-
-                <?php
-                if (!empty($errorMessage)) {
-                    echo "<script>alert('$errorMessage');</script>";
-                }
-                ?>
-
-                <form action="" method="POST">
-                    <div class="container" id="content">
-                        <div class="container">
-                            <div class="row align-items">
-                                <div class="col">
-                                    <input type="hidden" name="id" value="<?php echo $coor_id; ?>">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="first-name">First Name:</label>
-                                </div>
-
-                                <div class="col">
-                                    <input class="form-control" type="text" id="name" name="fname" placeholder="First Name" required value="<?php echo $fname; ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
+                <div class="container" id="content">
+                    <!-- PROFILE -->
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        <div class="container text-center" id="start">
                             <div class="row align-items-end">
                                 <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="middle-name">Middle Name:</label>
-                                </div>
-
-                                <div class="col">
-                                    <input class="form-control" type="text" id="name" name="mname" placeholder="Middle Name" value="<?php echo $mname; ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="last-name">Last Name:</label>
-                                </div>
-                                <div class="col">
-                                    <input class="form-control" type="text" id="name" name="lname" placeholder="Last Name" required value="<?php echo $lname; ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Contact:</label>
-                                </div>
-                                <div class="col">
-                                    <input class="form-control" type="number" id="name" name="contact" placeholder="Enter Phone No." required value="<?php echo $contact; ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
-                            <div class="row align-items-end">
-                                <div class="col">
-                                    <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="name">Email:</label>
-                                </div>
-                                <div class="col">
-                                    <input class="form-control" type="email" id="email" name="email" placeholder="Enter Email" required value="<?php echo $email; ?>">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container">
-                            <div class="row" style="margin-top:20px;">
-                                <div class="col" id="buttons">
-                                    <div class="button">
-                                        <button type="submit" class="btn btn-warning" name="inser" id="insert" value="insert">Update</button>
-                                        <?php
-                                        echo "
-                                                <a class='btn btn-danger' href='./coordinator.php'>Cancel</a>
-                                            "; ?>
+                                    <!-- Preview image -->
+                                    <div class="form-control" style="width:445px;height:435px; border-radius: 100%;">
+                                        <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" style="width:420px;height:420px; border-radius: 100%;">
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row align-items-end" style="margin-top:5%;">
+                                <div class="col">
+                                    <input type="hidden" name="id" value="<?php echo $alumni_id; ?>">
+                                    <input class="form-control" type="file" name="image" required onchange="getImagePreview(event)">
+                                </div>
+                                <div class="col">
+                                    <button type="submit" class="btn btn-warning" name="insert" id="insert" value="insert" style="padding-left: 70px; padding-right: 70px; margin-right: 7%;">Update</button>
+                                    <?php
+                                        echo "
+                                        <a class='btn btn-danger' href='./alumni_info.php?id=$row[alumni_id]' style='padding-left: 70px; padding-right: 70px;'>Cancel</a>
+                                        ";?>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -289,6 +213,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             </div>
         </div>
     </div>
+
+    <!-- Script to display preview of selected image -->
+    <script>
+        function getImagePreview(event) {
+            var image = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById('preview');
+            preview.src = image;
+            preview.style.width = '420px';
+            preview.style.height = '420px';
+        }
+    </script>
+    <!-- script to insert image to database -->
+    <Script>
+        $(document).ready(function() {
+            $('#insert').click(function() {
+                var image_name = $('#image').val();
+                if (image_name == '') {
+                    alert("please Select Profile")
+                    return false;
+                } else {
+                    var extension = $('#image').val().split('.').pop().toLowerCase();
+                    if (jquery.inArray(extenssion, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                        alert("Invalid Image File")
+                        $('#image').val('');
+                        return false;
+                    }
+                }
+            })
+        });
+    </Script>
 </body>
 
 </html>
