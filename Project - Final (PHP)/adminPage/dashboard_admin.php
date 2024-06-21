@@ -27,6 +27,36 @@ if (isset($_SESSION['user_id'])) {
     echo "User not logged in.";
 }
 
+//query for alumni count
+$sql = "SELECT COUNT(student_id) AS alumni_count FROM alumni";
+
+// connect in databse then run the query $sql
+$result = $conn->query($sql);
+// retrieve the data from database
+$row = $result->fetch_assoc();
+
+// get the exact query or in short COUNT(student_id) from table alumni,  COUNT(student_id) rename as alumni_count
+$count = $row['alumni_count'];
+
+//query for coordinators count
+$sql_coordinator = "SELECT COUNT(coor_id) AS coordinators_count FROM coordinator";
+
+// connect in databse then run the query $sql
+$result_coordinator = $conn->query($sql_coordinator);
+ // retrieve the data from database
+$row_coordinator = $result_coordinator->fetch_assoc();
+// get the exact query or in short COUNT(coor_id) from table coordinator,  COUNT(coordinator_id) rename as coordinators_count
+$coordinator_count = $row_coordinator['coordinators_count'];
+
+//query for events count
+$sql_event = "SELECT COUNT(event_id) AS events_count FROM event";
+
+// connect in databse then run the query $sql
+$result_event = $conn->query($sql_event);
+ // retrieve the data from database
+$row_event = $result_event->fetch_assoc();
+// get the exact query or in short COUNT(event_id) from table event,  COUNT(event_id) rename as events_count
+$event_count = $row_event['events_count'];
 
 ?>
 <!DOCTYPE html>
@@ -155,10 +185,12 @@ if (isset($_SESSION['user_id'])) {
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <i class="las la-user-graduate fa-3x"></i>
-                                                <div class="ml-4">
-                                                    <h5>Alumni</h5>
-                                                    <h2>1000</h2>
-                                                </div>
+                                                    <div class="row mb-3">
+                                                        <!-- display Alumni Total Count -->
+                                                        <label style="font-size: 20px;">Alumni Total Count:</label>
+                                                        <!-- display alumni count in database -->
+                                                        <label class="col-sm-3 col-form-label" style="font-size: 30px;"><?php echo $count; ?></label>
+                                                    </div>
                                             </div>
                                         </div>
                                         <a href="alumni/alumni.php" class="card-footer d-flex justify-content-between text-white">
@@ -172,10 +204,12 @@ if (isset($_SESSION['user_id'])) {
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <i class="las la-user-plus fa-3x"></i>
-                                                <div class="ml-4">
-                                                    <h5>Coordinators</h5>
-                                                    <h2>7</h2>
-                                                </div>
+                                                    <div class="row mb-3">
+                                                        <!-- Display coordinator Count -->
+                                                        <label style="font-size: 20px;">Coordinators Total Count:</label>
+                                                        <!-- display coordinators count in database -->
+                                                        <label class="col-sm-3 col-form-label" style="font-size: 30px;"><?php echo $coordinator_count; ?></label>
+                                                    </div>
                                             </div>
                                         </div>
                                         <a href="coordinator/coordinator.php" class="card-footer d-flex justify-content-between text-white">
@@ -189,9 +223,11 @@ if (isset($_SESSION['user_id'])) {
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <i class="las la-calendar-alt fa-3x"></i>
-                                                <div class="ml-4">
-                                                    <h5>Events</h5>
-                                                    <h2>5</h2>
+                                                    <div class="row mb-3">
+                                                     <!-- Display Student Total Count -->
+                                                    <label style="font-size: 20px;">Events Total Count:</label>
+                                                    <!-- display events count in database -->
+                                                    <label class="col-sm-3 col-form-label" style="font-size: 30px;"><?php echo $event_count; ?></label>
                                                 </div>
                                             </div>
                                         </div>

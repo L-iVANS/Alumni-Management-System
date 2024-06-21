@@ -27,6 +27,26 @@ if (isset($_SESSION['user_id'])) {
     echo "User not logged in.";
 }
 
+// Assuming you have a user ID stored in a variable $user_id
+$sql = "SELECT * FROM `admin` WHERE 1";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Fetch data
+    $row = $result->fetch_assoc();
+
+    // Assign fetched data to variables
+    $fname = $row['fname'];
+    $mname = $row['mname'];
+    $lname = $row['lname'];
+    $contact = $row['contact'];
+    $email = $row['email'];
+    $password = $row['password'];
+    // Add more fields as needed
+} else {
+    echo "0 results";
+}
+
 
 ?>
 
@@ -156,23 +176,19 @@ if (isset($_SESSION['user_id'])) {
                         <fieldset disabled>                          
                           <div class="mb-3">
                             <label for="disabledTextInput" class="form-label">ADMIN FULL NAME</label>
-                            <input type="text" id="disabledTextInput" class="form-control" placeholder="Admin">
-                          </div>                          
-                          <div class="mb-3">
-                            <label for="disabledTextInput" class="form-label">USERNAME</label>
-                            <input type="text" id="disabledTextInput" class="form-control" placeholder="Admin123">
-                          </div>                          
+                            <input fname="admminfullname" id="disabledTextInput" class="form-control" placeholder="First name" value="<?php echo htmlspecialchars("$fname $mname $lname"); ?>" />
+                          </div>                                                  
                           <div class="mb-3">
                             <label for="disabledTextInput" class="form-label">CONTACT NUMBER</label>
-                            <input type="number" id="disabledTextInput" class="form-control" placeholder="09123456789">
+                            <input contact="username" id="disabledTextInput" class="form-control" placeholder="contact" value="<?php echo htmlspecialchars($contact); ?>" />
                           </div>                          
                           <div class="mb-3">
                             <label for="disabledTextInput" class="form-label">EMAIL ADDRESS</label>
-                            <input type="text" id="disabledTextInput" class="form-control" placeholder="admin@email.com">
+                            <input email="email" id="disabledTextInput" class="form-control" placeholder="Email" value="<?php echo htmlspecialchars($email); ?>" />
                           </div>                          
                           <div class="mb-3">
                             <label for="disabledTextInput" class="form-label">PASSWORD</label>
-                            <input type="text" id="disabledTextInput" class="form-control" placeholder="admin123">
+                            <input password="email" id="disabledTextInput" class="form-control" placeholder="Password" value="<?php echo htmlspecialchars($password); ?>" />
                           </div>                          
                       </form>
                 </div>

@@ -28,7 +28,40 @@ if (isset($_SESSION['user_id'])) {
 }
 
 
+// Form data handling and SQL query preparation
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Assuming you want to update the record with admin_id = 1
+    $id = 1; 
+    $lname = mysqli_real_escape_string($conn, $_POST['lname']);
+    $lname = ucwords($lname);
+    $fname = mysqli_real_escape_string($conn, $_POST['fname']);
+    $fname = ucwords($fname);
+    $mname = mysqli_real_escape_string($conn, $_POST['mname']);
+    $mname = ucwords($mname);
+    $contact = mysqli_real_escape_string($conn, $_POST['contact']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+
+    // SQL update statement using prepared statement for security
+    $sql = "UPDATE `admin` SET lname=?, fname=?, mname=?, contact=?, email=? WHERE admin_id=?";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssssi", $lname, $fname, $mname, $contact, $email, $id);
+
+    if ($stmt->execute()) {
+        // Success message
+        echo '<script>alert("Update successful");</script>';
+        // Redirect after a brief delay to ensure the alert is displayed
+        echo '<script>setTimeout(function(){ window.location.href = "profile.php"; }, 1000);</script>';
+    } else {
+        // Error message
+        echo "Error updating record: " . $stmt->error;
+    }
+    $stmt->close();
+}
+
+$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -154,44 +187,36 @@ if (isset($_SESSION['user_id'])) {
             <div class="container-fluid" id="main-container">
                 <div class="container-fluid" id="content-container">
                 <div class="information">
-                    <form>
+                    <form action="update.php" method="POST">
                         <div class="mb-3">
                             <label for="formGroupExampleInput" class="form-label">LAST NAME</label>
-                            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter Last Name">
-                          </div>
+                            <input type="text" name="lname" class="form-control" id="formGroupExampleInput" placeholder="Enter Last Name">
+                        </div>
                         <div class="mb-3">
                             <label for="formGroupExampleInput" class="form-label">FIRST NAME</label>
-                            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter First Name">
-                          </div>
+                            <input type="text" name="fname" class="form-control" id="formGroupExampleInput" placeholder="Enter First Name">
+                        </div>
                         <div class="mb-3">
                             <label for="formGroupExampleInput" class="form-label">MIDDLE NAME</label>
-                            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter Middle Name">
-                          </div>
-                          <div class="mb-3">
-                            <label for="formGroupExampleInput2" class="form-label">USERNAME</label>
-                            <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Enter Username">
-                          </div>                                                   
+                            <input type="text" name="mname" class="form-control" id="formGroupExampleInput" placeholder="Enter Middle Name">
+                        </div>
                         <div class="mb-3">
                             <label for="formGroupExampleInput" class="form-label">CONTACT NUMBER</label>
-                            <input type="num" class="form-control" id="formGroupExampleInput" placeholder="Enter Contact Number">
-                          </div>
-                          <div class="mb-3">
-                            <label for="formGroupExampleInput2" class="form-label">EMAIL ADDRESS</label>
-                            <input type="email" class="form-control" id="formGroupExampleInput2" placeholder="Enter Email Address">
-                          </div>                                                                                                      
-                      </form>
+                            <input type="num" name="contact" class="form-control" id="formGroupExampleInput" placeholder="Enter Contact Number">
+                        </div>
+                        <div class="mb-3">
+                            <label for="formGroupExampleInput" class="form-label">EMAIL ADDRESS</label>
+                            <input type="email" name="email" class="form-control" id="formGroupExampleInput" placeholder="Enter Email Address">
+                        </div>
+                        <div class="buttons">
+                            <button type="submit" class="btn" id="button1" value="Update">UPDATE</button>
+                            <a href="./profile.php"><button type="button" class="btn" id="button1">CANCEL</button></a>
+                        </div>                                                                                                      
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="container-fluid">
-                <div class="buttons">
-                    <a href=""><button type="button" class="btn" id="button1">UPDATE</button></a>
-                    <a href="./profile.php"><button type="button" class="btn" id="button1">CANCEL</button></a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
     </div>
 </div>
     
