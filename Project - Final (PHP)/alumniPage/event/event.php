@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +8,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
     <title>Event List</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
-    <link rel="stylesheet" href="css/view_event.css">
+    <link rel="stylesheet" href="css/event.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -82,14 +84,81 @@
         
         
         <main>
-            
             <div class="page-header">
                 <h1><strong>Event</strong></h1>
             </div>
         </main>
-            <div class="page-content">
-                <!--  -->
+            <div class="container-fluid" id="page-content">
+                <div class="container-fluid" id="content-header">
+                    <span>
+                        <h2>EVENT DETAILS</h2>
+                    </span>
+                </div>
+                <div class="container" id="main-container">
+                    <div class="container-fluid" id="content-container">
+                        <div class="row g-0 position-relative">
+                            <div class="col-md-6 mb-md-0 p-md-4">
+                                <img src="OIP (1).jpg" class="w-100" alt="...">
+                            </div>
+                            <div class="col-md-6 p-4 ps-md-0" id="right-side">
+                                <h3 class="mt-0"> <strong>Event Title</strong></h3>
+                                <form action="">
+                                    <fieldset disabled>
+                                        <div class="description">
+                                            <label for="" class="form-label">Event Description:</label>
+                                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="10"></textarea>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                                <div class="row">
+                                    <div class="container" id="date">
+                                        <div class="col">
+                                            <form action="">
+                                                <fieldset disabled>
+                                                    <div class="date">
+                                                        <label for="" class="form-label mt-3">Event Date & Time:
+                                                        </label>
+                                                        <input type="date" class="form-control form-label mt-3">
+                                                        <input type="time" class="form-control">
+                                                    </div>
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                        <div class="col" id="dropdown">
+                                        <select class="form-control" name="course" id="course" required>
+                                        <option value="" selected hidden disabled>Are you going to the event?</option>
+                                        <option value="BAJ">Interested</option>
+                                        <option value="BECEd">Not Interested</option>
+                                        <option value="BECEd">Going</option>
+                                    </select>
+                                    <div class="submit">
+                                    <button type="submit" class="btn btn-success">Submit</button>
+                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
     </div>
+    </div>
+
+    
+    </div>
+
+    <!-- <script>
+        let eventPic = document.getElementById("event-pic");
+        let formFile = document.getElementById("formFile");
+
+        formFile.onchange = function() {
+            eventPic.src = URL.createObjectURL(formFile.files[0]);
+        }
+    </script> -->
 </body>
+
 </html>
