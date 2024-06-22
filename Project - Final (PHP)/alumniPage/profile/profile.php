@@ -120,7 +120,6 @@ $file = $row['picture'];
             </div>
         </header>
         
-        
         <main>
             
             <div class="page-header">
