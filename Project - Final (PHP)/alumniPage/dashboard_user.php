@@ -35,6 +35,7 @@ $row = $result->fetch_assoc();
 
 $file = $row['picture'];
 
+<<<<<<< HEAD
 //query for events count
 $sql_event = "SELECT COUNT(event_id) AS events_count FROM event";
 
@@ -45,6 +46,8 @@ $row_event = $result_event->fetch_assoc();
 // get the exact query or in short COUNT(event_id) from table event,  COUNT(event_id) rename as events_count
 $event_count = $row_event['events_count'];
 
+=======
+>>>>>>> origin/main
 
 ?>
 <!DOCTYPE html>
@@ -141,6 +144,7 @@ $event_count = $row_event['events_count'];
         </main>
         <div class="page-content">
             <!--  -->
+<<<<<<< HEAD
             <div class="col-md-4">
                 <div class="card bg-warning text-white mb-4">
                     <div class="card-body">
@@ -163,6 +167,10 @@ $event_count = $row_event['events_count'];
                 </div>    
             </div>
         </div>
+=======
+        </div>
+    </div>
+>>>>>>> origin/main
 
     <!-- Script to display preview of selected image -->
     <script>

@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+<<<<<<< HEAD
 $servername = "localhost";
 $db_username = "root";
 $db_password = "";
@@ -11,6 +12,13 @@ $conn = mysqli_connect($servername, $db_username, $db_password, $db_name);
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
+=======
+$serername = "localhost";
+$db_username = "root";
+$db_password = "";
+$db_name = "alumni_management_system";
+$conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
+>>>>>>> origin/main
 
 // USER ACCOUNT DATA
 if (isset($_SESSION['user_id'])) {
@@ -24,14 +32,19 @@ if (isset($_SESSION['user_id'])) {
     if ($user_result->num_rows > 0) {
         $user = $user_result->fetch_assoc();
     } else {
+<<<<<<< HEAD
         // No user found with the given coor_id
         echo "No user found.";
         exit();
+=======
+        // No user found with the given admin_id
+>>>>>>> origin/main
     }
 
     $stmt->close();
 } else {
     echo "User not logged in.";
+<<<<<<< HEAD
     exit();
 }
 
@@ -72,6 +85,10 @@ mysqli_close($conn);
 
 $conn->close();
 
+=======
+}
+
+>>>>>>> origin/main
 
 ?>
 
@@ -81,6 +98,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<<<<<<< HEAD
     <title>Update Coordinators Info</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="css/update_info.css">
@@ -91,6 +109,14 @@ $conn->close();
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+=======
+    <title>Update Coordinator Info</title>
+    <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
+    <link rel="stylesheet" href="css/update_info.css">
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+>>>>>>> origin/main
 </head>
 <body>
    <input type="checkbox" id="menu-toggle">
@@ -107,6 +133,7 @@ $conn->close();
             </div>
 
             <div class="side-menu">
+<<<<<<< HEAD
             <ul>
                     <li>
                        <a href="../dashboard_coor.php" >
@@ -116,6 +143,17 @@ $conn->close();
                     </li>
                     <li>
                        <a href="./profile.php"class="active">
+=======
+                <ul>
+                    <li>
+                       <a href="../dashboard_coor.php" >
+                            <span class="las la-home" style="color:#fff"></span>
+                            <small>DASHBOARD"</small>
+                        </a>
+                    </li>
+                    <li>
+                       <a href="./update_info.php" class="active">
+>>>>>>> origin/main
                             <span class="las la-user-alt" style="color:#fff"></span>
                             <small>PROFILE</small>
                         </a>
@@ -127,12 +165,15 @@ $conn->close();
                         </a>
                     </li>
                     <li>
+<<<<<<< HEAD
                        <a href="../coordinator/coordinator.php">
                             <span class="las la-user-cog" style="color:#fff"></span>
                             <small>COORDINATOR</small>
                         </a>
                     </li>
                     <li>
+=======
+>>>>>>> origin/main
                        <a href="../event/event.php">
                             <span class="las la-calendar" style="color:#fff"></span>
                             <small>EVENT</small>
@@ -151,11 +192,19 @@ $conn->close();
                         </a>
                     </li>
                     <li>
+<<<<<<< HEAD
                        <a href="../archive/alumni_archive.php">
                             <span class="las la-clipboard-check" style="color:#fff"></span>
                             <small>ARCHIVE</small>
                         </a>
                     </li>
+=======
+                        <a href="../archive/alumni_archive.php" >
+                             <span class="las la-clipboard-check" style="color:#fff"></span>
+                             <small>ARCHIVE</small>
+                         </a>
+                     </li>
+>>>>>>> origin/main
 
                 </ul>
             </div>
@@ -167,18 +216,36 @@ $conn->close();
         <header>
             <div class="header-content">
                 <label for="menu-toggle">
+<<<<<<< HEAD
                     <span class="las la-bars bars" style="color: white;"></span>
+=======
+                    <span class="las la-bars"></span>
+>>>>>>> origin/main
                 </label>
                 
                 <div class="header-menu">
                     <label for="">
                     </label>
                     
+<<<<<<< HEAD
                     <div class="user">
                         
                         
                         <a href="../logout.php">
                         <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
+=======
+                    <div class="notify-icon">
+                    </div>
+                    
+                    <div class="notify-icon">   
+                    </div>
+                    
+                    <div class="user">
+                        <div class="bg-img" style="background-image: url(img/1.jpeg)"></div>
+                        
+                        <a href="../logout.php">
+                        <span class="las la-power-off"></span>
+>>>>>>> origin/main
                         </a>
 
                     </div>
@@ -190,6 +257,7 @@ $conn->close();
         <main>
             
             <div class="page-header">
+<<<<<<< HEAD
             <h1><strong>Update Coordinators Info</strong></h1> 
             </div>
             
@@ -244,5 +312,14 @@ $conn->close();
     }
 </script> -->
 
+=======
+                <h1><strong>Profile</strong></h1>
+            </div>
+        </main>
+            <div class="page-content">
+                <!--  -->
+        </div>
+    </div>
+>>>>>>> origin/main
 </body>
 </html>

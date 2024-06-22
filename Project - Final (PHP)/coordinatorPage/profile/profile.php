@@ -27,6 +27,7 @@ if (isset($_SESSION['user_id'])) {
     echo "User not logged in.";
 }
 
+<<<<<<< HEAD
 // Assuming you have a user ID stored in a variable $user_id
 $sql = "SELECT * FROM `coordinator` WHERE coor_id = $account";
 $result = $conn->query($sql);
@@ -46,6 +47,8 @@ if ($result->num_rows > 0) {
 } else {
     echo "0 results";
 }
+=======
+>>>>>>> origin/main
 
 ?>
 
@@ -162,6 +165,7 @@ if ($result->num_rows > 0) {
         <main>
             
             <div class="page-header">
+<<<<<<< HEAD
                 <h1><strong>Cooordinators Profile</strong></h1>
             </div>
         </main>
@@ -204,6 +208,14 @@ if ($result->num_rows > 0) {
                     </div>
                 </div>
             </div>
+=======
+                <h1><strong>Profile</strong></h1>
+            </div>
+        </main>
+            <div class="page-content">
+                <!--  -->
+        </div>
+>>>>>>> origin/main
     </div>
 </body>
 </html>
