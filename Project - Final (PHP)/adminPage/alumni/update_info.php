@@ -90,16 +90,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
     // email and user existing check
-    $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email' AND alumni_id != $alumni_id");
+    // email and user existing check
+    $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
+    $emailCheck_archive = mysqli_query($conn, "SELECT * FROM alumni_archive WHERE email='$email'");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
-        // echo "
-        //         <script>
-        //             alert('Username Already Exist!!!');
-        //             window.location.href = '../coordinator.php';
-        //         </script>
-        //     ";
+
+    } else if (mysqli_num_rows($emailCheck_archive) > 0) {
+        $errorMessage = "Email Already Exists";
+
     } else {
 
         $sql = "UPDATE alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email' WHERE alumni_id=$alumni_id";

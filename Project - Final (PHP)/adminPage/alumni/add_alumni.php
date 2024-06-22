@@ -58,18 +58,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = strtolower($_POST['email']);
     $temp_password = $_POST['temp_pass'];
 
-
     // email and user existing check
     $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
+    $emailCheck_archive = mysqli_query($conn, "SELECT * FROM alumni_archive WHERE email='$email'");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
-        // echo "
-        //         <script>
-        //             alert('Username Already Exist!!!');
-        //             window.location.href = '../coordinator.php';
-        //         </script>
-        //     ";
+        
+    } else if (mysqli_num_rows($emailCheck_archive) > 0) {
+        $errorMessage = "Email Already Exists";
+
     } else {
 
         $filePath = '../../assets/profile_icon.jpg';
@@ -116,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div class="side-content">
             <div class="profile">
-            <i class="bi bi-person-circle"></i>
+                <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
             </div>

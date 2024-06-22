@@ -94,13 +94,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
         }
     } else {
         // Login failed
-        echo "
-                <script>
-                    alert('Invalid Username/Email and Password');
-                    window.location.href = 'login.php';
-                </script>
-            ";
+        $errorMessage = "Invalid Email and Password";
+    
     }
+    
 } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $stud_id = $_POST['student_id'];
     $fname = ucwords($_POST['fname']);
@@ -117,15 +114,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
 
     // email and user existing check
     $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
+    $emailCheck_archive = mysqli_query($conn, "SELECT * FROM alumni_archive WHERE email='$email'");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
-        // echo "
-        //         <script>
-        //             alert('Username Already Exist!!!');
-        //             window.location.href = '../coordinator.php';
-        //         </script>
-        //     ";
+
+    } else if (mysqli_num_rows($emailCheck_archive) > 0) {
+        $errorMessage = "Email Already Exists";
+
     } else {
 
         $filePath = '../assets/profile_icon.jpg';
@@ -141,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
             // $successMessage = "Coordinator Edited Successfully";
             echo "
                 <script>
-                    alert('Alumni Added Successfully');
+                    alert('Account Created Successfully');
                     window.location.href = './login.php';
                 </script>
             ";
@@ -149,24 +145,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
             $errorMessage = "Error: " . $conn->error;
         }
     }
-    // echo
-    //     "
-    //     <script>
-    //         alert('Alumni Added Successfully');
-    //         window.location.href = 'login.php';
-    //     </script>
-    // ";
 }
 
 // Function to check login
-function check_login($conn, $table, $identifier, $password)
+function check_login($conn, $table, $log_email, $pass)
 {
     // Prepare the SQL query
     $sql = "SELECT * FROM $table WHERE email = ? AND password = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
 
-    // Bind the identifier (username or email) and password parameters to the query
-    $stmt->bind_param("ss", $identifier, $password);
+    // Bind the log_email (username or email) and password parameters to the query
+    $stmt->bind_param("ss", $log_email, $pass);
 
     // Execute the query
     $stmt->execute();
@@ -193,10 +182,8 @@ function check_login($conn, $table, $identifier, $password)
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log in || Sign up form</title>
-    <!-- font awesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="shortcut icon" href="cvsu.png" type="image/svg+xml">
-    <!-- css stylesheet -->
     <link rel="stylesheet" href="css/login.css">
 
 </head>
@@ -266,13 +253,10 @@ function check_login($conn, $table, $identifier, $password)
                         <?php
                         // Get the current year
                         $currentYear = date('Y');
-
                         // Number of years to include before and after the current year
                         $yearRange = 21; // Adjust this number as needed
-
                         // Preserve the selected value after form submission
                         $selectedYear = isset($_POST['startYear']) ? $_POST['startYear'] : '';
-
                         // Generate options for years, from current year minus $yearRange to current year plus $yearRange
                         for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
                             $selected = ($year == $selectedYear) ? 'selected' : '';
@@ -288,7 +272,6 @@ function check_login($conn, $table, $identifier, $password)
                         if (isset($_POST['startYear'])) {
                             $startYear = $_POST['startYear'];
                             $selectedEndYear = isset($_POST['endYear']) ? $_POST['endYear'] : '';
-
                             // Generate options for endYear starting from startYear + 1
                             for ($year = $startYear + 1; $year <= $currentYear + $yearRange; $year++) {
                                 $selected = ($year == $selectedEndYear) ? 'selected' : '';

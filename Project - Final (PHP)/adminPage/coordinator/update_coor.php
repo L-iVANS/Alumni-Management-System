@@ -69,18 +69,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $email = strtolower($_POST['email']);
 
 
-
     // email and user existing check
-    $emailCheck = mysqli_query($conn, "SELECT * FROM coordinator WHERE email='$email' AND coor_id != $coor_id");
+    $emailCheck = mysqli_query($conn, "SELECT * FROM coordinator WHERE email='$email'");
+    $emailCheck_archive = mysqli_query($conn, "SELECT * FROM coordinator_archive WHERE email='$email'");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
-        // echo "
-        //         <script>
-        //             alert('Username Already Exist!!!');
-        //             window.location.href = '../coordinator.php';
-        //         </script>
-        //     ";
+    }
+    if (mysqli_num_rows($emailCheck_archive) > 0) {
+        $errorMessage = "Email Already Exists"; 
+        
     } else {
 
         $sql = "UPDATE coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email' WHERE coor_id=$coor_id";
@@ -121,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         <div class="side-content">
             <div class="profile">
-            <i class="bi bi-person-circle"></i>
+                <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
             </div>

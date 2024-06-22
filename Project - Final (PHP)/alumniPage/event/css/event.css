@@ -3,7 +3,6 @@
 
 
 
-
 @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;500;600&display=swap');
 
 :root {
@@ -117,7 +116,6 @@ border-radius: 10px;
 .profile h4 {
     color: #fff;
     font-weight: 500;
-    font-size: 20px;
 }
 
 .profile small {
@@ -329,62 +327,4 @@ main {
 
 .header-content span{
     color: #fff;
-}
-
-
-#content-container{
-    /* border:red 1px solid; */
-    margin-top: 30px;
-    background-color: #ffffff; /* White background */
-    border-radius: 15px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    padding: 20px; 
-    margin: 20px 0; 
-    transition: transform 0.2s; 
-}
-
-.side-content .profile i{
-    color: #fff;
-    font-size: 80px;
-    font-weight: lighter;
-}
-
-#content-header{
-        margin-top: 20px;
-        padding: 10px;
-}
-
-
-
-#button-response{
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    background-color: #ffffff; /* White background */
-    border-radius: 15px; 
-    transition: transform 0.2s; 
-    padding: 20px; 
-    margin: 20px 0; 
-}
-.description{
-    margin-top: 30px;
-}
-#date{
-    margin-top: 80px;
-}
-
-#container-submit{
-        margin-top: 30px;
-    background-color: #ffffff; /* White background */
-    border-radius: 15px; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    padding: 20px; 
-    margin: 20px 0; 
-    transition: transform 0.2s; 
-}
-
-#dropdown{
-    margin-top: 30px;
-    overflow: hidden;
-}
-.submit{
-    margin-top: 10px;
 }

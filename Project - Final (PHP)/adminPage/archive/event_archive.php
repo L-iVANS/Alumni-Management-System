@@ -290,8 +290,8 @@ $total_pages = ceil($total_records / $records_per_page);
 
                                 </div>
                             </div>
-                            <div class="col">
-                                <div class="add-button" style="margin-left: 17.7%; margin-right: 0;">
+                            <div class="col" style="text-align: end;">
+                                <div class="add-button">
                                     <a class='btn btn-light border border-dark' href='./alumni_archive.php' style="padding-left: 48px; padding-right: 48px; margin-right: 1%;">Alumni</a>
                                     <a class='btn btn-light border border-dark' href='./coor_archive.php' style="padding-left: 30.7px; padding-right: 30.7px; margin-right: 1%;">Coordinator</a>
                                     <a class='btn btn-secondary border border-dark' href='./event_archive.php' style="padding-left: 52px; padding-right: 52px;">Event</a>

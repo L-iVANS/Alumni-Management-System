@@ -49,15 +49,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // email and user existing check
     $emailCheck = mysqli_query($conn, "SELECT * FROM coordinator WHERE email='$email'");
+    $emailCheck_archive = mysqli_query($conn, "SELECT * FROM coordinator_archive WHERE email='$email'");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
-        // echo "
-        //         <script>
-        //             alert('Username Already Exist!!!');
-        //             window.location.href = '../coordinator.php';
-        //         </script>
-        //     ";
+        
+    } if (mysqli_num_rows($emailCheck_archive) > 0) {
+        $errorMessage = "Email Already Exists";
+        
     } else {
         $sql = "INSERT INTO coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email', password='$temp_password'";
         $result = $conn->query($sql);
