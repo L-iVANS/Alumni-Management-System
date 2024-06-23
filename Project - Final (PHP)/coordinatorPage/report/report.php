@@ -19,17 +19,18 @@ if (isset($_SESSION['user_id'])) {
     if ($user_result->num_rows > 0) {
         $user = $user_result->fetch_assoc();
     } else {
-        // No user found with the given admin_id
+        // No user found with the given coor_id
     }
 
     $stmt->close();
 } else {
     echo "User not logged in.";
+    header("Location: ../../loginPage/login.php");
+    exit();
 }
 
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,11 +38,13 @@ if (isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
     <title>Report</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
-    <link rel="stylesheet" href="css/report.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
 </head>
 <body>
    <input type="checkbox" id="menu-toggle">
@@ -62,7 +65,7 @@ if (isset($_SESSION['user_id'])) {
                     <li>
                        <a href="../dashboard_coor.php" >
                             <span class="las la-home" style="color:#fff"></span>
-                            <small>DASHBOARD"</small>
+                            <small>DASHBOARD</small>
                         </a>
                     </li>
                     <li>
@@ -90,18 +93,17 @@ if (isset($_SESSION['user_id'])) {
                         </a>
                     </li>
                     <li>
-                       <a href="./report.php" class="active">
+                       <a href="./report.php"class="active">
                             <span class="las la-clipboard-check" style="color:#fff"></span>
                             <small>REPORT</small>
                         </a>
                     </li>
                     <li>
-                        <a href="../archive/alumni_archive.php" >
-                             <span class="las la-clipboard-check" style="color:#fff"></span>
+                        <a href="../archive/alumni_archive.php">
+                             <span class="las la-archive" style="color:#fff"></span>
                              <small>ARCHIVE</small>
                          </a>
                      </li>
-
                 </ul>
             </div>
         </div>
@@ -112,24 +114,18 @@ if (isset($_SESSION['user_id'])) {
         <header>
             <div class="header-content">
                 <label for="menu-toggle">
-                    <span class="las la-bars"></span>
+                    <span class="las la-bars bars" style="color: white;"></span>
                 </label>
                 
                 <div class="header-menu">
                     <label for="">
                     </label>
                     
-                    <div class="notify-icon">
-                    </div>
-                    
-                    <div class="notify-icon">   
-                    </div>
-                    
                     <div class="user">
-                        <div class="bg-img" style="background-image: url(img/1.jpeg)"></div>
+                        
                         
                         <a href="../logout.php">
-                        <span class="las la-power-off"></span>
+                        <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
                         </a>
 
                     </div>
@@ -141,12 +137,13 @@ if (isset($_SESSION['user_id'])) {
         <main>
             
             <div class="page-header">
-                <h1><Strong>Reports</Strong></h1>
+                <h1><strong>Report</strong></h1>
+               
             </div>
         </main>
             <div class="page-content">
                 <!--  -->
-            </div>
+        </div>
     </div>
 </body>
 </html>

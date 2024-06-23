@@ -14,7 +14,7 @@ if (isset($_GET['id'])) {
     if (isset($_SESSION['user_id'])) {
         $account = $_SESSION['user_id'];
 
-        $stmt = $conn->prepare("SELECT * FROM coordinator WHERE coor_id = ?");
+        $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ?");
         $stmt->bind_param("s", $account); // "s" indicates the type is string
         $stmt->execute();
         $user_result = $stmt->get_result();

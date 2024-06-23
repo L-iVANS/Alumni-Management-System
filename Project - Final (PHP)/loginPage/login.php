@@ -296,7 +296,7 @@ function check_login($conn, $table, $log_email, $pass)
             <form action="#" method="POST">
                 <h1>Log in</h1>
                 <div class="infield">
-                    <input type="text" placeholder="Email" name="log_email" value="<?php echo htmlspecialchars($log_email); ?>" required />
+                    <input type="email" placeholder="Email" name="log_email" value="<?php echo htmlspecialchars($log_email); ?>" required />
                     <label></label>
                 </div>
                 <div class="infield">

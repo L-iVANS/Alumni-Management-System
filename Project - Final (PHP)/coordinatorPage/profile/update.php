@@ -11,7 +11,7 @@ $conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
 if (isset($_SESSION['user_id'])) {
     $account = $_SESSION['user_id'];
 
-    $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ?");
+    $stmt = $conn->prepare("SELECT * FROM coordinator WHERE coor_id = ?");
     $stmt->bind_param("s", $account); // "s" indicates the type is string
     $stmt->execute();
     $user_result = $stmt->get_result();
@@ -19,7 +19,7 @@ if (isset($_SESSION['user_id'])) {
     if ($user_result->num_rows > 0) {
         $user = $user_result->fetch_assoc();
     } else {
-        // No user found with the given admin_id
+        // No user found with the given coor_id
     }
 
     $stmt->close();
@@ -36,10 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         header("location: ./profile.php");
         exit;
     }
-    $admin_id = $_GET['id'];
+    $coor_id = $_GET['id'];
 
     //read data from table alumni
-    $sql = "SELECT * FROM admin WHERE admin_id=$admin_id";
+    $sql = "SELECT * FROM coordinator WHERE coor_id=$coor_id";
     $result = $conn->query($sql);
     $row = $result->fetch_assoc();
 
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         exit;
     }
     // data from table alumni where student_id = $alumni_id = $_GET['id']; get from alumni list update
-    $admin_id = $row['admin_id'];
+    $coor_id = $row['coor_id'];
     $fname = $row['fname'];
     $mname = $row['mname'];
     $lname = $row['lname'];
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $email = $row['email'];
 } else {
     // get the data from form
-    $admin_id = $_POST['admin_id'];
+    $coor_id = $_POST['coor_id'];
     $fname = ucwords($_POST['fname']);
     $mname = ucwords($_POST['mname']);
     $lname = ucwords($_POST['lname']);
@@ -64,13 +64,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $email = strtolower($_POST['email']);
 
     // email and user existing check
-    $emailCheck = mysqli_query($conn, "SELECT * FROM admin WHERE email = '$email' AND admin_id != $admin_id");
+    $emailCheck = mysqli_query($conn, "SELECT * FROM coordinator WHERE email = '$email' AND coor_id != $coor_id");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
     } else {
 
-        $sql = "UPDATE admin SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email' WHERE admin_id = $admin_id";
+        $sql = "UPDATE coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email' WHERE coor_id = $coor_id";
         $result = $conn->query($sql);
         echo
         "
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Update Admin Info</title>
+    <title>Update coordinator Info</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="css/update_info.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             <div class="side-menu">
                 <ul>
                     <li>
-                        <a href="../dashboard_admin.php">
+                        <a href="../dashboard_coor.php">
                             <span class="las la-home" style="color:#fff"></span>
                             <small>DASHBOARD</small>
                         </a>
@@ -133,12 +133,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         <a href="../alumni/alumni.php">
                             <span class="las la-th-list" style="color:#fff"></span>
                             <small>ALUMNI</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../coordinator/coordinator.php">
-                            <span class="las la-user-cog" style="color:#fff"></span>
-                            <small>COORDINATOR</small>
                         </a>
                     </li>
                     <li>
@@ -161,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     </li>
                     <li>
                         <a href="../archive/alumni_archive.php">
-                            <span class="las la-archive" style="color:#fff"></span>
+                            <span class="las la-clipboard-check" style="color:#fff"></span>
                             <small>ARCHIVE</small>
                         </a>
                     </li>
@@ -214,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             <div class="information">
                                 <form action="update.php" method="POST">
                                     <div class="mb-3">
-                                        <input type="hidden" name="admin_id" class="form-control" id="formGroupExampleInput" placeholder="Admin Id" value="<?php echo $admin_id; ?>">
+                                        <input type="hidden" name="coor_id" class="form-control" id="formGroupExampleInput" placeholder="Coordinator Id" value="<?php echo $coor_id; ?>">
                                         <label for="formGroupExampleInput" class="form-label">FIRST NAME</label>
                                         <input type="text" name="fname" class="form-control" id="formGroupExampleInput" placeholder="Enter First Name"required  value="<?php echo htmlspecialchars("$fname"); ?>">
                                     </div>

@@ -19,12 +19,14 @@ if (isset($_SESSION['user_id'])) {
     if ($user_result->num_rows > 0) {
         $user = $user_result->fetch_assoc();
     } else {
-        // No user found with the given admin_id
+        // No user found with the given coor_id
     }
 
     $stmt->close();
 } else {
     echo "User not logged in.";
+    header("Location: ../../loginPage/login.php");
+    exit();
 }
 
 // Pagination configuration
@@ -181,14 +183,14 @@ $total_pages = ceil($total_records / $records_per_page);
             <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
-                <!-- <h4>ADMIN</h4>
-                <small style="color: white;">admin@email.com</small> -->
+                <!-- <h4>coor</h4>
+                <small style="color: white;">coor@email.com</small> -->
             </div>
 
             <div class="side-menu">
                 <ul>
                     <li>
-                        <a href="../dashboard_admin.php">
+                        <a href="../dashboard_coor.php">
                             <span class="las la-home" style="color:#fff"></span>
                             <small>DASHBOARD</small>
                         </a>
@@ -268,7 +270,7 @@ $total_pages = ceil($total_records / $records_per_page);
             <div class="container-fluid" id="main-container">
                 <div class="container-fluid" id="content-container">
                     <div class="container-title">
-                        <span>Records</span>
+                        <h4>Event Records</h4>
                     </div>
                     <div class="congainer-fluid" id="column-header">
                         <div class="row">
@@ -284,8 +286,8 @@ $total_pages = ceil($total_records / $records_per_page);
 
                                 </div>
                             </div>
-                            <div class="col">
-                                <div class="add-button" style="margin-left: 17.7%; margin-right: 0;">
+                            <div class="col" style="text-align: end;">
+                                <div class="add-button">
                                     <a class='btn btn-light border border-dark' href='./alumni_archive.php' style="padding-left: 48px; padding-right: 48px; margin-right: 1%;">Alumni</a>
                                     <a class='btn btn-secondary border border-dark' href='./event_archive.php' style="padding-left: 52px; padding-right: 52px;">Event</a>
                                 </div>
@@ -312,13 +314,12 @@ $total_pages = ceil($total_records / $records_per_page);
                                 <?php
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
-                                        $schedule = $row["sched_date"] . "  " . $row["sched_time"];
                                         
                                 ?>
                                         <tr>
                                             <td class="inline"><?php echo $row['event_id'] ?></td>
                                             <td class="inline"><?php echo $row['title'] ?></td>
-                                            <td class="inline"><?php echo htmlspecialchars($schedule) ?></td>
+                                            <td class="inline"><?php echo $row['schedule']?></td>
                                             <td class="inline"><?php echo $row['description'] ?></td>
                                             <td class="inline"><?php echo $row['going'] ?></td>
                                             <td class="inline"><?php echo $row['interested'] ?></td>

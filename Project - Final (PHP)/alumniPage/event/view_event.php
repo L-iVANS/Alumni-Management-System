@@ -25,6 +25,8 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 } else {
     echo "User not logged in.";
+    header("Location: ../../loginPage/login.php");
+    exit();
 }
 
 
@@ -37,7 +39,10 @@ $file = $row['picture'];
 
 
 ?>
+=======
 
+
+>>>>>>> 63efeb90593cc3612bd5dd9094a872a4619a440e
 <!DOCTYPE html>
 <html lang="en">
 
@@ -46,7 +51,7 @@ $file = $row['picture'];
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
     <title>Event List</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
-    <link rel="stylesheet" href="css/event.css">
+    <link rel="stylesheet" href="css/view_event.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -131,12 +136,12 @@ $file = $row['picture'];
         </main>
         <div class="container-fluid" id="page-content">
             <div class="container-fluid" id="content-header">
-                <span>
-                    <h2>More Details</h2>
-                </span>
             </div>
             <div class="container" id="main-container">
                 <div class="container-fluid" id="content-container">
+                    <div class="container-title">
+                        <h4>More Details</h4>
+                    </div>
                     <div class="row g-0 position-relative">
                         <div class="col-md-6 mb-md-0 p-md-4">
                             <img src="OIP (1).jpg" class="w-100" alt="...">
@@ -173,8 +178,8 @@ $file = $row['picture'];
                                             <option value="BECEd">Going</option>
                                         </select>
                                         <div class="submit">
-                                            <button type="submit" class="btn btn-success">Submit</button>
-                                            <a class="btn btn-light border border-dark" href='./event.php' style="margin-left: 1%; padding-left: 22px; padding-right: 22px;">Back</a>
+                                            <button type="submit" class="btn btn-success" style="padding-left: 58.9px; padding-right: 58.9px;">Submit</button>
+                                            <a class="btn btn-light border border-dark" href='./event.php' style="margin-left: 1%; padding-left: 65.9px; padding-right: 65.9px;">Back</a>
                                         </div>
                                     </div>
                                 </div>
@@ -183,8 +188,16 @@ $file = $row['picture'];
                     </div>
                 </div>
             </div>
+
         </div>
+
     </div>
+    </div>
+    </div>
+
+
+    </div>
+
     <!-- <script>
         let eventPic = document.getElementById("event-pic");
         let formFile = document.getElementById("formFile");

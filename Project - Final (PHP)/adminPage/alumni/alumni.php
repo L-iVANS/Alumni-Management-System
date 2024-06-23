@@ -25,6 +25,8 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 } else {
     echo "User not logged in.";
+    header("Location: ../../loginPage/login.php");
+    exit();
 }
 
 // Pagination configuration
@@ -278,7 +280,7 @@ $total_pages = ceil($total_records / $records_per_page);
             <div class="container-fluid" id="main-container">
                 <div class="container-fluid" id="content-container">
                     <div class="container-title">
-                        <span>Records</span>
+                        <h4>Active Accounts</h4>
                     </div>
                     <div class="congainer-fluid" id="column-header">
                         <div class="row">

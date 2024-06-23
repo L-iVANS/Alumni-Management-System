@@ -25,33 +25,38 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 } else {
     echo "User not logged in.";
+    header("Location: ../../loginPage/login.php");
+    exit();
 }
 
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Add New Event</title>
+    <title>Update Event Info</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
-    <link rel="stylesheet" href="css/add_event.css">
-    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <link rel="stylesheet" href="css/update_event.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
+
 <body>
-   <input type="checkbox" id="menu-toggle">
+    <input type="checkbox" id="menu-toggle">
     <div class="sidebar">
         <div class="side-header">
             <h3><img src="https://cvsu-imus.edu.ph/student-portal/assets/images/logo-mobile.png"></img><span>CVSU</span></h3>
         </div>
-        
+
         <div class="side-content">
             <div class="profile">
-            <i class="bi bi-person-circle"></i>
+                <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
             </div>
@@ -59,93 +64,147 @@ if (isset($_SESSION['user_id'])) {
             <div class="side-menu">
                 <ul>
                     <li>
-                       <a href="../dashboard_admin.php" >
+                        <a href="../dashboard_admin.php">
                             <span class="las la-home" style="color:#fff"></span>
                             <small>DASHBOARD</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../profile/profile.php">
+                        <a href="../profile/profile.php">
                             <span class="las la-user-alt" style="color:#fff"></span>
                             <small>PROFILE</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../alumni/alumni.php">
+                        <a href="../alumni/alumni.php">
                             <span class="las la-th-list" style="color:#fff"></span>
                             <small>ALUMNI</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../coordinator/coordinator.php">
+                        <a href="../coordinator/coordinator.php">
                             <span class="las la-user-cog" style="color:#fff"></span>
                             <small>COORDINATOR</small>
                         </a>
                     </li>
                     <li>
-                       <a href="./event.php"class="active">
+                        <a href="./update_event.php" class="active">
                             <span class="las la-calendar" style="color:#fff"></span>
                             <small>EVENT</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../settings/about.php">
+                        <a href="../settings/about.php">
                             <span class="las la-cog" style="color:#fff"></span>
                             <small>SETTINGS</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../report/report.php">
+                        <a href="../report/report.php">
                             <span class="las la-clipboard-check" style="color:#fff"></span>
                             <small>REPORT</small>
                         </a>
                     </li>
                     <li>
                         <a href="../archive/alumni_archive.php">
-                             <span class="las la-archive" style="color:#fff"></span>
-                             <small>ARCHIVE</small>
-                         </a>
-                     </li>
+                            <span class="las la-archive" style="color:#fff"></span>
+                            <small>ARCHIVE</small>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
-    
+
     <div class="main-content">
-        
+
         <header>
             <div class="header-content">
                 <label for="menu-toggle">
                     <span class="las la-bars bars" style="color: white;"></span>
                 </label>
-                
+
                 <div class="header-menu">
                     <label for="">
                     </label>
-                    
+
                     <div class="user">
-                        
-                        
+
+
                         <a href="../logout.php">
-                        <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
+                            <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
                         </a>
 
                     </div>
                 </div>
             </div>
         </header>
-        
-        
+
+
         <main>
-            
+
             <div class="page-header">
                 <h1><strong>Event</strong></h1>
-               
             </div>
-        </main>
-            <div class="page-content">
-                <!--  -->
-       </div>     
+
+            <div class="container-fluid" id="page-content">
+                <div class="row">
+                    <div class="container-fluid" id="main-container">
+                        <div class="container-fluid" id="content-container">
+                            <h3 style="margin-bottom: 2%;">Add New Event</h3>
+                            <form>
+                                <div class="mb-3">
+                                    <label for="formGroupExampleInput" class="form-label">Event Title</label>
+                                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter Event Title" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="formGroupExampleInput2" class="form-label">Schedule</label>
+                                    <input type="datetime-local" class="form-control" id="formGroupExampleInput2" required placeholder="">
+                                </div>
+                                <div class="row">
+                                    <div class="container-fluid">
+                                        <div class="mb-3">
+                                            <label for="exampleFormControlTextarea1" class="form-label">Enter Description</label>
+                                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="mb-3">
+                                                <label for="formFile" class="form-label"></label>
+                                                <input class="form-control" type="file" id="formFile" required>
+                                            </div>
+                                            <div class="col">
+                                                <img src="..." class="img-thumbnail" alt="..." id="event-pic">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid" id="button-response">
+                    <div class="row">
+                        <div class="d-grid col-4 mx-auto">
+                            <button type="button" class="btn btn-warning">Submit</button>
+                        </div>
+                        <div class="d-grid col-4 mx-auto">
+                            <a class="btn btn-primary" href="./event.php">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
     </div>
+    <script>
+        let eventPic = document.getElementById("event-pic");
+        let formFile = document.getElementById("formFile");
+
+        formFile.onchange = function() {
+            eventPic.src = URL.createObjectURL(formFile.files[0]);
+        }
+    </script>
 </body>
+
 </html>

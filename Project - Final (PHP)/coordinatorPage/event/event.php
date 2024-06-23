@@ -25,6 +25,8 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 } else {
     echo "User not logged in.";
+    header("Location: ../../loginPage/login.php");
+    exit();
 }
 
 // Pagination configuration
@@ -77,7 +79,7 @@ $total_pages = ceil($total_records / $records_per_page);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Archive List</title>
+    <title>Event List</title>
     <link rel="stylesheet" href="./css/alumni.css">
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
@@ -188,7 +190,7 @@ $total_pages = ceil($total_records / $records_per_page);
             <div class="side-menu">
                 <ul>
                     <li>
-                        <a href="../dashboard_admin.php">
+                        <a href="../dashboard_coor.php">
                             <span class="las la-home" style="color:#fff"></span>
                             <small>DASHBOARD</small>
                         </a>
@@ -262,13 +264,13 @@ $total_pages = ceil($total_records / $records_per_page);
 
         <main>
             <div class="page-header">
-                <h1><strong>Archive</strong></h1>
+                <h1><strong>Event</strong></h1>
             </div>
 
             <div class="container-fluid" id="main-container">
                 <div class="container-fluid" id="content-container">
                     <div class="container-title">
-                        <span>Records</span>
+                        <h4>Event List</h4>
                     </div>
                     <div class="congainer-fluid" id="column-header">
                         <div class="row">
@@ -315,13 +317,12 @@ $total_pages = ceil($total_records / $records_per_page);
                                 <?php
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
-                                        $schedule = $row["sched_date"] . "  " . $row["sched_time"];
                                         
                                 ?>
                                         <tr>
                                             <td class="inline"><?php echo $row['event_id'] ?></td>
                                             <td class="inline"><?php echo $row['title'] ?></td>
-                                            <td class="inline"><?php echo htmlspecialchars($schedule) ?></td>
+                                            <td class="inline"><?php echo $row['schedule']?></td>
                                             <td class="inline"><?php echo $row['description'] ?></td>
                                             <td class="inline"><?php echo $row['going'] ?></td>
                                             <td class="inline"><?php echo $row['interested'] ?></td>

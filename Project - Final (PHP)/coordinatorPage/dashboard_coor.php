@@ -25,9 +25,10 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 } else {
     echo "User not logged in.";
+    header("Location: ../loginPage/login.php");
+    exit();
 }
 
-<<<<<<< HEAD
 //query for alumni count
 $sql = "SELECT COUNT(student_id) AS alumni_count FROM alumni";
 
@@ -48,8 +49,6 @@ $result_event = $conn->query($sql_event);
 $row_event = $result_event->fetch_assoc();
 // get the exact query or in short COUNT(event_id) from table event,  COUNT(event_id) rename as events_count
 $event_count = $row_event['events_count'];
-=======
->>>>>>> origin/main
 
 ?>
 
@@ -120,7 +119,7 @@ $event_count = $row_event['events_count'];
                     </li>
                     <li>
                         <a href="./archive/alumni_archive.php">
-                             <span class="las la-clipboard-check" style="color:#fff"></span>
+                             <span class="las la-archive" style="color:#fff"></span>
                              <small>ARCHIVE</small>
                          </a>
                      </li>
@@ -176,7 +175,6 @@ $event_count = $row_event['events_count'];
                                     <div class="card-body">
                                         <div class="d-flex align-items-center">
                                             <i class="las la-user-graduate fa-3x"></i>
-<<<<<<< HEAD
                                                 <div class="row mb-3">
                                                         <!-- display Alumni Total Count -->
                                                         <label style="font-size: 20px;">Alumni Total Count:</label>
@@ -186,15 +184,6 @@ $event_count = $row_event['events_count'];
                                         </div>
                                     </div>
                                     <a href="alumni/alumni.php" class="card-footer d-flex justify-content-between text-white">
-=======
-                                            <div class="ml-4">
-                                                <h5>Alumni</h5>
-                                                <h2>1000</h2>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a href="alumni-list.php" class="card-footer d-flex justify-content-between text-white">
->>>>>>> origin/main
                                         <span>View Details</span>
                                         <i class="las la-arrow-circle-right"></i>
                                     </a>
@@ -205,19 +194,12 @@ $event_count = $row_event['events_count'];
                                     <div class="card-body">
                                         <div class="d-flex align-items-center">
                                             <i class="las la-calendar-alt fa-3x"></i>
-<<<<<<< HEAD
                                                 <div class="row mb-3">
                                                     <!-- Display Student Total Count -->
                                                     <label style="font-size: 20px;">Events Total Count:</label>
                                                     <!-- display events count in database -->
                                                     <label class="col-sm-3 col-form-label" style="font-size: 30px;"><?php echo $event_count; ?></label>
                                                 </div>
-=======
-                                            <div class="ml-4">
-                                                <h5>Events</h5>
-                                                <h2>5</h2>
-                                            </div>
->>>>>>> origin/main
                                         </div>
                                     </div>
                                     <a href="event.php" class="card-footer d-flex justify-content-between text-white">

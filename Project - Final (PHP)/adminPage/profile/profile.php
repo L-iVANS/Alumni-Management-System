@@ -25,6 +25,8 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 } else {
     echo "User not logged in.";
+    header("Location: ../../loginPage/login.php");
+    exit();
 }
 
 // Assuming you have a user ID stored in a variable $user_id
@@ -36,6 +38,7 @@ if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
 
     // Assign fetched data to variables
+    $admin_id = $row['admin_id'];
     $fname = $row['fname'];
     $mname = $row['mname'];
     $lname = $row['lname'];
@@ -127,7 +130,7 @@ if ($result->num_rows > 0) {
                     </li>
                     <li>
                         <a href="../archive/alumni_archive.php">
-                            <span class="las la-clipboard-check" style="color:#fff"></span>
+                            <span class="las la-archive" style="color:#fff"></span>
                             <small>ARCHIVE</small>
                         </a>
                     </li>
@@ -199,8 +202,10 @@ if ($result->num_rows > 0) {
                         <div class="row">
                             <div class="container-fluid">
                                 <div class="buttons">
-                                    <a href="./update.php"><button type="button" class="btn" id="button1">UPDATE INFO</button></a>
-                                    <a href="./change_pass.php"><button type="button" class="btn" id="button2">CHANGE PASSWORD</button></a>
+                                    <?php echo "
+                                    <a href='./update.php?id=$row[admin_id]'><button type='button' class='btn' id='button1'>UPDATE INFO</button></a>
+                                    <a href='./change_pass.php?id=$row[admin_id]'><button type='button' class='btn' id='button2'>CHANGE PASSWORD</button></a>
+                                    "; ?>
                                 </div>
                             </div>
                         </div>
@@ -209,7 +214,20 @@ if ($result->num_rows > 0) {
             </div>
         </main>
     </div>
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            var passwordInput = document.getElementById('passwordInput');
+            var toggleButton = document.getElementById('togglePassword');
 
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.textContent = 'Hide';
+            } else {
+                passwordInput.type = 'password';
+                toggleButton.textContent = 'Show';
+            }
+        });
+    </script>
 </body>
 
 </html>

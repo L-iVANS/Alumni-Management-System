@@ -25,6 +25,8 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 } else {
     echo "User not logged in.";
+    header("Location: ../loginPage/login.php");
+    exit();
 }
 
 
@@ -35,33 +37,31 @@ $row = $result->fetch_assoc();
 
 $file = $row['picture'];
 
-<<<<<<< HEAD
 //query for events count
 $sql_event = "SELECT COUNT(event_id) AS events_count FROM event";
 
 // connect in databse then run the query $sql
 $result_event = $conn->query($sql_event);
- // retrieve the data from database
+// retrieve the data from database
 $row_event = $result_event->fetch_assoc();
 // get the exact query or in short COUNT(event_id) from table event,  COUNT(event_id) rename as events_count
 $event_count = $row_event['events_count'];
 
-=======
->>>>>>> origin/main
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Alumni Dasboard</title>
+    <title>Alumni Dashboard</title>
     <link rel="shortcut icon" href="../assets/cvsu.png" type="image/svg+xml">
-    <link rel="stylesheet" href="dashboard_user.css">
+    <link rel="stylesheet" href="./dashboard_user.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -124,10 +124,10 @@ $event_count = $row_event['events_count'];
                     </div>
 
                     <div class="user">
-                        <div class="bg-img" style="background-image: url(img/1.jpeg)"></div>
+
 
                         <a href="./logout.php">
-                            <span class="las la-power-off"></span>
+                            <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
                         </a>
 
                     </div>
@@ -143,35 +143,70 @@ $event_count = $row_event['events_count'];
             </div>
         </main>
         <div class="page-content">
-            <!--  -->
-<<<<<<< HEAD
-            <div class="col-md-4">
-                <div class="card bg-warning text-white mb-4">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <i class="las la-calendar-alt fa-3x"></i>
-                                <div class="row mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card bg-warning text-white mb-4">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <i class="las la-calendar-alt fa-3x"></i>
+                                <div class="ml-4">
                                     <!-- Display events Total Count -->
                                     <label style="font-size: 20px;">Events Total Count:</label>
                                     <!-- display events count in database -->
                                     <label class="col-sm-3 col-form-label" style="font-size: 30px;"><?php echo $event_count; ?></label>
                                 </div>
                             </div>
-                            </div>
-                            <a href="event/event.php" class="card-footer d-flex justify-content-between text-white">
-                                <span>View Details</span>
-                                <i class="las la-arrow-circle-right"></i>
+                        </div>
+                        <a href="event/event.php" class="card-footer d-flex justify-content-between text-white">
+                            <span>View Details</span>
+                            <i class="las la-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-8 notice-box">
+                    <div class="notice-title">Notice Alumni!</div>
+                    <div class="notice-text">
+                        <span>Welcome to Cavite State University - Imus Campus' Alumni Management System. Please be informed that <em>alumni records and transactions are managed separately from current student records</em>. Therefore, updates made in the system may not immediately reflect changes in official university records. For any questions, inquiries, or technical issues regarding the Alumni Management System, please contact the administrator and coordinator of the system.</span><br><br>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="quick-links">
+                        <h5><i class="fas fa-info-circle"></i> Quick Links</h5>
+                        <div class="quick-link-item">
+                            <a href="https://cvsu-imus.edu.ph">
+                                <i class="fas fa-globe fa-3x"></i>
+                                <p>CvSU Imus Website</p>
+                            </a>
+                        </div>
+                        <div class="quick-link-item">
+                            <a href="https://elearning.cvsu.edu.ph">
+                                <i class="fas fa-chalkboard-teacher fa-3x"></i>
+                                <p>CvSU eLearning</p>
+                            </a>
+                        </div>
+                        <div class="quick-link-item">
+                            <a href="https://www.facebook.com/CVSUImus">
+                                <i class="fab fa-facebook fa-3x"></i>
+                                <p>CvSU Imus Facebook page</p>
+                            </a>
+                        </div>
+                        <div class="quick-link-item">
+                            <a href="https://mail.google.com">
+                                <i class="fas fa-envelope fa-3x"></i>
+                                <p>Login your CvSU Email</p>
                             </a>
                         </div>
                     </div>
-                </div>    
+                </div>
+
             </div>
         </div>
-=======
-        </div>
-    </div>
->>>>>>> origin/main
 
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <!-- Script to display preview of selected image -->
     <script>
         function getImagePreview(event) {

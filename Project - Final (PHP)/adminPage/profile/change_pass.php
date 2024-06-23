@@ -1,19 +1,18 @@
-
 <?php
 session_start();
 
-$serername = "localhost";
+$servername = "localhost";
 $db_username = "root";
 $db_password = "";
 $db_name = "alumni_management_system";
-$conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
+$conn = mysqli_connect($servername, $db_username, $db_password, $db_name);
 
 // USER ACCOUNT DATA
 if (isset($_SESSION['user_id'])) {
     $account = $_SESSION['user_id'];
 
     $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ?");
-    $stmt->bind_param("s", $account); // "s" indicates the type is string
+    $stmt->bind_param("s", $account);
     $stmt->execute();
     $user_result = $stmt->get_result();
 
@@ -26,19 +25,84 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 } else {
     echo "User not logged in.";
+    header("Location: ../../loginPage/login.php");
+    exit();
 }
 
+$pass = "";
+$confirm_pass = "";
+$new_pass = "";
+$password = "";
+$errorMessage = "";
 
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    // Show the data of admin
+    if (!isset($_GET['id'])) {
+        header("location: ./profile.php");
+        exit;
+    }
+    $admin_id = $_GET['id'];
+
+    // Read data from table admin
+    $sql = "SELECT * FROM admin WHERE admin_id=$admin_id";
+    $result = $conn->query($sql);
+    $row = $result->fetch_assoc();
+
+    if (!$row) {
+        header("location: ./profile.php");
+        exit;
+    }
+
+    $admin_id = $row['admin_id'];
+    $password = $row['password'];
+} else {
+    // Get the data from form
+    $admin_id = $_POST['admin_id'];
+    $current_password = $_POST['current_password'];
+    $pass = $_POST['password'];
+    $confirm_pass = $_POST['confirm_pass'];
+    $new_pass = $_POST['new_pass'];
+    $errorMessage = "";
+
+    if ($current_password == $pass) {
+
+        if ($new_pass == $confirm_pass) {
+            $sql = "UPDATE admin SET password ='$new_pass' WHERE admin_id = $admin_id";
+            $result = $conn->query($sql);
+            echo "
+                <script>
+                    alert('Password Successfully Changed');
+                    window.location.href = './profile.php';
+                </script>
+            ";
+        } else {
+            $errorMessage = "New Password and Confirm Password Don't Match";
+            $pass = "";
+            $confirm_pass = "";
+            $new_pass = "";
+            $password = "";
+            $errorMessage = "";
+        }
+    } else {
+        $errorMessage = "Incorrect Current Password";
+        $pass = "";
+        $confirm_pass = "";
+        $new_pass = "";
+        $password = "";
+        $errorMessage = "";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
     <title>Change Admin Password</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="css/change_pass.css">
-    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">  
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
@@ -48,142 +112,143 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 </head>
+
 <body>
-   <input type="checkbox" id="menu-toggle">
+    <input type="checkbox" id="menu-toggle">
     <div class="sidebar">
         <div class="side-header">
             <h3><img src="https://cvsu-imus.edu.ph/student-portal/assets/images/logo-mobile.png"></img><span>CVSU</span></h3>
         </div>
-        
+
         <div class="side-content">
             <div class="profile">
-            <i class="bi bi-person-circle"></i>
+                <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
             </div>
 
             <div class="side-menu">
-            <ul>
+                <ul>
                     <li>
-                       <a href="../dashboard_admin.php" >
+                        <a href="../dashboard_admin.php">
                             <span class="las la-home" style="color:#fff"></span>
                             <small>DASHBOARD</small>
                         </a>
                     </li>
                     <li>
-                       <a href="./change_pass.php"class="active">
+                        <a href="./change_pass.php" class="active">
                             <span class="las la-user-alt" style="color:#fff"></span>
                             <small>PROFILE</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../alumni/alumni.php">
+                        <a href="../alumni/alumni.php">
                             <span class="las la-th-list" style="color:#fff"></span>
                             <small>ALUMNI</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../coordinator/coordinator.php">
+                        <a href="../coordinator/coordinator.php">
                             <span class="las la-user-cog" style="color:#fff"></span>
                             <small>COORDINATOR</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../event/event.php">
+                        <a href="../event/event.php">
                             <span class="las la-calendar" style="color:#fff"></span>
                             <small>EVENT</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../settings/about.php">
+                        <a href="../settings/about.php">
                             <span class="las la-cog" style="color:#fff"></span>
                             <small>SETTINGS</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../report/report.php">
+                        <a href="../report/report.php">
                             <span class="las la-clipboard-check" style="color:#fff"></span>
                             <small>REPORT</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../archive/alumni_archive.php">
-                            <span class="las la-clipboard-check" style="color:#fff"></span>
+                        <a href="../archive/alumni_archive.php">
+                            <span class="las la-archive" style="color:#fff"></span>
                             <small>ARCHIVE</small>
                         </a>
                     </li>
-
                 </ul>
             </div>
         </div>
     </div>
-    
+
     <div class="main-content">
-        
         <header>
             <div class="header-content">
                 <label for="menu-toggle">
                     <span class="las la-bars bars" style="color: white;"></span>
                 </label>
-                
+
                 <div class="header-menu">
                     <label for="">
                     </label>
-                    
-                    <div class="user">
-                        
-                        
-                        <a href="../logout.php">
-                        <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
-                        </a>
 
+                    <div class="user">
+                        <a href="../logout.php">
+                            <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
+                        </a>
                     </div>
                 </div>
             </div>
         </header>
-        
-        
+
         <main>
-            
             <div class="page-header">
-            <h1><strong>Profile</strong></h1>
+                <h1><strong>Profile</strong></h1>
             </div>
-            
-    <div class="container-fluid" id="page-content">
-            
-                    <span>
-                        <h2>CHANGE PASSWORD</h2>
-                    </span>
-            
-        <div class="row">
-            <div class="container-fluid" id="main-container">
-                <div class="container-fluid" id="content-container">
-                    <form>
-                        <div class="mb-3">
-                            <label for="formGroupExampleInput" class="form-label">Enter Current Password</label>
-                            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="">
-                          </div>
-                          <div class="mb-3">
-                            <label for="formGroupExampleInput2" class="form-label">Change Password</label>
-                            <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="">
-                          </div>    
-                          <div class="mb-3">
-                            <label for="formGroupExampleInput2" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="formGroupExampleInput2" placeholder="">
-                          </div>
-                          <div class="row">
-                            <div class="container-fluid">
-                                <div class="buttons">
-                                    <button type="button" class="btn" id="button1">CHANGE PASSWORD</button>
-                                    <a href="./profile.php"><button type="button" class="btn" id="button2">CANCEL</button></a>
+
+            <div class="container-fluid" id="page-content">
+                <?php
+                if (!empty($errorMessage)) {
+                    echo "<script>alert('$errorMessage');</script>";
+                }
+                ?>
+                <span>
+                    <h2>CHANGE PASSWORD</h2>
+                </span>
+
+                <div class="row">
+                    <div class="container-fluid" id="main-container">
+                        <div class="container-fluid" id="content-container">
+                            <form method="POST">
+                                <div class="mb-3">
+                                    <input type="hidden" name="admin_id" class="form-control" id="formGroupExampleInput" value="<?php echo $admin_id; ?>">
+                                    <input type="hidden" name="current_password" class="form-control" id="formGroupExampleInput" value="<?php echo $password; ?>">
+                                    <label for="formGroupExampleInput" class="form-label">Enter Current Password</label>
+                                    <input type="text" name="password" class="form-control" id="formGroupExampleInput" required>
                                 </div>
-                            </div>
-                        </div>   
-                    </form>
+                                <div class="mb-3">
+                                    <label for="formGroupExampleInput2" class="form-label">Change Password</label>
+                                    <input type="password" name="new_pass" class="form-control" id="formGroupExampleInput2" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="formGroupExampleInput2" class="form-label">Confirm Password</label>
+                                    <input type="password" name="confirm_pass" class="form-control" id="formGroupExampleInput2" required>
+                                </div>
+                                <div class="row">
+                                    <div class="container-fluid">
+                                        <div class="buttons">
+                                            <button type="submit" class="btn" id="button1">CHANGE PASSWORD</button>
+                                            <a href="./profile.php"><button type="button" class="btn" id="button2">CANCEL</button></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 </body>
+
 </html>
