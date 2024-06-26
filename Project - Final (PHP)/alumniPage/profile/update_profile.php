@@ -32,6 +32,14 @@ if (isset($_SESSION['user_id'])) {
 // Close the database connection if needed
 // $conn->close();
 
+// FOR PROFILE IMAGE
+//read data from table alumni
+$sql = "SELECT * FROM alumni WHERE alumni_id=$account";
+$result = $conn->query($sql);
+$row = $result->fetch_assoc();
+
+$file = $row['picture'];
+
 $file = "";
 $myId = "";
 
@@ -54,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
     // data from table alumni where student_id = $alumni_id = $_GET['id']; get from alumni list update
     $file = $row['picture'];
-
 } else {
 
     $alumni_id = $_POST['id'];
@@ -68,8 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     echo
     "
         <script>
-            alert('Alumni Info Updated Successfully');
-            window.location.href = './alumni_info.php?id=$alumni_id';
+            alert('Profile Updated Successfully');
+            window.location.href = './profile.php?id=$alumni_id';
         </script>
     ";
 }
@@ -100,7 +107,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         <div class="side-content">
             <div class="profile">
-            <i class="bi bi-person-circle"></i>
+                <div>
+                    <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" style="width:83px;height:83px; border-radius: 100%;border: 2px solid white;">
+                </div>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
             </div>
@@ -108,51 +117,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             <div class="side-menu">
                 <ul>
                     <li>
-                        <a href="../dashboard_admin.php">
+                        <a href="../dashboard_user.php">
                             <span class="las la-home" style="color:#fff"></span>
                             <small>DASHBOARD</small>
                         </a>
                     </li>
                     <li>
-                        <a href="../profile/profile.php">
+                        <a href="./update_profile.php" class="active">
                             <span class="las la-user-alt" style="color:#fff"></span>
                             <small>PROFILE</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./update_profile.php" class="active">
-                            <span class="las la-th-list" style="color:#fff"></span>
-                            <small>ALUMNI</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../coordinator/coordinator.php">
-                            <span class="las la-user-cog" style="color:#fff"></span>
-                            <small>COORDINATOR</small>
                         </a>
                     </li>
                     <li>
                         <a href="../event/event.php">
                             <span class="las la-calendar" style="color:#fff"></span>
                             <small>EVENT</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../settings/about.php">
-                            <span class="las la-cog" style="color:#fff"></span>
-                            <small>SETTINGS</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../report/report.php">
-                            <span class="las la-clipboard-check" style="color:#fff"></span>
-                            <small>REPORT</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../archive/alumni_archive.php">
-                            <span class="las la-archive" style="color:#fff"></span>
-                            <small>ARCHIVE</small>
                         </a>
                     </li>
                 </ul>
@@ -196,8 +175,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             <div class="row align-items-end">
                                 <div class="col">
                                     <!-- Preview image -->
-                                    <div class="form-control" style="width: 445px; height: 445px; border-radius: 50%;">
-                                        <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" style="width:420px;height:420px; border-radius: 100%;">
+                                    <div class="form-control" style="width:445px;height:435px; border-radius: 100%;">
+                                        <img id="previewTWO" src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" style="width:420px;height:420px; border-radius: 100%;">
                                     </div>
                                 </div>
                             </div>
@@ -209,10 +188,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                 <div class="col">
                                     <button type="submit" class="btn btn-warning" name="insert" id="insert" value="insert" style="padding-left: 70px; padding-right: 70px; margin-right: 7%;">Update</button>
                                     <?php
-                                        echo "
-                                        <a class='btn btn-danger' href='./alumni_info.php?id=$row[alumni_id]' style='padding-left: 70px; padding-right: 70px;'>Cancel</a>
-                                        ";?>
-                                    
+                                    echo "
+                                        <a class='btn btn-danger' href='./profile.php' style='padding-left: 70px; padding-right: 70px;'>Cancel</a>
+                                        "; ?>
+
                                 </div>
                             </div>
                         </div>
@@ -224,9 +203,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     <!-- Script to display preview of selected image -->
     <script>
+        var image = URL.createObjectURL(event.target.files[0]);
+        var preview = document.getElementById('preview');
+        preview.src = image;
+        preview.style.width = '420px';
+        preview.style.height = '420px';
+    </script>
+    <!-- Script to display preview of selected image -->
+    <script>
         function getImagePreview(event) {
             var image = URL.createObjectURL(event.target.files[0]);
-            var preview = document.getElementById('preview');
+            var preview = document.getElementById('previewTWO');
             preview.src = image;
             preview.style.width = '420px';
             preview.style.height = '420px';

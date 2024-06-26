@@ -95,10 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
-        
     } else if (mysqli_num_rows($emailCheck_archive) > 0) {
         $errorMessage = "Email Already Exists";
-
     } else {
 
         $sql = "UPDATE alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email' WHERE alumni_id=$alumni_id";
@@ -317,41 +315,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                 <div class="col" id="calendar">
                                     <label class="col-sm-3 col-form-label" style="font-size: 20px;" for="phone"><span>Batch:</span></label>
                                 </div>
-
                                 <div class="col" id="batch">
-                                    <div class="col" id="batch">
-                                        <select class="form-control" name="startYear" id="startYear" required>
-                                            <option value="<?php echo $fromYear; ?>" selected><?php echo $fromYear; ?></option>
-                                            <?php
-                                            // Get the current year
-                                            $currentYear = date('Y');
+                                <select class="form-control" name="startYear" id="startYear" required>
+                                        <option value="" selected hidden disabled>Batch: From Year</option>
+                                        <?php
+                                        // Get the current year
+                                        $currentYear = date('Y');
 
-                                            // Number of years to include before and after the current year
-                                            $yearRange = 21; // Adjust this number as needed
+                                        // Number of years to include before and after the current year
+                                        $yearRange = 21; // Adjust this number as needed
 
-                                            // Generate options for years, from current year minus $yearRange to current year plus $yearRange
-                                            for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
-                                                echo "<option value=\"$year\">$year</option>";
+                                        // Generate options for years, from current year minus $yearRange to current year plus $yearRange
+                                        for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
+                                            $selected = ($year == $fromYear) ? 'selected' : '';
+                                            echo "<option value=\"$year\" $selected>$year</option>";
+                                        }
+                                        ?>
+                                    </select>
+
+                                    <select class="form-control" name="endYear" id="endYear" required disabled>
+                                        <option value="" selected hidden disabled>Batch: To Year</option>
+                                        <?php
+                                        if (isset($fromYear)) {
+                                            // Generate options for endYear starting from startYear + 1
+                                            for ($year = $fromYear + 1; $year <= $currentYear + $yearRange; $year++) {
+                                                $selected = ($year == $toYear) ? 'selected' : '';
+                                                echo "<option value=\"$year\" $selected>$year</option>";
                                             }
-                                            ?>
-                                        </select>
-
-                                        <select class="form-control" name="endYear" id="endYear" required>
-                                            <option value="<?php echo $toYear; ?>" selected><?php echo $toYear; ?></option>
-                                            <?php
-                                            // Get the current year
-                                            $currentYear = date('Y');
-
-                                            // Number of years to include before and after the current year
-                                            $yearRange = 21; // Adjust this number as needed
-
-                                            // Generate options for years, from current year minus $yearRange to current year plus $yearRange
-                                            for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
-                                                echo "<option value=\"$year\">$year</option>";
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                             </div>
                             <div class="container">
@@ -402,6 +395,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             </div>
         </div>
     </div>
+    <!-- FOR BATCH SELECTOR UPDATE -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var startYearSelect = document.getElementById('startYear');
+            var endYearSelect = document.getElementById('endYear');
+
+            // Enable endYear if startYear is already selected from the database
+            if (startYearSelect.value) {
+                populateEndYearOptions(parseInt(startYearSelect.value));
+            }
+
+            startYearSelect.addEventListener('change', function() {
+                var startYear = parseInt(this.value);
+                populateEndYearOptions(startYear);
+            });
+
+            function populateEndYearOptions(startYear) {
+                var currentYear = new Date().getFullYear();
+                var yearRange = 21; // Adjust this number as needed
+
+                // Clear all existing options and reset endYear
+                endYearSelect.innerHTML = '<option value="" selected hidden disabled>Batch: To Year</option>';
+
+                // Enable endYear dropdown
+                endYearSelect.disabled = false;
+
+                // Generate new options for endYear based on selected startYear
+                for (var year = startYear + 1; year <= currentYear + yearRange; year++) {
+                    var option = document.createElement('option');
+                    option.value = year;
+                    option.text = year;
+                    endYearSelect.appendChild(option);
+                }
+
+                // If endYear is already selected from the database, reselect it
+                if (<?php echo isset($toYear) ? 'true' : 'false'; ?>) {
+                    endYearSelect.value = <?php echo isset($toYear) ? $toYear : '""'; ?>;
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

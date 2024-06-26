@@ -64,10 +64,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $email = strtolower($_POST['email']);
 
     // email and user existing check
-    $emailCheck = mysqli_query($conn, "SELECT * FROM coordinator WHERE email = '$email' AND coor_id != $coor_id");
+    $emailCheck = mysqli_query($conn, "SELECT * FROM coordinator WHERE email='$email' AND coor_id != $coor_id");
+    $emailCheck_archive = mysqli_query($conn, "SELECT * FROM coordinator_archive WHERE email='$email' AND coor_id != $coor_id");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
+
+    } else if (mysqli_num_rows($emailCheck_archive) > 0) {
+        $errorMessage = "Email Already Exists";
+
     } else {
 
         $sql = "UPDATE coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email' WHERE coor_id = $coor_id";

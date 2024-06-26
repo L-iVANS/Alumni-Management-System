@@ -19,7 +19,7 @@ if (isset($_SESSION['user_id'])) {
     if ($user_result->num_rows > 0) {
         $user = $user_result->fetch_assoc();
     } else {
-        // No user found with the given admin_id
+        // No user found with the given alumni_id
     }
 
     $stmt->close();
@@ -29,7 +29,7 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
-
+// FOR PROFILE IMAGE
 //read data from table alumni
 $sql = "SELECT * FROM alumni WHERE alumni_id=$account";
 $result = $conn->query($sql);
@@ -37,27 +37,59 @@ $row = $result->fetch_assoc();
 
 $file = $row['picture'];
 
+// Assuming you have a user ID stored in a variable $user_id
+$sql = "SELECT * FROM alumni WHERE alumni_id = $user[alumni_id]";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Fetch data
+    $row = $result->fetch_assoc();
+
+    // Assign fetched data to variables
+    $alumni_id = $row['alumni_id'];
+    $student_id = $row['student_id'];
+    $fname = $row['fname'];
+    $mname = $row['mname'];
+    $lname = $row['lname'];
+    $gender = $row['gender'];
+    $batch = $row["batch_startYear"] . " - " . $row["batch_endYear"];
+    $contact = $row['contact'];
+    $address = $row['address'];
+    $email = $row['email'];
+    $password = $row['password'];
+
+    // Add more fields as needed
+} else {
+    echo "0 results";
+}
+
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Alumni Profile</title>
+    <title>Admin Profile</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 </head>
+
 <body>
-   <input type="checkbox" id="menu-toggle">
+    <input type="checkbox" id="menu-toggle">
     <div class="sidebar">
         <div class="side-header">
             <h3><img src="https://cvsu-imus.edu.ph/student-portal/assets/images/logo-mobile.png"></img><span>CVSU</span></h3>
         </div>
-        
+
         <div class="side-content">
             <div class="profile">
                 <div>
@@ -70,19 +102,19 @@ $file = $row['picture'];
             <div class="side-menu">
                 <ul>
                     <li>
-                       <a href="../dashboard_user.php">
+                        <a href="../dashboard_user.php">
                             <span class="las la-home" style="color:#fff"></span>
                             <small>DASHBOARD</small>
                         </a>
                     </li>
                     <li>
-                       <a href="./profile.php" class="active">
+                        <a href="./profile.php" class="active">
                             <span class="las la-user-alt" style="color:#fff"></span>
                             <small>PROFILE</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../event/event.php">
+                        <a href="../event/event.php">
                             <span class="las la-calendar" style="color:#fff"></span>
                             <small>EVENT</small>
                         </a>
@@ -91,48 +123,119 @@ $file = $row['picture'];
             </div>
         </div>
     </div>
-    
+
     <div class="main-content">
-        
-        <header> 
+
+        <header>
             <div class="header-content">
                 <label for="menu-toggle">
-                    <span class="las la-bars"></span>
+                    <span class="las la-bars bars" style="color: white;"></span>
                 </label>
-                <!-- <span class="header-title">ALUMNI MANAGEMENT SYSTEM</span>  -->
+
                 <div class="header-menu">
                     <label for="">
                     </label>
-                    
-                    <div class="notify-icon">
-                    </div>
-                    
-                    <div class="notify-icon">   
-                    </div>
-                    
+
                     <div class="user">
-                        <div class="bg-img" style="background-image: url(img/1.jpeg)"></div>
-                        
+
+
                         <a href="../logout.php">
-                        <span class="las la-power-off"></span>
+                            <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
                         </a>
 
                     </div>
                 </div>
             </div>
         </header>
-        
+
+
         <main>
-            
-            <div class="page-header">
+
+            <div class="page-header" style="color: #74767d;">
                 <h1><strong>Profile</strong></h1>
             </div>
-        </main>
+
             <div class="page-content">
-                <!--  -->
+                <div class="container-fluid" id="container-main">
+                    <div class="row">
+                        <div class="container-fluid">
+                            <div class="container-fluid" id="content-container">
+                                <div class="information">
+                                    <form>
+                                        <fieldset disabled>
+                                            <div style="display: flex; justify-content: center;">
+                                                <!-- Preview image -->
+                                                <div class="form-control" style="width: 325px; height: 325px; border-radius: 50%; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                                                    <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" style="width: 300px; height: 300px; border-radius: 50%;">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="disabledTextInput" class="form-label">STUDENT ID</label>
+                                                <input studentid="studentid" id="disabledTextInput" class="form-control" value="<?php echo htmlspecialchars("$student_id"); ?>" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="disabledTextInput" class="form-label">FULL NAME</label>
+                                                <input alumniname="admminfullname" id="disabledTextInput" class="form-control" value="<?php echo htmlspecialchars("$fname $mname $lname"); ?>" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="disabledTextInput" class="form-label">GENDER</label>
+                                                <input gender="gender" id="disabledTextInput" class="form-control" value="<?php echo htmlspecialchars($gender); ?>" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="disabledTextInput" class="form-label">BATCH</label>
+                                                <input batch="batch" id="disabledTextInput" class="form-control" value="<?php echo htmlspecialchars($batch); ?>" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="disabledTextInput" class="form-label">CONTACT</label>
+                                                <input contact="contact" id="disabledTextInput" class="form-control" value="<?php echo htmlspecialchars($contact); ?>" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="disabledTextInput" class="form-label">ADDRESS</label>
+                                                <input address="address" id="disabledTextInput" class="form-control" value="<?php echo htmlspecialchars($address); ?>" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="disabledTextInput" class="form-label">EMAIL ADDRESS</label>
+                                                <input email="email" id="disabledTextInput" class="form-control" value="<?php echo htmlspecialchars($email); ?>" />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="disabledTextInput" class="form-label">PASSWORD</label>
+                                                <input password="password" id="disabledTextInput" class="form-control" value="<?php echo htmlspecialchars($password); ?>" />
+                                            </div>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="container-fluid">
+                                <div class="buttons">
+                                    <?php echo "
+                                    <a href='./update.php?id=$row[alumni_id]'><button type='button' class='btn' id='button1'>UPDATE INFO</button></a>
+                                    <a style='text-align: center;' href='./update_profile.php?id=$row[alumni_id]'><button type='button' class='btn' id='button1'>CHANGE PROFILE</button></a>
+                                    <a href='./change_pass.php?id=$row[alumni_id]'><button type='button' class='btn' id='button2'>CHANGE PASSWORD</button></a>
+                                    "; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        
+        </main>
     </div>
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            var passwordInput = document.getElementById('passwordInput');
+            var toggleButton = document.getElementById('togglePassword');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.textContent = 'Hide';
+            } else {
+                passwordInput.type = 'password';
+                toggleButton.textContent = 'Show';
+            }
+        });
+    </script>
     <!-- Script to display preview of selected image -->
     <script>
         function getImagePreview(event) {
@@ -144,4 +247,5 @@ $file = $row['picture'];
         }
     </script>
 </body>
+
 </html>

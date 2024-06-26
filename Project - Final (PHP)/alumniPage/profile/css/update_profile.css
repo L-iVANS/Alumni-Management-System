@@ -1,6 +1,5 @@
 
 
-
 @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;500;600&display=swap');
 
 :root {
@@ -17,7 +16,8 @@
     box-sizing: border-box;
     font-family: 'Merriweather', sans-serif;
     overflow-x: hidden;
-}
+    scroll-behavior: smooth;
+    }
 
 #menu-toggle {
     display: none;
@@ -34,6 +34,7 @@
     background: #2a9134;
     box-shadow: 0px 5px 5px 5px rgb(0 0 0 0.2);
     transition: left 300ms;
+    
 }
 
 .side-header span{
@@ -85,9 +86,9 @@ font-weight: bold;
 }
 
 /* Handle on hover */
-.side-content::-webkit-scrollbar-thumb:hover {
-  background: #b30000; 
-}
+/* .side-content::-webkit-scrollbar-thumb:hover {   
+  
+} */
 
 .sidebar ul li a:hover {
     color: #2a9134;
@@ -237,72 +238,27 @@ header {
 }
 
 
+
+
 main {
     margin-top: 60px;
 }
 
 .page-header {
     padding: 1.3rem 1rem;
-    /* background: #E9edf2 !important; */
+    background: #fff;
     border-bottom: 1px solid #dee2e8;
-    min-width: 100% !important;
+    width: 100%;
 }
 
 .page-header h1, .page-header small {
     color: #74767d;
     margin-left: 20px;
+    width: 100%;
 }
 
 .page-content {
     padding: 1.3rem 1rem;
-}
-
-.information{
-    display: block;
-    padding:0px ;
-}
-
-.content-header img{
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    /* margin-top: 40px; */
-    margin-bottom: 30px;
-}
-
-
-.container-fluid .content-header{
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height:auto;
-    border-bottom: none;
-    margin-bottom: 30px;
-    width: 100%;
-    font-size: 150px;
-}
-
-.buttons{
-    display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
-}
-
-.buttons::after :hover{
-    background-color: #2a9134;
-}
-#button1 , #button2{
-    background-color: #f7b205;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#button1:hover, #button2:hover {
-    background-color: #2a9134; 
-    color: #fff; 
-    transition: background-color 0.3s; 
 }
 
 /*media queries  */
@@ -313,8 +269,15 @@ main {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+@media only screen and (min-width: 425px) {
+    *{
+        overflow-x: hidden;
+    }
+}
 
 @media only screen and (max-width: 768px) {
+    
+    
     .sidebar {
         left: -165px;
         z-index: 90;
@@ -355,19 +318,90 @@ main {
         left: 0px;
     }
     
-    table {
-        width: 900px;
-    }
+    
 }
 
-@media only screen and (max-width: 768px){
-    .page-header{
-        width: 100%;
-    }
+.alumni-info{
+    margin-top: 30px;
+}
+.container{
+    margin-top: 30px;
+    display: block;
+    /* border: 1px solid red; */
+    unicode-bidi: isolate;
+}
+#profile-pic{
+    display: flex;
+    justify-items: center;
+    margin-bottom: 30px;
+
+}
+.container-title span{
+    font-size: large;
+    font-weight: bold;
+}
+.container-title{
+    border-bottom: #dee2e8 1px solid;
+}
+.col{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* border: green 1px solid;  */
 }
 
+#profile-pic{
+    max-width: 100%;
+    border-radius: 50%;
+    width: 150px;
+}
+#name{
+    width: 100%;
+}
+#course{
+    width: 100%;
+}
+#batch{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    justify-content: space-evenly;
+}
+#address{
+    width: 100%;
+}
+
+#email{
+    width: 100%;
+}
+#username{
+    width: 100%;
+}
+#button{
+    display: flex;
+    justify-content: right;
+    padding: 10px;
+    /* border: #2a9134 1px solid; */
+}
+
+#start{
+    margin-top: 20px;
+}
+#buttons{
+    display: flex;
+    justify-content: right;
+    padding: 10px;
+}
+.side-content .profile i{
+    color: #fff;
+    font-size: 80px;
+    font-weight: lighter;
+}
+#content{
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
 #content-container{
-    /* border:red 1px solid; */
     margin-top: 30px;
     background-color: #ffffff; /* White background */
     border-radius: 15px; 
@@ -375,10 +409,4 @@ main {
     padding: 20px; 
     margin: 20px 0; 
     transition: transform 0.2s; 
-}
-
-.side-content .profile i{
-    color: #fff;
-    font-size: 80px;
-    font-weight: lighter;
 }
