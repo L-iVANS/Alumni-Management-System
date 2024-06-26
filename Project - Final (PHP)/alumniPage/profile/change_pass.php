@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if ($current_password == $pass) {
 
         if ($new_pass == $confirm_pass) {
-            $sql = "UPDATE admin SET password ='$new_pass' WHERE alumni_id = $alumni_id";
+            $sql = "UPDATE alumni SET password ='$new_pass' WHERE alumni_id = $alumni_id";
             $result = $conn->query($sql);
             echo "
                 <script>
@@ -206,11 +206,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                 </div>
                                 <div class="mb-3">
                                     <label for="formGroupExampleInput2" class="form-label">Change Password</label>
-                                    <input type="password" name="new_pass" class="form-control" id="formGroupExampleInput2" required>
+                                    <input type="text" name="new_pass" class="form-control" id="formGroupExampleInput2" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="formGroupExampleInput2" class="form-label">Confirm Password</label>
-                                    <input type="password" name="confirm_pass" class="form-control" id="formGroupExampleInput2" required>
+                                    <input type="text" name="confirm_pass" class="form-control" id="formGroupExampleInput2" required>
                                 </div>
                                 <div class="row">
                                     <div class="container-fluid">
