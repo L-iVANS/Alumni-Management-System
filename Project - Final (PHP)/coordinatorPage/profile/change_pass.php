@@ -64,32 +64,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $errorMessage = "";
 
     if ($current_password == $pass) {
-
         if ($new_pass == $confirm_pass) {
             $sql = "UPDATE coordinator SET password ='$new_pass' WHERE coor_id = $coor_id";
             $result = $conn->query($sql);
             echo "
-                <script>
-                    alert('Password Successfully Changed');
-                    window.location.href = './profile.php';
-                </script>
-            ";
-        } else {
+            <script>
+                alert('Password Successfully Changed');
+                window.location.href = './profile.php';
+            </script>";
+        } 
+        if($new_pass != $confirm_pass) {
             $errorMessage = "New Password and Confirm Password Don't Match";
-            $pass = "";
-            $confirm_pass = "";
-            $new_pass = "";
-            $password = "";
-            $errorMessage = "";
         }
     } else {
         $errorMessage = "Incorrect Current Password";
-        $pass = "";
-        $confirm_pass = "";
-        $new_pass = "";
-        $password = "";
-        $errorMessage = "";
+        
     }
+
+    // Reset the form variables
+    $pass = "";
+    $confirm_pass = "";
+    $new_pass = "";
+    $current_password = "";
 }
 ?>
 <!DOCTYPE html>
@@ -212,13 +208,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     echo "<script>alert('$errorMessage');</script>";
                 }
                 ?>
-                <span>
-                    <h2>CHANGE PASSWORD</h2>
-                </span>
 
                 <div class="row">
                     <div class="container-fluid" id="main-container">
                         <div class="container-fluid" id="content-container">
+                        <span>
+                            <h3>CHANGE PASSWORD</h3>
+                        </span>
+                        <br>
                             <form method="POST">
                                 <div class="mb-3">
                                     <input type="hidden" name="coor_id" class="form-control" id="formGroupExampleInput" value="<?php echo $coor_id; ?>">

@@ -94,6 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $confirm_pass = "";
     $new_pass = "";
     $current_password = "";
+    
 }
 ?>
 <!DOCTYPE html>
@@ -189,13 +190,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     echo "<script>alert('$errorMessage');</script>";
                 }
                 ?>
-                <span>
-                    <h2>CHANGE PASSWORD</h2>
-                </span>
-
+    
                 <div class="row">
                     <div class="container-fluid" id="main-container">
                         <div class="container-fluid" id="content-container">
+                        <span>
+                            <h3>CHANGE PASSWORD</h3>
+                        </span>
+                        <br>
                             <form method="POST">
                                 <div class="mb-3">
                                     <input type="hidden" name="alumni_id" class="form-control" id="formGroupExampleInput" value="<?php echo $alumni_id; ?>">

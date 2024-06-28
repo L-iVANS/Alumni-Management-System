@@ -393,14 +393,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
     </div>
     </div>
-
-
     </div>
 
     <!-- <script>
