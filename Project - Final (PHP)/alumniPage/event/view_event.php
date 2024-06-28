@@ -306,9 +306,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     </div>
                     <div class="row g-0 position-relative">
                         <div class="col-md-6 mb-md-0 p-md-4">
-                            <div>
-                                <img src="data:image/jpeg;base64,<?php echo base64_encode($row['image']); ?>" class="w-100" alt="...">
-                            </div>
+                            <?php
+                            // Assuming $row['image'] contains the binary image data
+                            $imageData = $row['image'];
+
+                            // Save the image to a temporary file
+                            $tempImagePath = tempnam(sys_get_temp_dir(), 'img');
+                            file_put_contents($tempImagePath, $imageData);
+
+                            // Get the image dimensions
+                            list($width, $height) = getimagesize($tempImagePath);
+
+                            // Delete the temporary file
+                            unlink($tempImagePath);
+
+                            if ($width > $height || $width == $height) {
+                                // Landscape or square (1x1) image
+                                echo '<div style="display: flex; justify-content: center; align-items: center; height: 65vh;">';
+                                echo '<img src="data:image/jpeg;base64,' . base64_encode($imageData) . '" class="w-100" alt="...">';
+                                echo '</div>';
+                            } else {
+                                // Portrait image
+                                echo '<div>';
+                                echo '<img src="data:image/jpeg;base64,' . base64_encode($imageData) . '" class="w-100" alt="...">';
+                                echo '</div>';
+                            }
+                            ?>
                         </div>
                         <div class="col-md-6 p-4 ps-md-0" id="right-side">
                             <h3 class="mt-0"> <strong><?php echo $row['title'] ?></strong></h3>
