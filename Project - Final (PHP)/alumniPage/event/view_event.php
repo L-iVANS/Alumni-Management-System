@@ -76,14 +76,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $row2 = $result2->fetch_assoc();
 
     $check = mysqli_query($conn, "SELECT * FROM event_choice WHERE event_id=$event_id_id AND alumni_id=$rowpic[alumni_id]");
-    if(mysqli_num_rows($check) > 0){
+    if (mysqli_num_rows($check) > 0) {
         $choice_event_id = $row2['event_id'];
         $event_choice = $row2['event_choice'];
         $event_alumni_id = $row2['alumni_id'];
-
-    } 
-    
-
+    }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get the data from form
     $event_id = $_POST['event_id'];
@@ -107,12 +104,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
     $prev_vote_check = mysqli_query($conn, "SELECT event_choice FROM event_choice WHERE event_id=$event_id_id AND alumni_id=$rowpic[alumni_id]");
-    if(mysqli_num_rows($prev_vote_check) > 0){
+    if (mysqli_num_rows($prev_vote_check) > 0) {
         $prev_vote = $row2['event_choice'];
     } else {
-        $prev_vote = ""; 
+        $prev_vote = "";
     }
-    
+
 
     // START OF POST METHOD
     $alumni_id = $_POST['alumni_id'];
@@ -309,7 +306,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     </div>
                     <div class="row g-0 position-relative">
                         <div class="col-md-6 mb-md-0 p-md-4">
-                            <div style="display: flex; justify-content: center; align-items: center; height: 70vh;">
+                            <div>
                                 <img src="data:image/jpeg;base64,<?php echo base64_encode($row['image']); ?>" class="w-100" alt="...">
                             </div>
                         </div>
@@ -344,10 +341,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                             <input type="hidden" name="email" value="<?php echo $user['email']; ?>">
                                             <select class="form-control" name="event_choice" id="event" required>
                                                 <?php if (($choice_event_id == $event_id_id)  and ($event_alumni_id == $rowpic['alumni_id'])) : ?>
-                                                    <option value="<?php echo htmlspecialchars($event_choice); ?>" selected hidden><?php echo htmlspecialchars($event_choice); ?></option>
-                                                    <option value="Interested">Interested</option>
-                                                    <option value="Not Interested">Not Interested</option>
-                                                    <option value="Going">Going</option>
+                                                    <option value="" selected hidden disabled><?php echo htmlspecialchars($event_choice); ?></option>
+                                                    <?php if ($event_choice != 'Interested') : ?>
+                                                        <option value="Interested">Interested</option>
+                                                    <?php endif; ?>
+                                                    <?php if ($event_choice != 'Not Interested') : ?>
+                                                        <option value="Not Interested">Not Interested</option>
+                                                    <?php endif; ?>
+                                                    <?php if ($event_choice != 'Going') : ?>
+                                                        <option value="Going">Going</option>
+                                                    <?php endif; ?>
                                                 <?php else : ?>
                                                     <option value="" selected hidden disabled>Are you going to the event?</option>
                                                     <option value="Interested">Interested</option>
