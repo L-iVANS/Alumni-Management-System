@@ -73,29 +73,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $errorMessage = "";
 
     if ($current_password == $pass) {
-
         if ($new_pass == $confirm_pass) {
             $sql = "UPDATE alumni SET password ='$new_pass' WHERE alumni_id = $alumni_id";
             $result = $conn->query($sql);
             echo "
-                <script>
-                    alert('Password Successfully Changed');
-                    window.location.href = './profile.php';
-                </script>
-            ";
-        } else {
+            <script>
+                alert('Password Successfully Changed');
+                window.location.href = './profile.php';
+            </script>";
+        } 
+        if($new_pass != $confirm_pass) {
             $errorMessage = "New Password and Confirm Password Don't Match";
         }
     } else {
         $errorMessage = "Incorrect Current Password";
-
     }
-    $errorMessage = "";
+
+    // Reset the form variables
     $pass = "";
     $confirm_pass = "";
     $new_pass = "";
-    $password = "";
-    $errorMessage = "";
+    $current_password = "";
 }
 ?>
 <!DOCTYPE html>
@@ -126,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         </div>
 
         <div class="side-content">
-        <div class="profile">
+            <div class="profile">
                 <div>
                     <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" style="width:83px;height:83px; border-radius: 100%;border: 2px solid white;">
                 </div>
@@ -186,6 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             <div class="container-fluid" id="page-content">
                 <?php
+                // Display the error message if it exists
                 if (!empty($errorMessage)) {
                     echo "<script>alert('$errorMessage');</script>";
                 }
@@ -200,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             <form method="POST">
                                 <div class="mb-3">
                                     <input type="hidden" name="alumni_id" class="form-control" id="formGroupExampleInput" value="<?php echo $alumni_id; ?>">
-                                    <input type="hidden" name="current_password" class="form-control" id="formGroupExampleInput" value="<?php echo $password; ?>">
+                                    <input type="hidden" name="current_password" class="form-control" id="formGroupExampleInput" value="<?php echo $row['password']; ?>">
                                     <label for="formGroupExampleInput" class="form-label">Enter Current Password</label>
                                     <input type="text" name="password" class="form-control" id="formGroupExampleInput" required>
                                 </div>

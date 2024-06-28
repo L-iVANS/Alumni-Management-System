@@ -11,7 +11,7 @@ $conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
 if (isset($_SESSION['user_id'])) {
     $account = $_SESSION['user_id'];
 
-    $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ?");
+    $stmt = $conn->prepare("SELECT * FROM alumni WHERE alumni_id = ?");
     $stmt->bind_param("s", $account); // "s" indicates the type is string
     $stmt->execute();
     $user_result = $stmt->get_result();

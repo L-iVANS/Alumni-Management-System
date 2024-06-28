@@ -38,8 +38,8 @@ if (isset($_GET['id'])) {
 
 
     //insert data into table alumni_archive from alumni
-    $sql_archive = "INSERT INTO event_archive (event_id, title, sched_date, sched_time, description, image, going, interested, not_interested, date_created)" .
-        "SELECT event_id, title, sched_date, sched_time, description, image, going, interested, not_interested, date_created FROM event WHERE event_id=$event_id";
+    $sql_archive = "INSERT INTO event_archive (event_id, title, schedule, description, image, going, interested, not_interested, date_created)" .
+        "SELECT event_id, title, schedule, description, image, going, interested, not_interested, date_created FROM event WHERE event_id=$event_id";
     $conn->query($sql_archive);
 
     //delete data in table alumni

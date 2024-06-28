@@ -22,6 +22,8 @@ if (isset($_SESSION['user_id'])) {
         // No user found with the given admin_id
     }
 
+    $fullname = $user["fname"] . " " . $user["mname"] . " " . $user["lname"];
+
     $stmt->close();
 } else {
     echo "User not logged in.";
@@ -29,20 +31,183 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
-
 //read data from table alumni
 $sql = "SELECT * FROM alumni WHERE alumni_id=$account";
 $result = $conn->query($sql);
-$row = $result->fetch_assoc();
+$rowpic = $result->fetch_assoc();
 
-$file = $row['picture'];
+$file = $rowpic['picture'];
+
+$title = "";
+$schedule = "";
+$description = "";
+$interested = "";
+$not_interested = "";
+$going = "";
+
+// for view more details on event
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    // Show the data of admin
+    if (!isset($_GET['id'])) {
+        header("location: ./event.php");
+        exit;
+    }
+    $event_id = $_GET['id'];
+
+    // Read data from table admin
+    $sql = "SELECT * FROM event WHERE event_id=$event_id";
+    $result = $conn->query($sql);
+    $row = $result->fetch_assoc();
+
+    if (!$row) {
+        header("location: ./event.php");
+        exit;
+    }
+
+    $event_id_id = $row['event_id'];
+    $title = $row['title'];
+    $schedule = $row['schedule'];
+    $description = $row['description'];
+    $image = $row['image'];
+
+    // for alumni choice
+    $sql2 = "SELECT * FROM event_choice WHERE event_id=$event_id_id AND alumni_id=$rowpic[alumni_id]";
+    $result2 = $conn->query($sql2);
+    $row2 = $result2->fetch_assoc();
+
+    $check = mysqli_query($conn, "SELECT * FROM event_choice WHERE event_id=$event_id_id AND alumni_id=$rowpic[alumni_id]");
+    if(mysqli_num_rows($check) > 0){
+        $choice_event_id = $row2['event_id'];
+        $event_choice = $row2['event_choice'];
+        $event_alumni_id = $row2['alumni_id'];
+
+    } 
+    
+
+} else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Get the data from form
+    $event_id = $_POST['event_id'];
+
+    // Read data from table admin
+    $sql = "SELECT * FROM event WHERE event_id=$event_id";
+    $result = $conn->query($sql);
+    $row = $result->fetch_assoc();
+
+    if (!$row) {
+        header("location: ./event.php");
+        exit;
+    }
+
+    $event_id_id = $row['event_id'];
+
+    // for alumni choice
+    $sql2 = "SELECT * FROM event_choice WHERE event_id=$event_id_id AND alumni_id=$rowpic[alumni_id]";
+    $result2 = $conn->query($sql2);
+    $row2 = $result2->fetch_assoc();
 
 
+    $prev_vote_check = mysqli_query($conn, "SELECT event_choice FROM event_choice WHERE event_id=$event_id_id AND alumni_id=$rowpic[alumni_id]");
+    if(mysqli_num_rows($prev_vote_check) > 0){
+        $prev_vote = $row2['event_choice'];
+    } else {
+        $prev_vote = ""; 
+    }
+    
+
+    // START OF POST METHOD
+    $alumni_id = $_POST['alumni_id'];
+    $event_choice = $_POST['event_choice'];
+    $student_id = $_POST['student_id'];
+    $fullname = $_POST['fullname'];
+    $email = $_POST['email'];
+
+    // check from previous data
+    $sql3 = "SELECT * FROM event WHERE event_id=$event_id_id";
+    $result3 = $conn->query($sql3);
+    $row3 = $result3->fetch_assoc();
+
+    $going = $row3['going'];
+    $interested = $row3['interested'];
+    $not_interested = $row3['not_interested'];
+
+    // check the event count change the value
+    if ($event_choice == "Going") {
+        if ($prev_vote == "Interested") {
+            $interested -= 1;
+            $going += 1;
+            $sql_event = "UPDATE event SET going = $going, interested = $interested WHERE event_id=$event_id_id";
+            $result_event = $conn->query($sql_event);
+        } else if ($prev_vote == "Not Interested") {
+            $not_interested -= 1;
+            $going += 1;
+            $sql_event = "UPDATE event SET going = $going, not_interested = $not_interested WHERE event_id=$event_id_id";
+            $result_event = $conn->query($sql_event);
+        } else {
+            $going += 1;
+            $sql_event = "UPDATE event SET going = $going WHERE event_id=$event_id_id";
+            $result_event = $conn->query($sql_event);
+        }
+    } else if ($event_choice == "Interested") {
+        if ($prev_vote == "Going") {
+            $going -= 1;
+            $interested += 1;
+            $sql_event = "UPDATE event SET going = $going, interested = $interested WHERE event_id=$event_id_id";
+            $result_event = $conn->query($sql_event);
+        } else if ($prev_vote == "Not Interested") {
+            $not_interested -= 1;
+            $interested += 1;
+            $sql_event = "UPDATE event SET not_interested = $not_interested, interested = $interested WHERE event_id=$event_id_id";
+            $result_event = $conn->query($sql_event);
+        } else {
+            $interested += 1;
+            $sql_event = "UPDATE event SET interested = $interested WHERE event_id=$event_id_id";
+            $result_event = $conn->query($sql_event);
+        }
+    } else if ($event_choice == "Not Interested") {
+        if ($prev_vote == "Going") {
+            $going -= 1;
+            $not_interested += 1;
+            $sql_event = "UPDATE event SET going = $going, not_interested = $not_interested WHERE event_id=$event_id_id";
+            $result_event = $conn->query($sql_event);
+        } else if ($prev_vote == "Interested") {
+            $interested -= 1;
+            $not_interested += 1;
+            $sql_event = "UPDATE event SET interested = $interested, not_interested = $not_interested WHERE event_id=$event_id_id";
+            $result_event = $conn->query($sql_event);
+        } else {
+            $not_interested += 1;
+            $sql_event = "UPDATE event SET not_interested = $not_interested WHERE event_id=$event_id_id";
+            $result_event = $conn->query($sql_event);
+        }
+    }
+
+    // CHECK IF USER HAS A VOTE RECORD IN THIS EVENT
+    $check = mysqli_query($conn, "SELECT * FROM event_choice WHERE event_id=$event_id_id AND alumni_id=$rowpic[alumni_id]");
+
+    if (mysqli_num_rows($check) > 0) {
+        // insert to event_choice table
+        $final_sql = "UPDATE event_choice SET event_choice = '$event_choice' WHERE event_id=$event_id_id AND alumni_id=$rowpic[alumni_id]";
+        $final_result = $conn->query($final_sql);
+
+        echo "
+        <script>
+            alert('Status updated Successfully');
+            window.location.href = './event.php';
+        </script>";
+    } else {
+        // insert to event_choice table
+        $final_sql = "INSERT INTO event_choice (event_id, alumni_id, event_choice, student_id, fullname, email) VALUES ($event_id, $alumni_id, '$event_choice', $student_id, '$fullname', '$email')";
+        $final_result = $conn->query($final_sql);
+
+        echo "
+        <script>
+            alert('Status updated Successfully');
+            window.location.href = './event.php';
+        </script>";
+    }
+}
 ?>
-=======
 
-
->>>>>>> 63efeb90593cc3612bd5dd9094a872a4619a440e
 <!DOCTYPE html>
 <html lang="en">
 
@@ -67,7 +232,7 @@ $file = $row['picture'];
         <div class="side-content">
             <div class="profile">
                 <div>
-                    <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" style="width:83px;height:83px; border-radius: 100%;border: 2px solid white;">
+                    <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($rowpic['picture']); ?>" style="width:83px;height:83px; border-radius: 100%;border: 2px solid white;">
                 </div>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
@@ -88,7 +253,7 @@ $file = $row['picture'];
                         </a>
                     </li>
                     <li>
-                        <a href="./event.php" class="active">
+                        <a href="./view_event.php" class="active">
                             <span class="las la-calendar" style="color:#fff"></span>
                             <small>EVENT</small>
                         </a>
@@ -144,44 +309,58 @@ $file = $row['picture'];
                     </div>
                     <div class="row g-0 position-relative">
                         <div class="col-md-6 mb-md-0 p-md-4">
-                            <img src="OIP (1).jpg" class="w-100" alt="...">
+                            <div style="display: flex; justify-content: center; align-items: center; height: 70vh;">
+                                <img src="data:image/jpeg;base64,<?php echo base64_encode($row['image']); ?>" class="w-100" alt="...">
+                            </div>
                         </div>
                         <div class="col-md-6 p-4 ps-md-0" id="right-side">
-                            <h3 class="mt-0"> <strong>Event Title</strong></h3>
-                            <form action="">
-                                <fieldset disabled>
-                                    <div class="description">
-                                        <label for="" class="form-label">Event Description:</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="10"></textarea>
-                                    </div>
-                                </fieldset>
-                            </form>
+                            <h3 class="mt-0"> <strong><?php echo $row['title'] ?></strong></h3>
+
+                            <fieldset disabled>
+                                <div class="description">
+                                    <label for="" class="form-label">Event Description:</label>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="10"><?php echo $row['description'] ?></textarea>
+                                </div>
+                            </fieldset>
+
                             <div class="row">
                                 <div class="container" id="date">
                                     <div class="col">
-                                        <form action="">
-                                            <fieldset disabled>
-                                                <div class="date">
-                                                    <label for="" class="form-label mt-3">Event Date & Time:
-                                                    </label>
-                                                    <input type="date" class="form-control form-label mt-3">
-                                                    <input type="time" class="form-control">
-                                                </div>
-                                            </fieldset>
-                                        </form>
+
+                                        <fieldset disabled>
+                                            <div class="date">
+                                                <label for="" class="form-label mt-3">Event Date & Time:</label>
+                                                <input type="datetime-local" class="form-control form-label mt-3" value="<?php echo $schedule ?>">
+                                            </div>
+                                        </fieldset>
+
                                     </div>
-                                    <div class="col" id="dropdown">
-                                        <select class="form-control" name="course" id="course" required>
-                                            <option value="" selected hidden disabled>Are you going to the event?</option>
-                                            <option value="BAJ">Interested</option>
-                                            <option value="BECEd">Not Interested</option>
-                                            <option value="BECEd">Going</option>
-                                        </select>
-                                        <div class="submit">
-                                            <button type="submit" class="btn btn-success" style="padding-left: 58.9px; padding-right: 58.9px;">Submit</button>
-                                            <a class="btn btn-light border border-dark" href='./event.php' style="margin-left: 1%; padding-left: 65.9px; padding-right: 65.9px;">Back</a>
+                                    <form method="POST" action="view_event.php">
+                                        <div class="col" id="dropdown">
+                                            <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
+                                            <input type="hidden" name="alumni_id" value="<?php echo $user['alumni_id']; ?>">
+                                            <input type="hidden" name="student_id" value="<?php echo $user['student_id']; ?>">
+                                            <input type="hidden" name="fullname" value="<?php echo $fullname; ?>">
+                                            <input type="hidden" name="email" value="<?php echo $user['email']; ?>">
+                                            <select class="form-control" name="event_choice" id="event" required>
+                                                <?php if (($choice_event_id == $event_id_id)  and ($event_alumni_id == $rowpic['alumni_id'])) : ?>
+                                                    <option value="<?php echo htmlspecialchars($event_choice); ?>" selected hidden><?php echo htmlspecialchars($event_choice); ?></option>
+                                                    <option value="Interested">Interested</option>
+                                                    <option value="Not Interested">Not Interested</option>
+                                                    <option value="Going">Going</option>
+                                                <?php else : ?>
+                                                    <option value="" selected hidden disabled>Are you going to the event?</option>
+                                                    <option value="Interested">Interested</option>
+                                                    <option value="Not Interested">Not Interested</option>
+                                                    <option value="Going">Going</option>
+                                                <?php endif; ?>
+                                            </select>
+                                            <div class="submit">
+                                                <button type="submit" class="btn btn-success" style="padding-left: 58.9px; padding-right: 58.9px;">Submit</button>
+                                                <a class="btn btn-light border border-dark" href='./event.php' style="margin-left: 1%; padding-left: 65.9px; padding-right: 65.9px;">Back</a>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -206,6 +385,14 @@ $file = $row['picture'];
             eventPic.src = URL.createObjectURL(formFile.files[0]);
         }
     </script> -->
+    <!-- Script to display preview of selected image -->
+    <script>
+        function getImagePreview(event) {
+            var image = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById('preview');
+            preview.src = image;
+        }
+    </script>
 </body>
 
 </html>

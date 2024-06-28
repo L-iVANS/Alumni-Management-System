@@ -45,8 +45,7 @@ if (isset($_GET['query']) && !empty($_GET['query'])) {
     // Modify SQL query to include search filter
     $sql .= "WHERE event_id LIKE '%$search_query%' 
             OR title LIKE '%$search_query%' 
-            OR sched_date LIKE '%$search_query%' 
-            OR sched_time LIKE '%$search_query%'
+            OR schedule LIKE '%$search_query%'
             OR description LIKE '%$search_query%'";
 }
 
@@ -59,8 +58,7 @@ $total_records_query = "SELECT COUNT(*) FROM event_archive";
 if (isset($_GET['query']) && !empty($_GET['query'])) {
     $total_records_query .= " WHERE event_id LIKE '%$search_query%' 
                               OR title LIKE '%$search_query%' 
-                              OR sched_date LIKE '%$search_query%' 
-                              OR sched_time LIKE '%$search_query%'
+                              OR schedule LIKE '%$search_query%' 
                               OR description LIKE '%$search_query%'";
 }
 $total_records_result = mysqli_query($conn, $total_records_query);

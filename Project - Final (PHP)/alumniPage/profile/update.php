@@ -335,6 +335,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     preview.style.height = '83px';
                 }
             </script>
+            <!-- FOR BATCH SELECTOR UPDATE -->
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
                     var startYearSelect = document.getElementById('startYear');
