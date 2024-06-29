@@ -11,7 +11,7 @@ $conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
 if (isset($_SESSION['user_id'])) {
     $account = $_SESSION['user_id'];
 
-    $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ?");
+    $stmt = $conn->prepare("SELECT * FROM coordinator WHERE coor_id = ?");
     $stmt->bind_param("s", $account);
     $stmt->execute();
     $user_result = $stmt->get_result();
@@ -19,7 +19,7 @@ if (isset($_SESSION['user_id'])) {
     if ($user_result->num_rows > 0) {
         $user = $user_result->fetch_assoc();
     } else {
-        // No user found with the given admin_id
+        // No user found with the given coor_id
     }
 
     $stmt->close();
@@ -130,7 +130,7 @@ if ($res_alumniCount->num_rows > 0) {
             <div class="side-menu">
                 <ul>
                     <li>
-                        <a href="../dashboard_admin.php">
+                        <a href="../dashboard_coor.php">
                             <span class="las la-home" style="color:#fff"></span>
                             <small>DASHBOARD</small>
                         </a>
@@ -145,12 +145,6 @@ if ($res_alumniCount->num_rows > 0) {
                         <a href="../alumni/alumni.php">
                             <span class="las la-th-list" style="color:#fff"></span>
                             <small>ALUMNI</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../coordinator/coordinator.php">
-                            <span class="las la-user-cog" style="color:#fff"></span>
-                            <small>COORDINATOR</small>
                         </a>
                     </li>
                     <li>

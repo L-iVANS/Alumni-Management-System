@@ -47,9 +47,11 @@ if (isset($_GET['query']) && !empty($_GET['query'])) {
             OR lname LIKE '%$search_query%'
             OR address LIKE '%$search_query%'
             OR email LIKE '%$search_query%' 
+            OR course LIKE '%$search_query%'
             OR (gender LIKE '%$search_query%' AND gender != 'fe') ";
 }
 
+$sql .= "ORDER BY student_id ASC ";
 $sql .= "LIMIT $start_from, $records_per_page";
 
 $result = $conn->query($sql);
@@ -63,6 +65,7 @@ if (isset($_GET['query']) && !empty($_GET['query'])) {
                               OR lname LIKE '%$search_query%' 
                               OR address LIKE '%$search_query%'
                               OR email LIKE '%$search_query%' 
+                              OR course LIKE '%$search_query%'
                               OR (gender LIKE '%$search_query%' AND gender != 'fe')";
 }
 $total_records_result = mysqli_query($conn, $total_records_query);
@@ -309,7 +312,6 @@ $total_pages = ceil($total_records / $records_per_page);
                             <thead>
 
                                 <tr>
-                                    <th scope="col" class="inline">ID</th>
                                     <th scope="col" class="inline">STUDENT ID</th>
                                     <th scope="col" class="inline">NAME</th>
                                     <th scope="col" class="inline">GENDER</th>
@@ -330,7 +332,6 @@ $total_pages = ceil($total_records / $records_per_page);
                                         $batch = $row["batch_startYear"] . " - " . $row["batch_endYear"];
                                 ?>
                                         <tr>
-                                            <td class="inline"><?php echo $row['alumni_id'] ?></td>
                                             <td class="inline"><?php echo $row['student_id'] ?></td>
                                             <td class="inline"><?php echo htmlspecialchars($fullname) ?></td>
                                             <td class="inline"><?php echo $row['gender'] ?></td>

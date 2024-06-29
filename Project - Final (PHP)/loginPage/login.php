@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
     $pass = $_POST['log_password'];
 
     // Check in users table
-    $user = check_login($conn, 'alumni', $log_email, $pass);
+    $user = check_alumni($conn, 'alumni', $log_email, $pass);
     $user_type = 'alumni';
 
     // Check in admin table if not found in users
@@ -53,17 +53,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
     }
 
     if (!$user) {
-        $user = check_login($conn, 'pending', $log_email, $pass);
+        $user = check_alumni($conn, 'pending', $log_email, $pass);
         $user_type = 'pending';
     }
 
     if (!$user) {
-        $user = check_login($conn, 'alumni_archive', $log_email, $pass);
+        $user = check_alumni($conn, 'alumni_archive', $log_email, $pass);
         $user_type = 'alumni_arc';
     }
 
     if (!$user) {
-        $user = check_login($conn, 'declined_account', $log_email, $pass);
+        $user = check_alumni($conn, 'declined_account', $log_email, $pass);
         $user_type = 'declined_account';
     }
 
@@ -134,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
         // Login failed
         echo "
                 <script>
-                    alert('Incorrect Email and Password');
+                    alert('Incorrect Student ID / Email and Password');
                     window.location.href = 'login.php';
                 </script>
             ";
@@ -156,6 +156,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
     // email and user existing check
     $emailCheck = mysqli_query($conn, "SELECT * FROM pending WHERE email='$email'");
     $emailCheck_decline = mysqli_query($conn, "SELECT * FROM declined_account WHERE email='$email'");
+    $idCheck = mysqli_query($conn, "SELECT * FROM declined_account WHERE student_id='$stud_id'");
+    $idCheck_decline = mysqli_query($conn, "SELECT * FROM declined_account WHERE student_id='$stud_id'");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
@@ -163,11 +165,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
      } else if (mysqli_num_rows($emailCheck_decline) > 0) {
         $errorMessage = "Email Already Exists";
 
+    } else if (mysqli_num_rows($idCheck) > 0) {
+        $errorMessage = "Student ID Already Exists";
+
+    } else if (mysqli_num_rows($idCheck_decline) > 0) {
+        $errorMessage = "Student ID Already Exists";
+
     } else {
 
         // email and user existing check
         $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
         $emailCheck_archive= mysqli_query($conn, "SELECT * FROM alumni_archive WHERE email='$email'");
+        $idCheck = mysqli_query($conn, "SELECT * FROM declined_account WHERE student_id='$stud_id'");
+        $idCheck_archive = mysqli_query($conn, "SELECT * FROM declined_account WHERE student_id='$stud_id'");
+    
 
         if (mysqli_num_rows($emailCheck) > 0) {
             $errorMessage = "Email Already Exists";
@@ -175,6 +186,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
         } else if (mysqli_num_rows($emailCheck_archive) > 0) {
             $errorMessage = "Email Already Exists";
 
+        } else if (mysqli_num_rows($idCheck) > 0) {
+            $errorMessage = "Student ID Already Exists";
+    
+        } else if (mysqli_num_rows($idCheck_archive) > 0) {
+            $errorMessage = "Student ID Already Exists";
+    
         } else {
 
             $filePath = '../assets/profile_icon.jpg';
@@ -199,7 +216,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
     }
 }
 
-// Function to check login
+// LOGIN CHECK FOR ADMIN AND COORDINATOR
 function check_login($conn, $table, $log_email, $pass)
 {
     $sql = "SELECT * FROM $table WHERE email = ? AND password = ? LIMIT 1";
@@ -214,6 +231,21 @@ function check_login($conn, $table, $log_email, $pass)
 
     return false;
 }
+
+function check_alumni($conn, $table, $log_email, $pass)
+{
+    $sql = "SELECT * FROM $table WHERE (student_id = ? OR email = ?) AND password = ? LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sss", $log_email, $log_email, $pass);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        return $result->fetch_assoc();
+    }
+    return false;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -344,7 +376,7 @@ function check_login($conn, $table, $log_email, $pass)
             <form action="#" method="POST">
                 <h1>Log in</h1>
                 <div class="infield">
-                    <input type="text" placeholder="Email" name="log_email" value="<?php echo htmlspecialchars($log_email); ?>" required />
+                    <input type="text" placeholder="Student ID / Email" name="log_email" value="<?php echo htmlspecialchars($log_email); ?>" required />
                     <label></label>
                 </div>
                 <div class="infield">

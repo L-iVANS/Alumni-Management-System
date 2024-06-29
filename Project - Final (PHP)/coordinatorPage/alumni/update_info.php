@@ -90,27 +90,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
     // email and user existing check
-    $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email' AND alumni_id != $alumni_id");
+    $emailCheck = mysqli_query($conn, "SELECT * FROM pending WHERE email='$email' AND alumni_id != '$alumni_id'");
+    $emailCheck_decline = mysqli_query($conn, "SELECT * FROM declined_account WHERE email='$email' AND alumni_id != '$alumni_id'");
+    $idCheck = mysqli_query($conn, "SELECT * FROM declined_account WHERE student_id='$stud_id' AND alumni_id != '$alumni_id'");
+    $idCheck_decline = mysqli_query($conn, "SELECT * FROM declined_account WHERE student_id='$stud_id' AND alumni_id != '$alumni_id'");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
-        // echo "
-        //         <script>
-        //             alert('Username Already Exist!!!');
-        //             window.location.href = '../coordinator.php';
-        //         </script>
-        //     ";
+    } else if (mysqli_num_rows($emailCheck_decline) > 0) {
+        $errorMessage = "Email Already Exists";
+    } else if (mysqli_num_rows($idCheck) > 0) {
+        $errorMessage = "Student ID Already Exists";
+    } else if (mysqli_num_rows($idCheck_decline) > 0) {
+        $errorMessage = "Student ID Already Exists";
     } else {
 
-        $sql = "UPDATE alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email' WHERE alumni_id=$alumni_id";
-        $result = $conn->query($sql);
-        echo
-        "
+        // email and user existing check
+        $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email' AND alumni_id != '$alumni_id'");
+        $emailCheck_archive = mysqli_query($conn, "SELECT * FROM alumni_archive WHERE email='$email' AND alumni_id != '$alumni_id'");
+        $idCheck = mysqli_query($conn, "SELECT * FROM declined_account WHERE student_id='$stud_id' AND alumni_id != '$alumni_id'");
+        $idCheck_archive = mysqli_query($conn, "SELECT * FROM declined_account WHERE student_id='$stud_id' AND alumni_id != '$alumni_id'");
+
+
+        if (mysqli_num_rows($emailCheck) > 0) {
+            $errorMessage = "Email Already Exists";
+        } else if (mysqli_num_rows($emailCheck_archive) > 0) {
+            $errorMessage = "Email Already Exists";
+        } else if (mysqli_num_rows($idCheck) > 0) {
+            $errorMessage = "Student ID Already Exists";
+        } else if (mysqli_num_rows($idCheck_archive) > 0) {
+            $errorMessage = "Student ID Already Exists";
+        } else {
+
+            $sql = "UPDATE alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email' WHERE alumni_id=$alumni_id";
+            $result = $conn->query($sql);
+            echo
+            "
         <script>
             alert('Alumni Info Updated Successfully');
             window.location.href = './alumni_info.php?id=$alumni_id';
         </script>
     ";
+        }
     }
 }
 ?>
@@ -140,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         <div class="side-content">
             <div class="profile">
-            <i class="bi bi-person-circle"></i>
+                <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
             </div>
