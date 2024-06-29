@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errorMessage = "Email Already Exists";
         } else {
 
-            $filePath = '../assets/profile_icon.jpg';
+            $filePath = '../../assets/profile_icon.jpg';
             $imageData = file_get_contents($filePath);
             $imageDataEscaped = addslashes($imageData);
 

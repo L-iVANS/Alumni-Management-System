@@ -41,8 +41,8 @@ if (isset($_GET['id'])) {
         echo "Successfully Connected!";
     }
     //insert data into table alumni_archive from alumni
-    $sql_restore = "INSERT INTO alumni (alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created)" .
-        "SELECT alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created FROM declined_account WHERE alumni_id=$alumni_id";
+    $sql_restore = "INSERT INTO alumni (student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created)" .
+        "SELECT student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created FROM declined_account WHERE alumni_id=$alumni_id";
     $conn->query($sql_restore);
 
     //delete data in table alumni

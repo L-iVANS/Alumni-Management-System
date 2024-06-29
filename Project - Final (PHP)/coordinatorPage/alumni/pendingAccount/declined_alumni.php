@@ -37,8 +37,8 @@ if (isset($_GET['id'])) {
     // $conn->close();
 
     //insert data into table alumni_archive from alumni
-    $sql_archive = "INSERT INTO declined_account (alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created)" .
-        "SELECT alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created FROM pending WHERE alumni_id=$alumni_id";
+    $sql_archive = "INSERT INTO declined_account (student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created)" .
+        "SELECT student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created FROM pending WHERE alumni_id=$alumni_id";
     $conn->query($sql_archive);
 
     //delete data in table alumni
@@ -49,6 +49,6 @@ echo
 "
         <script>
             alert('Alumni Acccount Declined');
-            window.location.href = './declined_alumni.php';
+            window.location.href = './pending.php';
         </script>
     ";
