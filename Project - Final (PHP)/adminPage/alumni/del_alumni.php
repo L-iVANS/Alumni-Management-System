@@ -28,6 +28,7 @@ if (isset($_GET['id'])) {
         $stmt->close();
     } else {
         echo "User not logged in.";
+        echo "User not logged in.";
         header("location: ../../loginPage/login.php");
         exit;
     }

@@ -25,8 +25,6 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 } else {
     echo "User not logged in.";
-    header("Location: ../../loginPage/login.php");
-    exit();
 }
 
 
@@ -36,13 +34,14 @@ if (isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>About Preview Page</title>
+    <title>Report</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
-    <link rel="stylesheet" href="css/about_preview.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 
 </head>
 <body>
@@ -60,7 +59,7 @@ if (isset($_SESSION['user_id'])) {
             </div>
 
             <div class="side-menu">
-            <ul>
+                <ul>
                     <li>
                        <a href="../dashboard_admin.php" >
                             <span class="las la-home" style="color:#fff"></span>
@@ -92,13 +91,13 @@ if (isset($_SESSION['user_id'])) {
                         </a>
                     </li>
                     <li>
-                       <a href="./about_preview.php"class="active">
+                       <a href="../settings/about.php">
                             <span class="las la-cog" style="color:#fff"></span>
                             <small>SETTINGS</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../report/report.php">
+                       <a href="./report.php"class="active">
                             <span class="las la-clipboard-check" style="color:#fff"></span>
                             <small>REPORT</small>
                         </a>
@@ -142,7 +141,7 @@ if (isset($_SESSION['user_id'])) {
         <main>
             
             <div class="page-header">
-                <h1><strong>Settings</strong></h1>
+                <h1><strong>Report</strong></h1>
                
             </div>
         </main>

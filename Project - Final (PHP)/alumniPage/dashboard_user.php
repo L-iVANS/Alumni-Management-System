@@ -127,7 +127,7 @@ $event_count = $row_event['events_count'];
 
 
                         <a href="./logout.php">
-                            <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
+                            <span class="las la-power-off" style="font-size: 40px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
                         </a>
 
                     </div>
@@ -148,16 +148,16 @@ $event_count = $row_event['events_count'];
                     <div class="card bg-warning text-white mb-4">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
-                                <i class="las la-calendar-alt fa-3x"></i>
+                                <i class="las la-calendar-alt fa-3x" style="font-size: 20px;"></i>
                                 <div class="ml-4">
                                     <!-- Display events Total Count -->
                                     <label style="font-size: 20px;">Events Total Count:</label>
                                     <!-- display events count in database -->
-                                    <label class="col-sm-3 col-form-label" style="font-size: 30px;"><?php echo $event_count; ?></label>
+                                    <label class="col-sm-3 col-form-label" style="font-size: 40px;"><?php echo $event_count; ?></label>
                                 </div>
                             </div>
                         </div>
-                        <a href="event/event.php" class="card-footer d-flex justify-content-between text-white">
+                        <a href="event/event.php" class="card-footer d-flex justify-content-between text-white" style="text-decoration: none;">
                             <span>View Details</span>
                             <i class="las la-arrow-circle-right"></i>
                         </a>

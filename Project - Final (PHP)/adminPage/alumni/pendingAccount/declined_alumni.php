@@ -14,7 +14,7 @@ if (isset($_GET['id'])) {
     if (isset($_SESSION['user_id'])) {
         $account = $_SESSION['user_id'];
 
-        $stmt = $conn->prepare("SELECT * FROM coordinator WHERE coor_id = ?");
+        $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ?");
         $stmt->bind_param("s", $account); // "s" indicates the type is string
         $stmt->execute();
         $user_result = $stmt->get_result();
@@ -22,7 +22,7 @@ if (isset($_GET['id'])) {
         if ($user_result->num_rows > 0) {
             $user = $user_result->fetch_assoc();
         } else {
-            // No user found with the given coor_id
+            // No user found with the given admin_id
         }
 
         $stmt->close();
@@ -37,18 +37,18 @@ if (isset($_GET['id'])) {
     // $conn->close();
 
     //insert data into table alumni_archive from alumni
-    $sql_archive = "INSERT INTO alumni_archive (alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created)" .
-        "SELECT alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created FROM alumni WHERE alumni_id=$alumni_id";
+    $sql_archive = "INSERT INTO declined_account (alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created)" .
+        "SELECT alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created FROM pending WHERE alumni_id=$alumni_id";
     $conn->query($sql_archive);
 
     //delete data in table alumni
-    $sql_delete = "DELETE FROM alumni WHERE alumni_id=$alumni_id";
+    $sql_delete = "DELETE FROM pending WHERE alumni_id=$alumni_id";
     $conn->query($sql_delete);
 }
 echo
 "
         <script>
-            alert('Alumni Acccount Archived Successfully ');
-            window.location.href = './alumni.php';
+            alert('Alumni Acccount Declined');
+            window.location.href = './declined_alumni.php';
         </script>
     ";

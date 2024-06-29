@@ -12,7 +12,7 @@ if (isset($_SESSION['user_id'])) {
     $account = $_SESSION['user_id'];
 
     $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ?");
-    $stmt->bind_param("s", $account); // "s" indicates the type is string
+    $stmt->bind_param("s", $account);
     $stmt->execute();
     $user_result = $stmt->get_result();
 
@@ -29,35 +29,28 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
-//query for alumni count
-$sql = "SELECT COUNT(student_id) AS alumni_count FROM alumni";
+// alumni count
+$sql_alumni = "SELECT COUNT(student_id) AS alumni_count FROM alumni";
+$result_alumni = $conn->query($sql_alumni);
+$row_alumni = $result_alumni->fetch_assoc();
+$count_alumni = $row_alumni['alumni_count'];
 
-// connect in databse then run the query $sql
-$result = $conn->query($sql);
-// retrieve the data from database
-$row = $result->fetch_assoc();
+// PENDING ACCOUNT
+$sql_pending = "SELECT COUNT(student_id) AS alumni_pending_count FROM pending";
+$result_pending = $conn->query($sql_pending);
+$row_pending = $result_pending->fetch_assoc();
+$count_pending = $row_pending['alumni_pending_count'];
 
-// get the exact query or in short COUNT(student_id) from table alumni,  COUNT(student_id) rename as alumni_count
-$count = $row['alumni_count'];
-
-//query for coordinators count
+// COORDINATOR count
 $sql_coordinator = "SELECT COUNT(coor_id) AS coordinators_count FROM coordinator";
-
-// connect in databse then run the query $sql
 $result_coordinator = $conn->query($sql_coordinator);
- // retrieve the data from database
 $row_coordinator = $result_coordinator->fetch_assoc();
-// get the exact query or in short COUNT(coor_id) from table coordinator,  COUNT(coordinator_id) rename as coordinators_count
 $coordinator_count = $row_coordinator['coordinators_count'];
 
-//query for events count
+// events count
 $sql_event = "SELECT COUNT(event_id) AS events_count FROM event";
-
-// connect in databse then run the query $sql
 $result_event = $conn->query($sql_event);
- // retrieve the data from database
 $row_event = $result_event->fetch_assoc();
-// get the exact query or in short COUNT(event_id) from table event,  COUNT(event_id) rename as events_count
 $event_count = $row_event['events_count'];
 
 ?>
@@ -162,7 +155,7 @@ $event_count = $row_event['events_count'];
 
 
                         <a href="./logout.php">
-                            <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
+                            <span class="las la-power-off" style="font-size: 40px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
                         </a>
 
                     </div>
@@ -186,35 +179,54 @@ $event_count = $row_event['events_count'];
                                     <div class="card bg-primary text-white mb-4">
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
-                                                <i class="las la-user-graduate fa-3x"></i>
+                                                <i class="las la-user-graduate fa-3x" style="font-size: 25px;"></i>
                                                     <div class="row mb-3">
                                                         <!-- display Alumni Total Count -->
                                                         <label style="font-size: 20px;">Alumni Total Count:</label>
                                                         <!-- display alumni count in database -->
-                                                        <label class="col-sm-3 col-form-label" style="font-size: 30px;"><?php echo $count; ?></label>
+                                                        <label class="col-sm-10 col-form-label" style="font-size: 40px;"><?php echo $count_alumni; ?></label>
                                                     </div>
                                             </div>
                                         </div>
-                                        <a href="alumni/alumni.php" class="card-footer d-flex justify-content-between text-white">
+                                        <a href="alumni/alumni.php" class="card-footer d-flex justify-content-between text-white" style="text-decoration: none;">
                                             <span>View Details</span>
-                                            <i class="las la-arrow-circle-right"></i>
+                                            <i class="las la-arrow-circle-right" style="font-size: 20px;"></i>
                                         </a>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
+                                <div class="card bg-danger text-white mb-4">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <i class="las la-user-graduate fa-3x" style="font-size: 25px;"></i>
+                                                <div class="row mb-3">
+                                                        <!-- display Alumni Total Count -->
+                                                        <label style="font-size: 20px;">Pending Alumni Account:</label>
+                                                        <!-- display alumni count in database -->
+                                                        <label class="col-sm-10 col-form-label" style="font-size: 40px;"><?php echo $count_pending; ?></label>
+                                                </div>
+                                        </div>
+                                    </div>
+                                    <a href="./alumni/pendingAccount/pending.php" class="card-footer d-flex justify-content-between text-white" style="text-decoration: none;">
+                                        <span>View Details</span>
+                                        <i class="las la-arrow-circle-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                                <div class="col-md-4">
                                     <div class="card bg-success text-white mb-4">
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
-                                                <i class="las la-user-plus fa-3x"></i>
+                                                <i class="las la-user-plus fa-3x" style="font-size: 25px;"></i>
                                                     <div class="row mb-3">
                                                         <!-- Display coordinator Count -->
                                                         <label style="font-size: 20px;">Coordinators Total Count:</label>
                                                         <!-- display coordinators count in database -->
-                                                        <label class="col-sm-3 col-form-label" style="font-size: 30px;"><?php echo $coordinator_count; ?></label>
+                                                        <label class="col-sm-10 col-form-label" style="font-size: 40px;"><?php echo $coordinator_count; ?></label>
                                                     </div>
                                             </div>
                                         </div>
-                                        <a href="coordinator/coordinator.php" class="card-footer d-flex justify-content-between text-white">
+                                        <a href="coordinator/coordinator.php" class="card-footer d-flex justify-content-between text-white" style="text-decoration: none;">
                                             <span>View Details</span>
                                             <i class="las la-arrow-circle-right"></i>
                                         </a>
@@ -224,33 +236,16 @@ $event_count = $row_event['events_count'];
                                     <div class="card bg-warning text-white mb-4">
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
-                                                <i class="las la-calendar-alt fa-3x"></i>
+                                                <i class="las la-calendar-alt fa-3x" style="font-size: 25px;"></i>
                                                     <div class="row mb-3">
                                                      <!-- Display Student Total Count -->
                                                     <label style="font-size: 20px;">Events Total Count:</label>
                                                     <!-- display events count in database -->
-                                                    <label class="col-sm-3 col-form-label" style="font-size: 30px;"><?php echo $event_count; ?></label>
+                                                    <label class="col-sm-10 col-form-label" style="font-size: 40px;"><?php echo $event_count; ?></label>
                                                 </div>
                                             </div>
                                         </div>
-                                        <a href="event/event.php" class="card-footer d-flex justify-content-between text-white">
-                                            <span>View Details</span>
-                                            <i class="las la-arrow-circle-right"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="card bg-danger text-white mb-4">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center">
-                                                <i class="las la-users fa-3x"></i>
-                                                <div class="ml-4">
-                                                    <h5>Total Visits</h5>
-                                                    <h2>10,000</h2>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <a href="report/report.php" class="card-footer d-flex justify-content-between text-white">
+                                        <a href="event/event.php" class="card-footer d-flex justify-content-between text-white" style="text-decoration: none;">
                                             <span>View Details</span>
                                             <i class="las la-arrow-circle-right"></i>
                                         </a>

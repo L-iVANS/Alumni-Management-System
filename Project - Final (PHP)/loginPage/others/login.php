@@ -47,24 +47,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
         $user_type = 'admin';
     }
 
+    // Check in moderators table if not found in users and admin
     if (!$user) {
         $user = check_login($conn, 'coordinator', $log_email, $pass);
         $user_type = 'coordinator';
-    }
-
-    if (!$user) {
-        $user = check_login($conn, 'pending', $log_email, $pass);
-        $user_type = 'pending';
-    }
-
-    if (!$user) {
-        $user = check_login($conn, 'alumni_archive', $log_email, $pass);
-        $user_type = 'alumni_arc';
-    }
-
-    if (!$user) {
-        $user = check_login($conn, 'declined_account', $log_email, $pass);
-        $user_type = 'declined_account';
     }
 
     if ($user) {
@@ -89,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
                         window.location.href = '../adminPage/dashboard_admin.php';
                     </script>
                 ";
-        } else if ($user_type == 'coordinator') {
+        } elseif ($user_type == 'coordinator') {
             // Redirect to COORDINATOR
             echo "
                     <script>
@@ -97,30 +83,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
                         window.location.href = '../coordinatorPage/dashboard_coor.php';
                     </script>
                 ";
-        } else if ($user_type == 'pending') {
-            // PENDING ACCOUNT
-            echo "
-                        <script>
-                            alert('Your Account Is Under Review!');
-                            window.location.href = 'login.php';
-                        </script>
-                    ";
-        } else if ($user_type == 'alumni_arc') {
-            // ARCHIED ACCOUNT
-            echo "
-                                <script>
-                                    alert('Your Account Is Suspended!... If you Think it was Mistaken, Please Contact Adminitrator.');
-                                    window.location.href = 'login.php';
-                                </script>
-                            ";
-        } else if ($user_type == 'declined_account') {
-            // DECLINED ACCOUNT
-            echo "
-                            <script>
-                                alert('Your Application Had Been Declined');
-                                window.location.href = 'login.php';
-                            </script>
-                        ";
         } else {
             // Redirect to ALUMNI DASHBOARD
             echo "
@@ -132,13 +94,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
         }
     } else {
         // Login failed
-        echo "
-                <script>
-                    alert('Incorrect Email and Password');
-                    window.location.href = 'login.php';
-                </script>
-            ";
+        $errorMessage = "Invalid Email and Password";
+    
     }
+    
 } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $stud_id = $_POST['student_id'];
     $fname = ucwords($_POST['fname']);
@@ -154,47 +113,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
     $password = $_POST['password'];
 
     // email and user existing check
-    $emailCheck = mysqli_query($conn, "SELECT * FROM pending WHERE email='$email'");
-    $emailCheck_decline = mysqli_query($conn, "SELECT * FROM declined_account WHERE email='$email'");
+    $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
+    $emailCheck_archive = mysqli_query($conn, "SELECT * FROM alumni_archive WHERE email='$email'");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
-        
-     } else if (mysqli_num_rows($emailCheck_decline) > 0) {
+
+    } else if (mysqli_num_rows($emailCheck_archive) > 0) {
         $errorMessage = "Email Already Exists";
 
     } else {
 
-        // email and user existing check
-        $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
-        $emailCheck_archive= mysqli_query($conn, "SELECT * FROM alumni_archive WHERE email='$email'");
+        $filePath = '../assets/profile_icon.jpg';
+        // Read the image file into a variable
+        $imageData = file_get_contents($filePath);
+        // Escape special characters (optional, depends on usage)
+        $imageDataEscaped = addslashes($imageData);
 
-        if (mysqli_num_rows($emailCheck) > 0) {
-            $errorMessage = "Email Already Exists";
+        $sql = "INSERT INTO alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email', password='$password', picture='$imageDataEscaped'";
+        $result = $conn->query($sql);
 
-        } else if (mysqli_num_rows($emailCheck_archive) > 0) {
-            $errorMessage = "Email Already Exists";
-
-        } else {
-
-            $filePath = '../assets/profile_icon.jpg';
-            $imageData = file_get_contents($filePath);
-            $imageDataEscaped = addslashes($imageData);
-
-            $sql = "INSERT INTO pending SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email', password='$password', picture='$imageDataEscaped'";
-            $result = $conn->query($sql);
-
-            if ($result) {
-                // $successMessage = "Coordinator Edited Successfully";
-                echo "
+        if ($result) {
+            // $successMessage = "Coordinator Edited Successfully";
+            echo "
                 <script>
-                    alert('Account Successfully Registered');
+                    alert('Account Created Successfully');
                     window.location.href = './login.php';
                 </script>
             ";
-            } else {
-                $errorMessage = "Error: " . $conn->error;
-            }
+        } else {
+            $errorMessage = "Error: " . $conn->error;
         }
     }
 }
@@ -202,16 +150,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
 // Function to check login
 function check_login($conn, $table, $log_email, $pass)
 {
+    // Prepare the SQL query
     $sql = "SELECT * FROM $table WHERE email = ? AND password = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
+
+    // Bind the log_email (username or email) and password parameters to the query
     $stmt->bind_param("ss", $log_email, $pass);
+
+    // Execute the query
     $stmt->execute();
+
+    // Get the result set from the query
     $result = $stmt->get_result();
 
+    // Check if a matching row was found
     if ($result->num_rows > 0) {
+        // Fetch the row as an associative array
         return $result->fetch_assoc();
     }
 
+    // Return false if no match was found
     return false;
 }
 ?>
@@ -224,10 +182,8 @@ function check_login($conn, $table, $log_email, $pass)
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log in || Sign up form</title>
-    <!-- font awesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="shortcut icon" href="cvsu.png" type="image/svg+xml">
-    <!-- css stylesheet -->
     <link rel="stylesheet" href="css/login.css">
 
 </head>
@@ -250,7 +206,7 @@ function check_login($conn, $table, $log_email, $pass)
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="text" placeholder="Password" name="password" value="<?php echo htmlspecialchars($password); ?>" required />
+                    <input type="password" placeholder="Password" name="password" value="<?php echo htmlspecialchars($password); ?>" required />
                     <label></label>
                 </div>
                 <div class="infield">
@@ -297,13 +253,10 @@ function check_login($conn, $table, $log_email, $pass)
                         <?php
                         // Get the current year
                         $currentYear = date('Y');
-
                         // Number of years to include before and after the current year
                         $yearRange = 21; // Adjust this number as needed
-
                         // Preserve the selected value after form submission
                         $selectedYear = isset($_POST['startYear']) ? $_POST['startYear'] : '';
-
                         // Generate options for years, from current year minus $yearRange to current year plus $yearRange
                         for ($year = $currentYear - $yearRange; $year <= $currentYear + $yearRange; $year++) {
                             $selected = ($year == $selectedYear) ? 'selected' : '';
@@ -319,7 +272,6 @@ function check_login($conn, $table, $log_email, $pass)
                         if (isset($_POST['startYear'])) {
                             $startYear = $_POST['startYear'];
                             $selectedEndYear = isset($_POST['endYear']) ? $_POST['endYear'] : '';
-
                             // Generate options for endYear starting from startYear + 1
                             for ($year = $startYear + 1; $year <= $currentYear + $yearRange; $year++) {
                                 $selected = ($year == $selectedEndYear) ? 'selected' : '';
@@ -334,7 +286,7 @@ function check_login($conn, $table, $log_email, $pass)
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="text" placeholder="Address" name="address" value="<?php echo htmlspecialchars($address); ?>" required />
+                    <input type="text" placeholder="Last Name" name="address" value="<?php echo htmlspecialchars($address); ?>" required />
                     <label></label>
                 </div>
                 <button type="submit" name="submit">Sign Up</button>
@@ -344,7 +296,7 @@ function check_login($conn, $table, $log_email, $pass)
             <form action="#" method="POST">
                 <h1>Log in</h1>
                 <div class="infield">
-                    <input type="text" placeholder="Email" name="log_email" value="<?php echo htmlspecialchars($log_email); ?>" required />
+                    <input type="email" placeholder="Email" name="log_email" value="<?php echo htmlspecialchars($log_email); ?>" required />
                     <label></label>
                 </div>
                 <div class="infield">

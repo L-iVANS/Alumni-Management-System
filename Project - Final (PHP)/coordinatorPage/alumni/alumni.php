@@ -25,8 +25,6 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 } else {
     echo "User not logged in.";
-    header("Location: ../../loginPage/login.php");
-    exit();
 }
 
 // Pagination configuration
@@ -102,7 +100,7 @@ $total_pages = ceil($total_records / $records_per_page);
             border-collapse: collapse;
         }
 
-        td{
+        td {
             text-align: left;
         }
 
@@ -184,7 +182,7 @@ $total_pages = ceil($total_records / $records_per_page);
 
         <div class="side-content">
             <div class="profile">
-            <i class="bi bi-person-circle"></i>
+                <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
                 <!-- <h4>coor</h4>
@@ -270,10 +268,11 @@ $total_pages = ceil($total_records / $records_per_page);
             <div class="page-header">
                 <h1><strong>Alumni</strong></h1>
             </div>
+
             <div class="container-fluid" id="main-container">
                 <div class="container-fluid" id="content-container">
                     <div class="container-title">
-                        <h4>Active Accounts</h4>
+                        <span>Records</span>
                     </div>
                     <div class="congainer-fluid" id="column-header">
                         <div class="row">
@@ -289,13 +288,12 @@ $total_pages = ceil($total_records / $records_per_page);
 
                                 </div>
                             </div>
-                            <div class="col" id="add-btn">
+                            <div class="col" style="text-align: end;">
                                 <div class="add-button">
-                                    <div class="span">
-                                        <a href='./add_alumni.php'>
-                                            <button id="add-new-btn">Add New +</button>
-                                        </a>
-                                    </div>
+                                    <a style="text-decoration: none;" href='./add_alumni.php'>
+                                        <button id="add-new-btn" >Add New +</button>
+                                    </a>
+                                    <a class='btn btn-secondary border border-dark' href='./pendingAccount/pending.php' style="margin-left: 1%; padding-left: 4.1px; padding-right: 5.4px; white-space: nowrap;">Pending Account</a>
                                 </div>
                             </div>
                         </div>

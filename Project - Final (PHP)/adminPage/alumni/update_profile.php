@@ -25,8 +25,6 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 } else {
     echo "User not logged in.";
-    header("Location: ../../loginPage/login.php");
-    exit();
 }
 
 // Close the database connection if needed
@@ -196,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             <div class="row align-items-end">
                                 <div class="col">
                                     <!-- Preview image -->
-                                    <div class="form-control" style="width: 445px; height: 445px; border-radius: 50%;">
+                                    <div class="form-control" style="width:445px;height:435px; border-radius: 100%;">
                                         <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['picture']); ?>" style="width:420px;height:420px; border-radius: 100%;">
                                     </div>
                                 </div>

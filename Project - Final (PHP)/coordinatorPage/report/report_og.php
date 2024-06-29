@@ -11,7 +11,7 @@ $conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
 if (isset($_SESSION['user_id'])) {
     $account = $_SESSION['user_id'];
 
-    $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ?");
+    $stmt = $conn->prepare("SELECT * FROM coordinator WHERE coor_id = ?");
     $stmt->bind_param("s", $account); // "s" indicates the type is string
     $stmt->execute();
     $user_result = $stmt->get_result();
@@ -19,14 +19,12 @@ if (isset($_SESSION['user_id'])) {
     if ($user_result->num_rows > 0) {
         $user = $user_result->fetch_assoc();
     } else {
-        // No user found with the given admin_id
+        // No user found with the given coor_id
     }
 
     $stmt->close();
 } else {
     echo "User not logged in.";
-    header("Location: ../../loginPage/login.php");
-    exit();
 }
 
 
@@ -36,13 +34,14 @@ if (isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Contact Preview Page</title>
+    <title>Report</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
-    <link rel="stylesheet" href="css/contact_preview.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 
 </head>
 <body>
@@ -62,7 +61,7 @@ if (isset($_SESSION['user_id'])) {
             <div class="side-menu">
                 <ul>
                     <li>
-                       <a href="../dashboard_admin.php" >
+                       <a href="../dashboard_coor.php" >
                             <span class="las la-home" style="color:#fff"></span>
                             <small>DASHBOARD</small>
                         </a>
@@ -80,25 +79,19 @@ if (isset($_SESSION['user_id'])) {
                         </a>
                     </li>
                     <li>
-                       <a href="../coordinator/coordinator.php">
-                            <span class="las la-user-cog" style="color:#fff"></span>
-                            <small>COORDINATOR</small>
-                        </a>
-                    </li>
-                    <li>
                        <a href="../event/event.php">
                             <span class="las la-calendar" style="color:#fff"></span>
                             <small>EVENT</small>
                         </a>
                     </li>
                     <li>
-                       <a href="./contact_preview.php"class="active">
+                       <a href="../settings/about.php">
                             <span class="las la-cog" style="color:#fff"></span>
                             <small>SETTINGS</small>
                         </a>
                     </li>
                     <li>
-                       <a href="../report/report.php">
+                       <a href="./report.php"class="active">
                             <span class="las la-clipboard-check" style="color:#fff"></span>
                             <small>REPORT</small>
                         </a>
@@ -108,7 +101,7 @@ if (isset($_SESSION['user_id'])) {
                              <span class="las la-archive" style="color:#fff"></span>
                              <small>ARCHIVE</small>
                          </a>
-                    </li>
+                     </li>
                 </ul>
             </div>
         </div>
@@ -142,7 +135,7 @@ if (isset($_SESSION['user_id'])) {
         <main>
             
             <div class="page-header">
-                <h1><strong>Settings</strong></h1>
+                <h1><strong>Report</strong></h1>
                
             </div>
         </main>

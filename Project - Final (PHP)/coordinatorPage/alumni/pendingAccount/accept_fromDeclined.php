@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 if (isset($_GET['id'])) {
     $alumni_id = $_GET['id'];
 
@@ -36,19 +35,24 @@ if (isset($_GET['id'])) {
     // Close the database connection if needed
     // $conn->close();
 
+    if (mysqli_connect_errno()) {
+        die("" . mysqli_connect_error());
+    } else {
+        echo "Successfully Connected!";
+    }
     //insert data into table alumni_archive from alumni
-    $sql_archive = "INSERT INTO alumni_archive (alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created)" .
-        "SELECT alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created FROM alumni WHERE alumni_id=$alumni_id";
-    $conn->query($sql_archive);
+    $sql_restore = "INSERT INTO alumni (alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created)" .
+        "SELECT alumni_id, student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created FROM declined_account WHERE alumni_id=$alumni_id";
+    $conn->query($sql_restore);
 
     //delete data in table alumni
-    $sql_delete = "DELETE FROM alumni WHERE alumni_id=$alumni_id";
+    $sql_delete = "DELETE FROM declined_account WHERE alumni_id=$alumni_id";
     $conn->query($sql_delete);
 }
 echo
 "
         <script>
-            alert('Alumni Acccount Archived Successfully ');
-            window.location.href = './alumni.php';
+            alert('Alumni Acccount Accepted!');
+            window.location.href = './declined_acc.php';
         </script>
     ";

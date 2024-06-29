@@ -11,7 +11,7 @@ $conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
 if (isset($_SESSION['user_id'])) {
     $account = $_SESSION['user_id'];
 
-    $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ?");
+    $stmt = $conn->prepare("SELECT * FROM coordinator WHERE coor_id = ?");
     $stmt->bind_param("s", $account); // "s" indicates the type is string
     $stmt->execute();
     $user_result = $stmt->get_result();
@@ -19,7 +19,7 @@ if (isset($_SESSION['user_id'])) {
     if ($user_result->num_rows > 0) {
         $user = $user_result->fetch_assoc();
     } else {
-        // No user found with the given admin_id
+        // No user found with the given coor_id
     }
 
     $stmt->close();
@@ -35,7 +35,7 @@ $current_page = isset($_GET['page']) ? $_GET['page'] : 1; // Get current page nu
 $start_from = ($current_page - 1) * $records_per_page;
 
 // Initialize variables
-$sql = "SELECT * FROM alumni ";
+$sql = "SELECT * FROM pending ";
 
 // Check if search query is provided
 if (isset($_GET['query']) && !empty($_GET['query'])) {
@@ -55,7 +55,7 @@ $sql .= "LIMIT $start_from, $records_per_page";
 $result = $conn->query($sql);
 
 // Count total number of records
-$total_records_query = "SELECT COUNT(*) FROM alumni";
+$total_records_query = "SELECT COUNT(*) FROM pending";
 if (isset($_GET['query']) && !empty($_GET['query'])) {
     $total_records_query .= " WHERE alumni_id LIKE '%$search_query%' 
                               OR fname LIKE '%$search_query%' 
@@ -81,9 +81,9 @@ $total_pages = ceil($total_records / $records_per_page);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Alumni List</title>
+    <title>Pending Alumni Account</title>
     <link rel="stylesheet" href="./css/alumni.css">
-    <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
+    <link rel="shortcut icon" href="../../../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <script>
@@ -185,56 +185,50 @@ $total_pages = ceil($total_records / $records_per_page);
                 <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
-                <!-- <h4>ADMIN</h4>
-                <small style="color: white;">admin@email.com</small> -->
+                <!-- <h4>coor</h4>
+                <small style="color: white;">coor@email.com</small> -->
             </div>
 
             <div class="side-menu">
                 <ul>
                     <li>
-                        <a href="../dashboard_admin.php">
+                        <a href="../../dashboard_coor.php">
                             <span class="las la-home" style="color:#fff"></span>
                             <small>DASHBOARD</small>
                         </a>
                     </li>
                     <li>
-                        <a href="../profile/profile.php">
+                        <a href="../../profile/profile.php">
                             <span class="las la-user-alt" style="color:#fff"></span>
                             <small>PROFILE</small>
                         </a>
                     </li>
                     <li>
-                        <a href="./alumni.php" class="active">
+                        <a href="./pending.php" class="active">
                             <span class="las la-th-list" style="color:#fff"></span>
                             <small>ALUMNI</small>
                         </a>
                     </li>
                     <li>
-                        <a href="../coordinator/coordinator.php">
-                            <span class="las la-user-cog" style="color:#fff"></span>
-                            <small>COORDINATOR</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="../event/event.php">
+                        <a href="../../event/event.php">
                             <span class="las la-calendar" style="color:#fff"></span>
                             <small>EVENT</small>
                         </a>
                     </li>
                     <li>
-                        <a href="../settings/about.php">
+                        <a href="../../settings/about.php">
                             <span class="las la-cog" style="color:#fff"></span>
                             <small>SETTINGS</small>
                         </a>
                     </li>
                     <li>
-                        <a href="../report/report.php">
+                        <a href="../../report/report.php">
                             <span class="las la-clipboard-check" style="color:#fff"></span>
                             <small>REPORT</small>
                         </a>
                     </li>
                     <li>
-                        <a href="../archive/alumni_archive.php">
+                        <a href="../../archive/alumni_archive.php">
                             <span class="las la-archive" style="color:#fff"></span>
                             <small>ARCHIVE</small>
                         </a>
@@ -260,7 +254,7 @@ $total_pages = ceil($total_records / $records_per_page);
                     <div class="user">
 
 
-                        <a href="../logout.php">
+                        <a href="../../logout.php">
                             <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
                         </a>
 
@@ -278,7 +272,7 @@ $total_pages = ceil($total_records / $records_per_page);
             <div class="container-fluid" id="main-container">
                 <div class="container-fluid" id="content-container">
                     <div class="container-title">
-                        <span>Records</span>
+                        <span>Pending Accounts</span>
                     </div>
                     <div class="congainer-fluid" id="column-header">
                         <div class="row">
@@ -296,10 +290,8 @@ $total_pages = ceil($total_records / $records_per_page);
                             </div>
                             <div class="col" style="text-align: end;">
                                 <div class="add-button">
-                                    <a style="text-decoration: none;" href='./add_alumni.php'>
-                                        <button id="add-new-btn" >Add New +</button>
-                                    </a>
-                                    <a class='btn btn-secondary border border-dark' href='./pendingAccount/pending.php' style="margin-left: 1%; padding-left: 4.1px; padding-right: 5.4px; white-space: nowrap;">Pending Account</a>
+                                    <a class='btn btn-secondary border border-dark' href='../alumni.php' style="padding-left: 27.9px; padding-right: 27.9px; white-space: nowrap;">Alumni List</a>
+                                    <a class='btn btn-danger border border-dark' href='./decline_acc.php' style="margin-left: 1%; padding-left: 4px; padding-right: 5.3px; white-space: nowrap;">Declined Account</a>
                                 </div>
                             </div>
                         </div>
@@ -343,9 +335,8 @@ $total_pages = ceil($total_records / $records_per_page);
                                             <?php
                                             echo "
                                                 <td class='inline act'>
-                                                    <a class='btn btn-warning btn-sm' href='./update_info.php?id=$row[alumni_id]' style='font-size: 11.8px;'>Update</a>
-                                                    <a class='btn btn-danger btn-sm' href='./del_alumni.php?id=$row[alumni_id]' style='font-size: 11.8px;'>Archive</a>
-                                                    <a class='btn btn-info btn-sm' href='./alumni_info.php?id=$row[alumni_id]' style='font-size: 11.8px;'>More Info</a>
+                                                    <a class='btn btn-success btn-sm' href='./accept_pending.php?id=$row[alumni_id]' style='font-size: 11.8px;'>Accept</a>
+                                                    <a class='btn btn-danger btn-sm' href='./declined_alumni.php?id=$row[alumni_id]' style='font-size: 11.8px;'>Decline</a>
                                                 </td>
                                             "; ?>
                                         </tr>

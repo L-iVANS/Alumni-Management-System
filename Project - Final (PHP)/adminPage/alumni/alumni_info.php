@@ -25,8 +25,6 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 } else {
     echo "User not logged in.";
-    header("Location: ../../loginPage/login.php");
-    exit();
 }
 
 // Close the database connection if needed

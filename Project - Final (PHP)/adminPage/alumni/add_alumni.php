@@ -25,8 +25,6 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 } else {
     echo "User not logged in.";
-    header("Location: ../../loginPage/login.php");
-    exit();
 }
 
 // Close the database connection if needed
@@ -60,33 +58,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = strtolower($_POST['email']);
     $temp_password = $_POST['temp_pass'];
 
+
     // email and user existing check
-    $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
-    $emailCheck_archive = mysqli_query($conn, "SELECT * FROM alumni_archive WHERE email='$email'");
+    $emailCheck = mysqli_query($conn, "SELECT * FROM pending WHERE email='$email'");
+    $emailCheck_decline = mysqli_query($conn, "SELECT * FROM declined_account WHERE email='$email'");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
-        
-    } else if (mysqli_num_rows($emailCheck_archive) > 0) {
+    } else if (mysqli_num_rows($emailCheck_decline) > 0) {
         $errorMessage = "Email Already Exists";
-
     } else {
 
-        $filePath = '../../assets/profile_icon.jpg';
-        // Read the image file into a variable
-        $imageData = file_get_contents($filePath);
-        // Escape special characters (optional, depends on usage)
-        $imageDataEscaped = addslashes($imageData);
+        // email and user existing check
+        $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
+        $emailCheck_archive = mysqli_query($conn, "SELECT * FROM alumni_archive WHERE email='$email'");
 
-        $sql = "INSERT INTO alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email', password='$temp_password', picture='$imageDataEscaped'";
-        $result = $conn->query($sql);
-        echo
-        "
+        if (mysqli_num_rows($emailCheck) > 0) {
+            $errorMessage = "Email Already Exists";
+        } else if (mysqli_num_rows($emailCheck_archive) > 0) {
+            $errorMessage = "Email Already Exists";
+        } else {
+
+            $filePath = '../assets/profile_icon.jpg';
+            $imageData = file_get_contents($filePath);
+            $imageDataEscaped = addslashes($imageData);
+
+            $sql = "INSERT INTO alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email', password='$temp_password', picture='$imageDataEscaped'";
+            $result = $conn->query($sql);
+            echo
+            "
         <script>
             alert('Alumni Added Successfully');
             window.location.href = './alumni.php';
         </script>
     ";
+        }
     }
 }
 ?>
