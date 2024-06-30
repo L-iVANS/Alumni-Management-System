@@ -3,43 +3,58 @@ session_start();
 if (isset($_GET['id'])) {
     $alumni_id = $_GET['id'];
 
-    $serername = "localhost";
+    $servername = "localhost";
     $db_username = "root";
     $db_password = "";
     $db_name = "alumni_management_system";
-    $conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
+    $conn = new mysqli($servername, $db_username, $db_password, $db_name);
 
-    // USER ACCOUNT DATA
-    if (isset($_SESSION['user_id'])) {
+    if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
         $account = $_SESSION['user_id'];
+        $account_email = $_SESSION['user_email'];
 
-        $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ?");
-        $stmt->bind_param("s", $account); // "s" indicates the type is string
+        // Check if user is an admin
+        $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ? AND email = ?");
+        $stmt->bind_param("ss", $account, $account_email);
         $stmt->execute();
         $user_result = $stmt->get_result();
 
         if ($user_result->num_rows > 0) {
+            // User is an admin
             $user = $user_result->fetch_assoc();
-        } else {
-            // No user found with the given admin_id
         }
+        $stmt->close();
 
+        // Check if user is a coordinator
+        $stmt = $conn->prepare("SELECT * FROM coordinator WHERE coor_id = ? AND email = ?");
+        $stmt->bind_param("ss", $account, $account_email);
+        $stmt->execute();
+        $user_result = $stmt->get_result();
+
+        if ($user_result->num_rows > 0) {
+            // User is a coordinator
+            header('Location: ../../../coordinatorPage/dashboard_coor.php');
+            exit();
+        }
+        $stmt->close();
+
+        // Check if user is an alumni
+        $stmt = $conn->prepare("SELECT * FROM alumni WHERE alumni_id = ? AND email = ?");
+        $stmt->bind_param("ss", $account, $account_email);
+        $stmt->execute();
+        $user_result = $stmt->get_result();
+
+        if ($user_result->num_rows > 0) {
+            // User is an alumni
+            header('Location: ../../../alumniPage/dashboard_user.php');
+            exit();
+        }
         $stmt->close();
     } else {
-        echo "User not logged in.";
-        echo "User not logged in.";
-        header("location: ../../loginPage/login.php");
-        exit;
+        header('Location: ../../../homepage.php');
+        exit();
     }
-
-    // Close the database connection if needed
-    // $conn->close();
-
-    if (mysqli_connect_errno()) {
-        die("" . mysqli_connect_error());
-    } else {
-        echo "Successfully Connected!";
-    }
+    
     //insert data into table alumni_archive from alumni
     $sql_restore = "INSERT INTO alumni (student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created)" .
         "SELECT student_id, fname, mname, lname, gender, course, batch_startYear, batch_endYear, contact, address, email, password, picture, date_created FROM pending WHERE alumni_id=$alumni_id";
