@@ -85,8 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         #preview {
-            max-width: 700px;
-            max-height: 700px;
+            max-width: 100%;
+            max-height: 100%;
             object-fit: contain;
         }
     </style>
