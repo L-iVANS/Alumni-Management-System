@@ -23,10 +23,10 @@ body {
 
 .container {
     position: relative;
-    width: 100%;
-    max-width: 850px;
-    height: 100%;
-    max-height: 600px;
+    width: 850px;
+    max-width: 100%;
+    height: 600px;
+    max-height: 100%;
     background-color: #FFF;
     box-shadow: 25px 30px 55px rgba(0, 0, 0, 0.1);
     border-radius: 13px;
@@ -37,8 +37,9 @@ body {
 .form-container {
     position: absolute;
     width: 50%;
+    max-width: 100%;
     height: 100%;
-    padding: 0px 40px;
+    /* padding: 0px 40px; */
     transition: all 0.6s ease-in-out;
 }
 
@@ -86,7 +87,7 @@ input {
 }
 
 select {
-    width: 100%;
+    max-width: 100%;
     margin: 3px;
     padding: 6.8px 15px;
     background-color: #f3f3f3;
@@ -94,7 +95,7 @@ select {
     outline: none;
 }
 
-label {
+/* label {
     position: absolute;
     left: 50%;
     top: 100%;
@@ -103,7 +104,7 @@ label {
     height: 2px;
     background: var(--linear-grad);
     transition: 0.3s;
-}
+} */
 
 input:focus ~ label {
     width: 100%;
@@ -175,6 +176,10 @@ button {
     height: 100%;
     width: 50%;
     transition: transform 0.6s ease-in-out;
+}
+
+img{
+    max-width: 100%;
 }
 
 .overlay-left {
@@ -254,7 +259,7 @@ button.ghost {
 }
 
 /* Responsive Styles */
-@media (max-width: 1024px) {
+/* @media (max-width: 1024px) {
     .container {
         width: 90%;
         height: auto;
@@ -317,5 +322,13 @@ button.ghost {
 
     button {
         padding: 12px 30px;
+    }
+} */
+/* Responsive Styles */
+/* Responsive Styles */
+
+@media (max-width:446px){
+    h1{
+        font-size: 20px;
     }
 }
