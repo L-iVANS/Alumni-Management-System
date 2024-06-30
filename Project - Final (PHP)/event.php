@@ -1,6 +1,21 @@
+<?php
+$servername = "localhost";
+$db_username = "root";
+$db_password = "";
+$db_name = "alumni_management_system";
+$conn = mysqli_connect($servername, $db_username, $db_password, $db_name);
+
+// Read data from table alumni
+$sql = "SELECT * FROM event";
+$result = $conn->query($sql);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <!-- Your head content -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event</title>
@@ -152,8 +167,9 @@
         }
     </style>
 </head>
-<body>
 
+<body>
+    <!-- Your navbar and other HTML content -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <a class="navbar-brand" href="Homepage.php">
             <img src="assets/cvsu.png" alt="Alumni Management System Logo" height="50">
@@ -185,64 +201,35 @@
             </ul>
         </div>
     </nav>
-    
+
     <section class="event-section">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-6 col-lg-4 event-card">
-                    <div class="card">
-                        <img src="assets/Scholarship.png" class="card-img-top" alt="Event Image">
-                        <div class="card-body">
-                            <h5 class="card-title">SCHOLARSHIP PROGRAM</h5>
-                            <p class="card-text">The Cavite State University - Imus Campus is proud to announce the upcoming Scholarship Awards Ceremony, a prestigious event dedicated to recognizing and celebrating the academic excellence and achievements of our outstanding students.</p>
-                            <p class="card-text"><small class="text-muted">2024-04-18 10:00</small></p>
+                <?php
+                // Check if there are results to display
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                ?>
+                        <div class="col-md-6 col-lg-4 event-card">
+                            <div class="card">
+                                <img src="data:image/jpeg;base64,<?php echo base64_encode($row['image']); ?>" class="card-img-top" alt="Event Image">
+                                <div class="card-body">
+                                    <h5 class="card-title"><?php echo $row['title']; ?></h5>
+                                    <p class="card-text"><?php echo $row['description']; ?></p>
+                                    <p class="card-text"><small class="text-muted"><?php echo $row['schedule']; ?></small></p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 event-card">
-                    <div class="card">
-                        <img src="assets/community.png" class="card-img-top" alt="Event Image">
-                        <div class="card-body">
-                            <h5 class="card-title">ALUMNI COMMUNITY</h5>
-                            <p class="card-text">We are thrilled to invite all CvSU alumni to our upcoming Alumni Community Event. This gathering is a wonderful opportunity for past students to reconnect, share their experiences, and strengthen their bonds with fellow alumni. The event is designed to foster a sense of community and networking among our graduates, providing a platform for both personal and professional growth.</p>
-                            <p class="card-text"><small class="text-muted">2024-05-10 15:00</small></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 event-card">
-                    <div class="card">
-                        <img src="assets/basketball.jpg" class="card-img-top" alt="Event Image">
-                        <div class="card-body">
-                            <h5 class="card-title">CVSU ALUMNI BASKETBALL</h5>
-                            <p class="card-text">Get ready to lace up your sneakers and join us for an exciting day of sportsmanship and camaraderie at the CVSU Alumni Basketball Event. This event is a fantastic opportunity for former CvSU students to reconnect on the basketball court, showcase their athletic skills, and enjoy a fun-filled day with fellow alumni.</p>
-                            <p class="card-text"><small class="text-muted">2024-06-20 09:00</small></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 event-card">
-                    <div class="card">
-                        <img src="assets/gathering.jpg" class="card-img-top" alt="Event Image">
-                        <div class="card-body">
-                            <h5 class="card-title">ALUMNI GATHERING</h5>
-                            <p class="card-text">Rekindle old friendships and make new memories at the CVSU Alumni Gathering, a special event dedicated to bringing together past graduates of Cavite State University - Imus Campus. This event promises an evening of nostalgia, celebration, and future aspirations, allowing alumni to reconnect with their alma mater and each other.</p>
-                            <p class="card-text"><small class="text-muted">2024-07-15 18:00</small></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 event-card">
-                    <div class="card">
-                        <img src="assets/Alumni Ball.png" class="card-img-top" alt="Event Image">
-                        <div class="card-body">
-                            <h5 class="card-title">ALUMNI BALL</h5>
-                            <p class="card-text">Step into a night of elegance and sophistication at the CVSU Alumni Ball, an annual event that brings together past graduates of Cavite State University - Imus Campus for an evening of glamour, dancing, and fond memories. This prestigious event is the perfect occasion to celebrate the achievements of our alumni, renew old friendships, and create new connections in a splendid setting.</p>
-                            <p class="card-text"><small class="text-muted">2024-08-25 19:00</small></p>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                    }
+                } else {
+                    echo "<p>No events found.</p>";
+                }
+                ?>
             </div>
         </div>
     </section>
-
+    
     <footer class="footer">
         <div class="container">
             <div class="logo-info">
@@ -258,5 +245,21 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Script to display preview of selected image -->
+    <script>
+        function getImagePreview(event) {
+            var image = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById('preview');
+            preview.src = image;
+            preview.style.width = '200px';
+            preview.style.height = '200px';
+        }
+    </script>
 </body>
+
 </html>
+
+<?php
+// Close connection
+$conn->close();
+?>

@@ -35,7 +35,7 @@ $schedule = "";
 
 // get the data from form
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $title = ucwords($_POST['title']);
+    $title = strtoupper($_POST['title']);
     $schedule = $_POST['schedule'];
     $description = ucwords($_POST['description']);
 

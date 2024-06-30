@@ -91,7 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     </style>
 </head>
-
 <body>
     <input type="checkbox" id="menu-toggle">
     <div class="sidebar">

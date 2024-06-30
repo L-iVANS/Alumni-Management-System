@@ -1,3 +1,17 @@
+<?php
+$servername = "localhost";
+$db_username = "root";
+$db_password = "";
+$db_name = "alumni_management_system";
+$conn = mysqli_connect($servername, $db_username, $db_password, $db_name);
+
+// Read data from table alumni
+$sql = "SELECT * FROM about_page";
+$result = $conn->query($sql);
+$row = $result->fetch_assoc();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -175,10 +189,10 @@
     <!-- About Section -->
     <section class="about-section">
         <div class="container">
-            <h2>ABOUT US:</h2>
-            <img src="assets/theteam.png" alt="The Team" class="image">
-            <p>
-                "Welcome to our Alumni Management System, your dedicated platform for staying connected, advancing your career, and giving back to the community. Our system empowers alumni students to effortlessly manage their academic and professional records, aiding in the creation of polished resumes that highlight their achievements. Through curated job opportunities, career resources, and networking events, we strive to support alumni in securing fulfilling employment opportunities. Moreover, we foster a spirit of community engagement by facilitating mentorship programs, volunteer opportunities, and initiatives that contribute to the growth and prosperity of our collective alumni network. Join us in harnessing the power of connectivity and collaboration as we embark on this journey together."
+            <h2 style="margin-bottom: 3%;"><?php echo $row['page_title']; ?></h2>
+            <img src="data:image/jpeg;base64,<?php echo base64_encode($row['image']); ?>" alt="The Team" class="image">
+            <p style="margin-top: 3%;">
+                <?php echo $row['description']; ?>
             </p>
         </div>
     </section>
@@ -199,5 +213,15 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Script to display preview of selected image -->
+    <script>
+        function getImagePreview(event) {
+            var image = URL.createObjectURL(event.target.files[0]);
+            var preview = document.getElementById('preview');
+            preview.src = image;
+            preview.style.width = '200px';
+            preview.style.height = '200px';
+        }
+    </script>
 </body>
 </html>
