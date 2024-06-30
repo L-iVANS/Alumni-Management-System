@@ -29,72 +29,50 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
-// FOR PROFILE IMAGE
-//read data from table alumni
-$sql = "SELECT * FROM alumni WHERE alumni_id=$account";
-$result = $conn->query($sql);
-$row = $result->fetch_assoc();
-
-$file = $row['picture'];
-
-$pass = "";
-$confirm_pass = "";
-$new_pass = "";
+$confirmPass = "";
+$newPass = "";
 $password = "";
 $errorMessage = "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    // Show the data of admin
+    // Show the data of alumni
     if (!isset($_GET['id'])) {
         header("location: ./profile.php");
         exit;
     }
-    $alumni_id = $_GET['id'];
+}
 
-    // Read data from table admin
-    $sql = "SELECT * FROM alumni WHERE alumni_id=$alumni_id";
-    $result = $conn->query($sql);
-    $row = $result->fetch_assoc();
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $currentPass = $_POST['currentPass'];
+    $newPass = $_POST['newPass'];
+    $confirmPass = $_POST['confirmPass'];
+    $userId = $_GET['id'];
 
-    if (!$row) {
-        header("location: ./profile.php");
-        exit;
+    $query = "SELECT password FROM alumni WHERE alumni_id = $userId";
+    $result = mysqli_query($conn, $query);
+    $account = mysqli_fetch_assoc($result);
+
+    // Check if the current password is correct
+    if ($currentPass !== $account['password']) {
+        $errorMessage = "Current password is incorrect.";
     }
-
-    $alumni_id = $row['alumni_id'];
-    $password = $row['password'];
-} else {
-    // Get the data from form
-    $alumni_id = $_POST['alumni_id'];
-    $current_password = $_POST['current_password'];
-    $pass = $_POST['password'];
-    $confirm_pass = $_POST['confirm_pass'];
-    $new_pass = $_POST['new_pass'];
-    $errorMessage = "";
-
-    if ($current_password == $pass) {
-        if ($new_pass == $confirm_pass) {
-            $sql = "UPDATE alumni SET password ='$new_pass' WHERE alumni_id = $alumni_id";
-            $result = $conn->query($sql);
-            echo "
-            <script>
-                alert('Password Successfully Changed');
-                window.location.href = './profile.php';
-            </script>";
-        } 
-        if($new_pass != $confirm_pass) {
-            $errorMessage = "New Password and Confirm Password Don't Match";
-        }
+    // Check if new password and confirm password match
+    elseif ($newPass !== $confirmPass) {
+        $errorMessage = "New password and confirm password do not match.";
     } else {
-        $errorMessage = "Incorrect Current Password";
+        // Update the password in the database
+        $updateQuery = "UPDATE alumni SET password = '$newPass' WHERE alumni_id = $userId";
+        if (mysqli_query($conn, $updateQuery)) {
+            echo "
+                <script>
+                    alert('Password Successfully Changed');
+                    window.location.href = './profile.php';
+                </script>";
+            exit;
+        } else {
+            $errorMessage = "Error changing password. Please try again.";
+        }
     }
-
-    // Reset the form variables
-    $pass = "";
-    $confirm_pass = "";
-    $new_pass = "";
-    $current_password = "";
-    
 }
 ?>
 <!DOCTYPE html>
@@ -103,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Change Admin Password</title>
+    <title>Change Password</title>
     <link rel="shortcut icon" href="../../assets/cvsu.png" type="image/svg+xml">
     <link rel="stylesheet" href="css/change_pass.css">
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
@@ -190,28 +168,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     echo "<script>alert('$errorMessage');</script>";
                 }
                 ?>
-    
+
                 <div class="row">
                     <div class="container-fluid" id="main-container">
                         <div class="container-fluid" id="content-container">
-                        <span>
-                            <h3>CHANGE PASSWORD</h3>
-                        </span>
-                        <br>
+                            <span>
+                                <h3>CHANGE PASSWORD</h3>
+                            </span>
+                            <br>
                             <form method="POST">
                                 <div class="mb-3">
-                                    <input type="hidden" name="alumni_id" class="form-control" id="formGroupExampleInput" value="<?php echo $alumni_id; ?>">
-                                    <input type="hidden" name="current_password" class="form-control" id="formGroupExampleInput" value="<?php echo $row['password']; ?>">
                                     <label for="formGroupExampleInput" class="form-label">Enter Current Password</label>
-                                    <input type="text" name="password" class="form-control" id="formGroupExampleInput" required>
+                                    <input type="text" name="currentPass" class="form-control" id="formGroupExampleInput" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="formGroupExampleInput2" class="form-label">Change Password</label>
-                                    <input type="text" name="new_pass" class="form-control" id="formGroupExampleInput2" required>
+                                    <input type="password" name="newPass" class="form-control" id="formGroupExampleInput2" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="formGroupExampleInput2" class="form-label">Confirm Password</label>
-                                    <input type="text" name="confirm_pass" class="form-control" id="formGroupExampleInput2" required>
+                                    <input type="password" name="confirmPass" class="form-control" id="formGroupExampleInput2" required>
                                 </div>
                                 <div class="row">
                                     <div class="container-fluid">
