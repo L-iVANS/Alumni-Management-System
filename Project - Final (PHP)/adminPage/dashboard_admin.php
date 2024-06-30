@@ -155,7 +155,7 @@ $event_count = $row_event['events_count'];
 
 
                         <a href="./logout.php">
-                            <span class="las la-power-off" style="font-size: 40px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
+                            <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
                         </a>
 
                     </div>
