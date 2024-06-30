@@ -32,7 +32,7 @@ if (isset($_SESSION['user_id'])) {
 $title = "";
 $description = "";
 
-// Read data from the table 'about_page'
+// Read data from the table 'about'
 $data_sql = "SELECT * FROM about_page WHERE about_id=1";
 $data_result = $conn->query($data_sql);
 
