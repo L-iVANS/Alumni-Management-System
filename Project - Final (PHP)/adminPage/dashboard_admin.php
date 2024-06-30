@@ -1,31 +1,57 @@
 <?php
 session_start();
 
-$serername = "localhost";
+$servername = "localhost";
 $db_username = "root";
 $db_password = "";
 $db_name = "alumni_management_system";
-$conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
+$conn = new mysqli($servername, $db_username, $db_password, $db_name);
 
-// USER ACCOUNT DATA
-if (isset($_SESSION['user_id'])) {
+if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
     $account = $_SESSION['user_id'];
+    $account_email = $_SESSION['user_email'];
 
-    $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ?");
-    $stmt->bind_param("s", $account);
+    // Check if user is an admin
+    $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ? AND email = ?");
+    $stmt->bind_param("ss", $account, $account_email);
     $stmt->execute();
     $user_result = $stmt->get_result();
 
     if ($user_result->num_rows > 0) {
+        // User is an admin
         $user = $user_result->fetch_assoc();
-    } else {
-        // No user found with the given admin_id
+        
     }
-
     $stmt->close();
+
+    // Check if user is a coordinator
+    $stmt = $conn->prepare("SELECT * FROM coordinator WHERE coor_id = ? AND email = ?");
+    $stmt->bind_param("ss", $account, $account_email);
+    $stmt->execute();
+    $user_result = $stmt->get_result();
+
+    if ($user_result->num_rows > 0) {
+        // User is a coordinator
+        header('Location: ../coordinatorPage/dashboard_coor.php');
+        exit();
+    }
+    $stmt->close();
+
+    // Check if user is an alumni
+    $stmt = $conn->prepare("SELECT * FROM alumni WHERE alumni_id = ? AND email = ?");
+    $stmt->bind_param("ss", $account, $account_email);
+    $stmt->execute();
+    $user_result = $stmt->get_result();
+
+    if ($user_result->num_rows > 0) {
+        // User is an alumni
+        header('Location: ../alumniPage/dashboard_user.php');
+        exit();
+    }
+    $stmt->close();
+    
 } else {
-    echo "User not logged in.";
-    header("Location: ../loginPage/login.php");
+    header('Location: ../homepage.php');
     exit();
 }
 
@@ -79,7 +105,7 @@ $event_count = $row_event['events_count'];
 
         <div class="side-content">
             <div class="profile">
-            <i class="bi bi-person-circle"></i>
+                <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
             </div>
@@ -180,12 +206,12 @@ $event_count = $row_event['events_count'];
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <i class="las la-user-graduate fa-3x" style="font-size: 25px;"></i>
-                                                    <div class="row mb-3">
-                                                        <!-- display Alumni Total Count -->
-                                                        <label style="font-size: 20px;">Alumni Total Count:</label>
-                                                        <!-- display alumni count in database -->
-                                                        <label class="col-sm-10 col-form-label" style="font-size: 40px;"><?php echo $count_alumni; ?></label>
-                                                    </div>
+                                                <div class="row mb-3">
+                                                    <!-- display Alumni Total Count -->
+                                                    <label style="font-size: 20px;">Alumni Total Count:</label>
+                                                    <!-- display alumni count in database -->
+                                                    <label class="col-sm-10 col-form-label" style="font-size: 40px;"><?php echo $count_alumni; ?></label>
+                                                </div>
                                             </div>
                                         </div>
                                         <a href="alumni/alumni.php" class="card-footer d-flex justify-content-between text-white" style="text-decoration: none;">
@@ -195,35 +221,35 @@ $event_count = $row_event['events_count'];
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <i class="las la-user-graduate fa-3x" style="font-size: 25px;"></i>
+                                    <div class="card bg-danger text-white mb-4">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center">
+                                                <i class="las la-user-graduate fa-3x" style="font-size: 25px;"></i>
                                                 <div class="row mb-3">
-                                                        <!-- display Alumni Total Count -->
-                                                        <label style="font-size: 20px;">Pending Alumni Account:</label>
-                                                        <!-- display alumni count in database -->
-                                                        <label class="col-sm-10 col-form-label" style="font-size: 40px;"><?php echo $count_pending; ?></label>
+                                                    <!-- display Alumni Total Count -->
+                                                    <label style="font-size: 20px;">Pending Alumni Account:</label>
+                                                    <!-- display alumni count in database -->
+                                                    <label class="col-sm-10 col-form-label" style="font-size: 40px;"><?php echo $count_pending; ?></label>
                                                 </div>
+                                            </div>
                                         </div>
+                                        <a href="./alumni/pendingAccount/pending.php" class="card-footer d-flex justify-content-between text-white" style="text-decoration: none;">
+                                            <span>View Details</span>
+                                            <i class="las la-arrow-circle-right"></i>
+                                        </a>
                                     </div>
-                                    <a href="./alumni/pendingAccount/pending.php" class="card-footer d-flex justify-content-between text-white" style="text-decoration: none;">
-                                        <span>View Details</span>
-                                        <i class="las la-arrow-circle-right"></i>
-                                    </a>
                                 </div>
-                            </div>
                                 <div class="col-md-4">
                                     <div class="card bg-success text-white mb-4">
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <i class="las la-user-plus fa-3x" style="font-size: 25px;"></i>
-                                                    <div class="row mb-3">
-                                                        <!-- Display coordinator Count -->
-                                                        <label style="font-size: 20px;">Coordinators Total Count:</label>
-                                                        <!-- display coordinators count in database -->
-                                                        <label class="col-sm-10 col-form-label" style="font-size: 40px;"><?php echo $coordinator_count; ?></label>
-                                                    </div>
+                                                <div class="row mb-3">
+                                                    <!-- Display coordinator Count -->
+                                                    <label style="font-size: 20px;">Coordinators Total Count:</label>
+                                                    <!-- display coordinators count in database -->
+                                                    <label class="col-sm-10 col-form-label" style="font-size: 40px;"><?php echo $coordinator_count; ?></label>
+                                                </div>
                                             </div>
                                         </div>
                                         <a href="coordinator/coordinator.php" class="card-footer d-flex justify-content-between text-white" style="text-decoration: none;">
@@ -237,8 +263,8 @@ $event_count = $row_event['events_count'];
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <i class="las la-calendar-alt fa-3x" style="font-size: 25px;"></i>
-                                                    <div class="row mb-3">
-                                                     <!-- Display Student Total Count -->
+                                                <div class="row mb-3">
+                                                    <!-- Display Student Total Count -->
                                                     <label style="font-size: 20px;">Events Total Count:</label>
                                                     <!-- display events count in database -->
                                                     <label class="col-sm-10 col-form-label" style="font-size: 40px;"><?php echo $event_count; ?></label>
