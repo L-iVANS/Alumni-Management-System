@@ -110,7 +110,7 @@ $event_count = $row_event['events_count'];
         <header>
             <div class="header-content">
                 <label for="menu-toggle">
-                    <span class="las la-bars"></span>
+                   <span class="las la-bars bars" style="color: white;"></span>
                 </label>
                 <!-- <span class="header-title">ALUMNI MANAGEMENT SYSTEM</span>  -->
                 <div class="header-menu">
@@ -127,7 +127,7 @@ $event_count = $row_event['events_count'];
 
 
                         <a href="./logout.php">
-                            <span class="las la-power-off" style="font-size: 40px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
+                           <span class="las la-power-off" style="font-size: 30px; border-left: 1px solid #fff; padding-left:10px; color:#fff"></span>
                         </a>
 
                     </div>
