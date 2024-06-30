@@ -29,6 +29,38 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
+$title = "";
+$description = "";
+$schedule = "";
+
+// get the data from form
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $title = ucwords($_POST['title']);
+    $schedule = $_POST['schedule'];
+    $description = ucwords($_POST['description']);
+
+    // for image
+    if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
+        $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
+        $sql = "INSERT INTO event SET title='$title', schedule='$schedule', description='$description', image='$file'";
+        
+    } else {
+        // Path to the image file
+        $filePath = '../../assets/no_image_available.png';
+        $imageData = file_get_contents($filePath);
+        $imageDataEscaped = addslashes($imageData);
+        $sql = "INSERT INTO event SET title='$title', schedule='$schedule', description='$description', image='$imageDataEscaped'";
+    }
+
+    $result = $conn->query($sql);
+    echo
+    "
+        <script>
+            alert('Event Added Successfully');
+            window.location.href = './event.php';
+        </script>
+    ";
+}
 
 ?>
 
@@ -45,6 +77,13 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        #preview {
+            max-width: 700px;
+            max-height: 700px;
+            object-fit: contain;
+        }
+    </style>
 </head>
 
 <body>
@@ -140,64 +179,102 @@ if (isset($_SESSION['user_id'])) {
             <div class="page-header">
                 <h1><strong>Event</strong></h1>
             </div>
-
-            <div class="container-fluid" id="page-content">
-                <div class="row">
-                    <div class="container-fluid" id="main-container">
-                        <div class="container-fluid" id="content-container">
-                            <h3 style="margin-bottom: 2%;">Add New Event</h3>
-                            <form>
+            </main>
+            <form method="POST" enctype="multipart/form-data">
+                <div class="container-fluid" id="page-content">
+                    <div class="row">
+                        <div class="container-fluid" id="main-container">
+                            <div class="container-fluid" id="content-container">
+                                <h3 style="margin-bottom: 2%;">Add New Event</h3>
                                 <div class="mb-3">
                                     <label for="formGroupExampleInput" class="form-label">Event Title</label>
-                                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter Event Title" required>
+                                    <input type="text" name="title" class="form-control" id="formGroupExampleInput" placeholder="Enter Event Title" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="formGroupExampleInput2" class="form-label">Schedule</label>
-                                    <input type="datetime-local" class="form-control" id="formGroupExampleInput2" required placeholder="">
+                                    <input type="datetime-local" name="schedule" class="form-control" id="formGroupExampleInput2" required placeholder="">
                                 </div>
                                 <div class="row">
                                     <div class="container-fluid">
                                         <div class="mb-3">
                                             <label for="exampleFormControlTextarea1" class="form-label">Enter Description</label>
-                                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                                            <textarea name="description" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
                                         </div>
                                     </div>
                                     <div class="container-fluid">
                                         <div class="row">
                                             <div class="mb-3">
-                                                <label for="formFile" class="form-label"></label>
-                                                <input class="form-control" type="file" id="formFile" required>
+                                                <input class="form-control" type="file" name="image" onchange="getImagePreview(event)">
                                             </div>
-                                            <div class="col">
-                                                <img src="..." class="img-thumbnail" alt="..." id="event-pic">
+                                            <div class="col-md-12 mb-md-0 p-md-12" style="text-align: center;">
+                                                <!-- for display image -->
+                                                <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['image']); ?>" alt="EVENT IMAGE">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid" id="button-response">
+                        <div class="row">
+                            <div class="d-grid col-4 mx-auto">
+                                <button type="submit" class="btn btn-warning">Submit</button>
+                            </div>
+                            <div class="d-grid col-4 mx-auto">
+                                <a class="btn btn-danger" href="./event.php">Cancel</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="container-fluid" id="button-response">
-                    <div class="row">
-                        <div class="d-grid col-4 mx-auto">
-                            <button type="button" class="btn btn-warning">Submit</button>
-                        </div>
-                        <div class="d-grid col-4 mx-auto">
-                            <a class="btn btn-primary" href="./event.php">Cancel</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            </form>
     </div>
-    <script>
+    <!-- <script>
         let eventPic = document.getElementById("event-pic");
         let formFile = document.getElementById("formFile");
 
         formFile.onchange = function() {
             eventPic.src = URL.createObjectURL(formFile.files[0]);
         }
+    </script> -->
+    <!-- Script to display preview of selected image -->
+    <script>
+        function getImagePreview(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = new Image();
+                img.onload = function() {
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0, img.width, img.height);
+                    var preview = document.getElementById('preview');
+                    preview.src = canvas.toDataURL('image/jpeg'); // Adjust format if needed
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // script to insert image to database
+        $(document).ready(function() {
+            $('#insert').click(function() {
+                var image_name = $('#image').val();
+                if (image_name == '') {
+                    alert("please Select Profile")
+                    return false;
+                } else {
+                    var extension = $('#image').val().split('.').pop().toLowerCase();
+                    if (jquery.inArray(extenssion, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                        alert("Invalid Image File")
+                        $('#image').val('');
+                        return false;
+                    }
+                }
+            })
+        });
     </script>
 </body>
 

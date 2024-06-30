@@ -193,9 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
-
     <div class="main-content">
-
         <header>
             <div class="header-content">
                 <label for="menu-toggle">
