@@ -75,3 +75,4 @@ echo
             window.location.href = './coor_archive.php';
         </script>
     ";
+?>

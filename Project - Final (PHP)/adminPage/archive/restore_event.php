@@ -73,3 +73,4 @@ echo
             window.location.href = './event_archive.php';
         </script>
     ";
+?>

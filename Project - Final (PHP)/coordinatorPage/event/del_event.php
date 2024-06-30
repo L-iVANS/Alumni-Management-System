@@ -76,3 +76,4 @@ echo
             window.location.href = './event.php';
         </script>
     ";
+    ?>

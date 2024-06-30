@@ -74,3 +74,4 @@ echo
             window.location.href = './alumni.php';
         </script>
     ";
+?>

@@ -72,3 +72,4 @@ echo
             window.location.href = './pending.php';
         </script>
     ";
+?>

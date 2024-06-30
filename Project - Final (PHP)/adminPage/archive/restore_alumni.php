@@ -70,3 +70,4 @@ echo
             window.location.href = './alumni_archive.php';
         </script>
     ";
+?>

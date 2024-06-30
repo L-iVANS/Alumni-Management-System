@@ -71,3 +71,4 @@ echo
             window.location.href = './decline_acc.php';
         </script>
     ";
+?>
