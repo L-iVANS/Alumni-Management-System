@@ -1,29 +1,58 @@
 <?php
 session_start();
 
-$serername = "localhost";
+$servername = "localhost";
 $db_username = "root";
 $db_password = "";
 $db_name = "alumni_management_system";
-$conn = mysqli_connect($serername, $db_username, $db_password, $db_name);
+$conn = new mysqli($servername, $db_username, $db_password, $db_name);
 
-// USER ACCOUNT DATA
-if (isset($_SESSION['user_id'])) {
+if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
     $account = $_SESSION['user_id'];
+    $account_email = $_SESSION['user_email'];
 
-    $stmt = $conn->prepare("SELECT * FROM coordinator WHERE coor_id = ?");
-    $stmt->bind_param("s", $account);
+    // Check if user is an admin
+    $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ? AND email = ?");
+    $stmt->bind_param("ss", $account, $account_email);
     $stmt->execute();
     $user_result = $stmt->get_result();
 
     if ($user_result->num_rows > 0) {
-        $user = $user_result->fetch_assoc();
-    } else {
-        // No user found with the given coor_id
+        // User is an admin
+        header('Location: ../../adminPage/dashboard_admin.php');
+        exit();
     }
-
     $stmt->close();
 
+    // Check if user is a coordinator
+    $stmt = $conn->prepare("SELECT * FROM coordinator WHERE coor_id = ? AND email = ?");
+    $stmt->bind_param("ss", $account, $account_email);
+    $stmt->execute();
+    $user_result = $stmt->get_result();
+
+    if ($user_result->num_rows > 0) {
+        // User is a coordinator
+        $user = $user_result->fetch_assoc();
+    }
+    $stmt->close();
+
+    // Check if user is an alumni
+    $stmt = $conn->prepare("SELECT * FROM alumni WHERE alumni_id = ? AND email = ?");
+    $stmt->bind_param("ss", $account, $account_email);
+    $stmt->execute();
+    $user_result = $stmt->get_result();
+
+    if ($user_result->num_rows > 0) {
+        // User is an alumni
+        header('Location: ../../alumniPage/dashboard_user.php');
+        exit();
+    }
+    $stmt->close();
+    
+} else {
+    header('Location: ../../homepage.php');
+    exit();
+}
     // COUNTS
     //query for alumni count
     $sql_alumni = "SELECT COUNT(student_id) AS alumni_count FROM alumni";
@@ -42,12 +71,7 @@ if (isset($_SESSION['user_id'])) {
     $result_event = $conn->query($sql_event);
     $row_event = $result_event->fetch_assoc();
     $event_count = $row_event['events_count'];
-} else {
-    echo "User not logged in.";
-    header("Location: ../../loginPage/login.php");
-    exit();
-}
-
+    
 $sql = "SELECT course, COUNT(*) as count FROM alumni GROUP BY course";
 $result = $conn->query($sql);
 
