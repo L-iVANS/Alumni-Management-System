@@ -29,28 +29,45 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Assuming you have a user ID stored in a variable $user_id
-$sql = "SELECT * FROM admin WHERE admin_id = $user[admin_id]";
-$result = $conn->query($sql);
+$title = "";
+$description = "";
 
-if ($result->num_rows > 0) {
-    // Fetch data
-    $row = $result->fetch_assoc();
+// Read data from the table 'about_page'
+$data_sql = "SELECT * FROM about_page WHERE about_id=1";
+$data_result = $conn->query($data_sql);
 
-    // Assign fetched data to variables
-    $admin_id = $row['admin_id'];
-    $fname = $row['fname'];
-    $mname = $row['mname'];
-    $lname = $row['lname'];
-    $contact = $row['contact'];
-    $email = $row['email'];
-    $password = $row['password'];
-    // Add more fields as needed
+if ($data_result->num_rows > 0) {
+    $data_row = $data_result->fetch_assoc();
+    $data_about_id = $data_row['about_id'];
+    $data_title = $data_row['page_title'];
+    $data_description = $data_row['description'];
 } else {
-    echo "0 results";
+    header("Location: ./about.php");
+    exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $about_id = $_POST['about_id'];
+    $title = ucwords($conn->real_escape_string($_POST['title']));
+    $description = ucwords($conn->real_escape_string($_POST['description']));
 
+    // For image
+    if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
+        $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
+        $sql = "UPDATE about_page SET page_title='$title', description='$description', image='$file' WHERE about_id='$about_id'";
+    } else {
+        $sql = "UPDATE about_page SET page_title='$title', description='$description' WHERE about_id='$about_id'";
+    }
+
+    if ($conn->query($sql) === TRUE) {
+        echo "<script>
+            alert('About Page Updated Successfully');
+            window.location.href = './about.php';
+        </script>";
+    } else {
+        echo "Error updating record: " . $conn->error;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -66,6 +83,13 @@ if ($result->num_rows > 0) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        #preview {
+            max-width: 700px;
+            max-height: 700px;
+            object-fit: contain;
+        }
+    </style>
 </head>
 
 <body>
@@ -113,7 +137,7 @@ if ($result->num_rows > 0) {
             <div class="page-header">
                 <h1><strong>Settings</strong></h1>
             </div>
-            <form class="form-style">
+            <div class="form-style">
                 <div class="d-flex justify-content-end my-3">
                     <ul class="nav nav-pills custom-nav-pills" id="myTab" role="tablist">
                         <li class="nav-item mx-4">
@@ -124,39 +148,78 @@ if ($result->num_rows > 0) {
                         </li>
                     </ul>
                 </div>
-              
-               <div class="tab-content" id="myTabContent">
+
+                <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
-                        <form id="aboutForm" class="mt-4">
+                        <form method="POST" enctype="multipart/form-data">
                             <div class="mb-3">
+                                <input type="hidden" name="about_id" class="form-control" id="formGroupExampleInput" value="<?php echo $data_about_id; ?>">
                                 <label for="pageTitle">Page Title</label>
-                                <input type="text" class="form-control" id="pageTitle" value="About Us">
+                                <input type="text" name="title" class="form-control" id="pageTitle" required value="<?php echo $data_title; ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="pageDescription">Page Description</label>
-                                <textarea class="form-control" id="pageDescription" rows="5">Description</textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="title">Title</label>
-                                <input type="text" class="form-control" id="title" value="The Team">
+                                <textarea class="form-control" name="description" id="pageDescription" rows="5" required><?php echo $data_description; ?></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="upload" class="form-label">Upload</label>
-                                <input class="form-control" type="file" id="upload">
-                                <div class="mt-3">
+                                <input class="form-control" type="file" name="image" onchange="getImagePreview(event)">
+                                <!-- <div class="mt-3">
                                     <img src="/mnt/data/image.png" alt="Upload Image" class="img-thumbnail">
+                                </div> -->
+                                <div class="mt-3 col-md-12 mb-md-0 p-md-12" style="text-align: center;">
+                                    <!-- for display image -->
+                                    <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($data_row['image']); ?>" alt="EVENT IMAGE">
                                 </div>
                             </div>
-                            <button class="btn btn-warning" style="padding-left: 50px; padding-right: 50px;">Update</button>
+                            <button type="submit" class="btn btn-warning" style="padding-left: 50px; padding-right: 50px;">Update</button>
                         </form>
                     </div>
                 </div>
-            </form>
+            </div>
         </main>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function getImagePreview(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = new Image();
+                img.onload = function() {
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0, img.width, img.height);
+                    var preview = document.getElementById('preview');
+                    preview.src = canvas.toDataURL('image/jpeg'); // Adjust format if needed
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // script to insert image to database
+        $(document).ready(function() {
+            $('#insert').click(function() {
+                var image_name = $('#image').val();
+                if (image_name == '') {
+                    alert("please Select Profile")
+                    return false;
+                } else {
+                    var extension = $('#image').val().split('.').pop().toLowerCase();
+                    if (jquery.inArray(extenssion, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                        alert("Invalid Image File")
+                        $('#image').val('');
+                        return false;
+                    }
+                }
+            })
+        });
+    </script>
 </body>
 
 </html>

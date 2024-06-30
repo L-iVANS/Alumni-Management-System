@@ -204,7 +204,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
         <main>
-
             <div class="page-header">
                 <h1><strong>Event</strong></h1>
             </div>

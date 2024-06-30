@@ -29,6 +29,49 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
+$title = "";
+$address = "";
+$contact = "";
+$email = "";
+
+// Read data from the table 'about_page'
+$data_sql = "SELECT * FROM contact_page WHERE contact_id=1";
+$data_result = $conn->query($data_sql);
+
+if ($data_result->num_rows > 0) {
+    $data_row = $data_result->fetch_assoc();
+    $data_title = $data_row['page_title'];
+    $data_address = $data_row['address'];
+    $data_contact = $data_row['contact'];
+    $data_email = $data_row['email'];
+} else {
+    header("Location: ./contact.php");
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $title = ucwords($conn->real_escape_string($_POST['title']));
+    $address = ucwords($conn->real_escape_string($_POST['address']));
+    $contact = $_POST['contact'];
+    $email = strtolower($conn->real_escape_string($_POST['email']));
+
+    // For image
+    if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
+        $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
+        $sql = "UPDATE contact_page SET page_title='$title', address='$address', contact='$contact', email='$email', image='$file' WHERE contact_id=1";
+    } else {
+        $sql = "UPDATE contact_page SET page_title='$title', address='$address', contact='$contact', email='$email' WHERE contact_id=1";
+    }
+
+    if ($conn->query($sql) === TRUE) {
+        echo "<script>
+            alert('Contact Page Updated Successfully');
+            window.location.href = './contact.php';
+        </script>";
+    } else {
+        echo "Error updating record: " . $conn->error;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -44,6 +87,13 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        #preview {
+            max-width: 700px;
+            max-height: 700px;
+            object-fit: contain;
+        }
+    </style>
 </head>
 
 <body>
@@ -65,7 +115,7 @@ if (isset($_SESSION['user_id'])) {
                     <li><a href="../alumni/alumni.php"><span class="las la-th-list" style="color:#fff"></span><small>ALUMNI</small></a></li>
                     <li><a href="../coordinator/coordinator.php"><span class="las la-user-cog" style="color:#fff"></span><small>COORDINATOR</small></a></li>
                     <li><a href="../event/event.php"><span class="las la-calendar" style="color:#fff"></span><small>EVENT</small></a></li>
-                    <li><a href="./about.php" class="active"><span class="las la-cog" style="color:#fff"></span><small>SETTINGS</small></a></li>
+                    <li><a href="./contact.php" class="active"><span class="las la-cog" style="color:#fff"></span><small>SETTINGS</small></a></li>
                     <li><a href="../report/report.php"><span class="las la-clipboard-check" style="color:#fff"></span><small>REPORT</small></a></li>
                     <li><a href="../archive/alumni_archive.php"><span class="las la-archive" style="color:#fff"></span><small>ARCHIVE</small></a></li>
                 </ul>
@@ -92,41 +142,45 @@ if (isset($_SESSION['user_id'])) {
                 <h1><strong>Settings</strong></h1>
             </div>
             <div class="form-style">
-                <div class="d-flex justify-content-center my-3" style="text-align: end;">
+                <div class="d-flex justify-content-end my-3">
                     <ul class="nav nav-pills custom-nav-pills" id="myTab" role="tablist">
                         <li class="nav-item mx-4">
-                            <button class="btn btn-light border border-dark" id="about-tab" type="button" role="tab" aria-controls="about" aria-selected="false" onclick="location.href='about.php'" style="padding-left: 55px; padding-right: 55px;">About</button>
+                            <button class="btn btn-light border border-dark" id="contact-tab" type="button" role="tab" aria-controls="contact" aria-selected="false" onclick="location.href='about.php'" style="padding-left: 55px; padding-right: 55px;">About</button>
                         </li>
                         <li class="nav-item mx-4">
-                            <button class="btn btn-secondary border border-dark" id="contact-tab" type="button" role="tab" aria-controls="contact" aria-selected="true" onclick="location.href='contact.php'" style="padding-left: 48px; padding-right: 48px;">Contact</button>
+                            <button class="btn btn-secondary border border-dark" id="about-tab" type="button" role="tab" aria-controls="contact" aria-selected="true" onclick="location.href='contact.php'" style="padding-left: 48px; padding-right: 48px;">Contact</button>
                         </li>
                     </ul>
                 </div>
-                
+
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                        <form id="contactForm" class="mt-4">
+                        <form method="POST" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="pageTitle" class="form-label">Page Title</label>
-                                <input type="text" class="form-control" id="pageTitle">
+                                <input name="title" type="text" class="form-control" id="pageTitle" value="<?php echo $data_title; ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="address" class="form-label">Address</label>
-                                <input type="text" class="form-control" id="address">
+                                <input name="address" type="text" class="form-control" id="address" value="<?php echo $data_address; ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="contact" class="form-label">Contact</label>
-                                <input type="text" class="form-control" id="contact">
+                                <input name="contact" type="number" class="form-control" id="contact" value="<?php echo $data_contact; ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email">
+                                <input name="email" type="email" class="form-control" id="email" value="<?php echo $data_email; ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="upload" class="form-label">Upload</label>
-                                <input class="form-control" type="file" id="upload">
-                                <div class="mt-3">
-                                    <img src="../../assets/Imus-Campus-scaled.jpg" alt="Upload Image" class="img-thumbnail">
+                                <input class="form-control" type="file" name="image" onchange="getImagePreview(event)">
+                                <!-- <div class="mt-3">
+                                    <img src="/mnt/data/image.png" alt="Upload Image" class="img-thumbnail">
+                                </div> -->
+                                <div class="mt-3 col-md-12 mb-md-0 p-md-12" style="text-align: center;">
+                                    <!-- for display image -->
+                                    <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($data_row['image']); ?>" alt="EVENT IMAGE">
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-warning" style="padding-left: 50px; padding-right: 50px;">Update</button>
@@ -139,6 +193,44 @@ if (isset($_SESSION['user_id'])) {
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function getImagePreview(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = new Image();
+                img.onload = function() {
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0, img.width, img.height);
+                    var preview = document.getElementById('preview');
+                    preview.src = canvas.toDataURL('image/jpeg'); // Adjust format if needed
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // script to insert image to database
+        $(document).ready(function() {
+            $('#insert').click(function() {
+                var image_name = $('#image').val();
+                if (image_name == '') {
+                    alert("please Select Profile")
+                    return false;
+                } else {
+                    var extension = $('#image').val().split('.').pop().toLowerCase();
+                    if (jquery.inArray(extenssion, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                        alert("Invalid Image File")
+                        $('#image').val('');
+                        return false;
+                    }
+                }
+            })
+        });
+    </script>
 </body>
 
 </html>
