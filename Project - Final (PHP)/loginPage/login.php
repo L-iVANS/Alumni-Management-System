@@ -1,20 +1,62 @@
 <?php
-// Database configuration
+session_start();
+
 $servername = "localhost";
 $db_username = "root";
 $db_password = "";
-$dbname = "alumni_management_system";
+$db_name = "alumni_management_system";
+$conn = new mysqli($servername, $db_username, $db_password, $db_name);
 
-// Create connection
-$conn = new mysqli($servername, $db_username, $db_password, $dbname);
+function checkLoginAndRedirect($conn)
+{
+    if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
+        $account = $_SESSION['user_id'];
+        $account_email = $_SESSION['user_email'];
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+        // Check if user is an admin
+        $stmt = $conn->prepare("SELECT * FROM admin WHERE admin_id = ? AND email = ?");
+        $stmt->bind_param("ss", $account, $account_email);
+        $stmt->execute();
+        $user_result = $stmt->get_result();
+
+        if ($user_result->num_rows > 0) {
+            // User is an admin
+            header('Location: ../adminPage/dashboard_admin.php');
+            exit();
+        }
+        $stmt->close();
+
+        // Check if user is a coordinator
+        $stmt = $conn->prepare("SELECT * FROM coordinator WHERE coor_id = ? AND email = ?");
+        $stmt->bind_param("ss", $account, $account_email);
+        $stmt->execute();
+        $user_result = $stmt->get_result();
+
+        if ($user_result->num_rows > 0) {
+            // User is a coordinator
+            header('Location: ../coordinatorPage/dashboard_coor.php');
+            exit();
+        }
+        $stmt->close();
+
+        // Check if user is an alumni
+        $stmt = $conn->prepare("SELECT * FROM alumni WHERE alumni_id = ? AND email = ?");
+        $stmt->bind_param("ss", $account, $account_email);
+        $stmt->execute();
+        $user_result = $stmt->get_result();
+
+        if ($user_result->num_rows > 0) {
+            // User is an alumni
+            header('Location: ../alumniPage/dashboard_user.php');
+            exit();
+        }
+        $stmt->close();
+
+        header('Location: ./login.php');
+        exit();
+    }
 }
-
-// Start session
-session_start();
+checkLoginAndRedirect($conn);
 
 
 $stud_id = "";
@@ -72,12 +114,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
         switch ($user_type) {
             case 'alumni':
                 $_SESSION['user_id'] = $user['alumni_id'];
+                $_SESSION['user_email'] = $user['email'];
                 break;
             case 'admin':
                 $_SESSION['user_id'] = $user['admin_id'];
+                $_SESSION['user_email'] = $user['email'];
                 break;
             case 'coordinator':
                 $_SESSION['user_id'] = $user['coor_id'];
+                $_SESSION['user_email'] = $user['email'];
                 break;
         }
 
