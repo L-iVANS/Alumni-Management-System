@@ -84,10 +84,6 @@ font-weight: bold;
   border-radius: 10px;
 }
 
-/* Handle on hover */
-.side-content::-webkit-scrollbar-thumb:hover {
-  background: #b30000; 
-}
 
 .sidebar ul li a:hover {
     color: #2a9134;
