@@ -218,7 +218,7 @@ $event_count = $row_event['events_count'];
                                                 </div>
                                         </div>
                                     </div>
-                                    <a href="event.php" class="card-footer d-flex justify-content-between text-white" style="text-decoration: none;">
+                                    <a href="./event/event.php" class="card-footer d-flex justify-content-between text-white" style="text-decoration: none;">
                                         <span>View Details</span>
                                         <i class="las la-arrow-circle-right"></i>
                                     </a>
