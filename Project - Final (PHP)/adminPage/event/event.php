@@ -458,8 +458,7 @@ echo "
                         const href = this.getAttribute('href'); // Get the href attribute
 
                         Swal.fire({
-                            title: 'Are you sure?',
-                            text: "This action will archive the record.",
+                            title: 'Do you want to continue?',
                             icon: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#e03444',
