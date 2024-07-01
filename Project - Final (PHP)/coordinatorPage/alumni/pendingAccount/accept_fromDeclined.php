@@ -64,11 +64,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
     $sql_delete = "DELETE FROM declined_account WHERE alumni_id=$alumni_id";
     $conn->query($sql_delete);
 }
-echo
-"
-        <script>
-            alert('Alumni Acccount Accepted!');
-            window.location.href = './decline_acc.php';
-        </script>
-    ";
+$transfer = $alumni_id;
+header("Location: ./decline_acc.php?ide=$transfer");
+exit;
 ?>

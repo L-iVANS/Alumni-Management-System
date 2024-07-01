@@ -48,7 +48,6 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
         $user = $user_result->fetch_assoc();
     }
     $stmt->close();
-    
 } else {
     header('Location: ../../homepage.php');
     exit();
@@ -102,7 +101,23 @@ $total_records = $total_records_row[0];
 
 $total_pages = ceil($total_records / $records_per_page);
 
-
+if (isset($_GET['ide'])) {
+    echo "
+        <script>
+        // Wait for the document to load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Use SweetAlert2 for the alert
+            Swal.fire({
+                title: 'Event Archived Successfully',
+                timer: 2000,
+                showConfirmButton: true, // Show the confirm button
+                confirmButtonColor: '#4CAF50', // Set the button color to green
+                confirmButtonText: 'OK' // Change the button text if needed
+            });
+        });
+    </script>
+    ";
+}
 
 ?>
 <!DOCTYPE html>
@@ -117,7 +132,7 @@ $total_pages = ceil($total_records / $records_per_page);
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- FOR PAGINATION -->
     <style>
         /*  DESIGN FOR SEARCH BAR AND PAGINATION */
@@ -324,7 +339,7 @@ $total_pages = ceil($total_records / $records_per_page);
                                     <tr>
                                         <td class="inline"><?php echo $row['event_id'] ?></td>
                                         <td class="inline"><?php echo $row['title'] ?></td>
-                                        <td class="inline"><?php echo $row['schedule']?></td>
+                                        <td class="inline"><?php echo $row['schedule'] ?></td>
                                         <td class="inline"><?php echo $row['description'] ?></td>
                                         <td class="inline"><?php echo $row['date_created'] ?></td>
                                         <?php

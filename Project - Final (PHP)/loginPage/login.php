@@ -19,7 +19,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
 
     if ($user_result->num_rows > 0) {
         // User is an admin
-        header('Location: ./adminPage/dashboard_admin.php');
+        header('Location: ../adminPage/dashboard_admin.php');
         exit();
     }
     $stmt->close();
@@ -32,7 +32,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
 
     if ($user_result->num_rows > 0) {
         // User is a coordinator
-        header('Location: ./coordinatorPage/dashboard_coor.php');
+        header('Location: ../coordinatorPage/dashboard_coor.php');
         exit();
     }
     $stmt->close();
@@ -45,11 +45,11 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
 
     if ($user_result->num_rows > 0) {
         // User is an alumni
-        header('Location: ./alumniPage/dashboard_user.php');
+        header('Location: ../alumniPage/dashboard_user.php');
         exit();
     }
     $stmt->close();
-    
+
     header('Location: ./login.php');
     exit();
 }
@@ -125,60 +125,131 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
         if ($user_type == 'admin') {
             // Redirect to a ADMIN DASHBOARD
             echo "
-                    <script>
-                        alert('Login Successfully');
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Login Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
                         window.location.href = '../adminPage/dashboard_admin.php';
-                    </script>
-                ";
+                    });
+                });
+            </script>
+            ";
         } else if ($user_type == 'coordinator') {
             // Redirect to COORDINATOR
             echo "
-                    <script>
-                        alert('Login Successfully');
-                        window.location.href = '../coordinatorPage/dashboard_coor.php';
-                    </script>
-                ";
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Login Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
+                         window.location.href = '../coordinatorPage/dashboard_coor.php';
+                    });
+                });
+            </script>
+            ";
         } else if ($user_type == 'pending') {
             // PENDING ACCOUNT
             echo "
-                        <script>
-                            alert('Your Account Is Under Review!');
-                            window.location.href = 'login.php';
-                        </script>
-                    ";
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                        title: 'Your Account Is Under Review!',
+                        timer: 4000,
+                        showConfirmButton: true, // Show the confirm button
+                        confirmButtonColor: '#4CAF50', // Set the button color to green
+                        confirmButtonText: 'OK' // Change the button text if needed
+                    });
+                });
+            </script>";
         } else if ($user_type == 'alumni_arc') {
             // ARCHIED ACCOUNT
             echo "
-                                <script>
-                                    alert('Your Account Is Suspended!... If you Think it was Mistaken, Please Contact Adminitrator.');
-                                    window.location.href = 'login.php';
-                                </script>
-                            ";
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                        title: 'Your Account Is Suspended!... If you Think it was Mistaken, Please Contact Adminitrator.',
+                        timer: 4000,
+                        showConfirmButton: true, // Show the confirm button
+                        confirmButtonColor: '#4CAF50', // Set the button color to green
+                        confirmButtonText: 'OK' // Change the button text if needed
+                    });
+                });
+            </script>";
+
         } else if ($user_type == 'declined_account') {
             // DECLINED ACCOUNT
             echo "
-                            <script>
-                                alert('Your Application Had Been Declined');
-                                window.location.href = 'login.php';
-                            </script>
-                        ";
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                        title: 'Your Application Had Been Declined',
+                        timer: 4000,
+                        showConfirmButton: true, // Show the confirm button
+                        confirmButtonColor: '#4CAF50', // Set the button color to green
+                        confirmButtonText: 'OK' // Change the button text if needed
+                    });
+                });
+            </script>";
+            
         } else {
             // Redirect to ALUMNI DASHBOARD
             echo "
-                    <script>
-                        alert('Login Successfully');
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Login Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
                         window.location.href = '../alumniPage/dashboard_user.php';
-                    </script>
-                ";
+                    });
+                });
+            </script>
+            ";
         }
     } else {
         // Login failed
         echo "
-                <script>
-                    alert('Incorrect Student ID / Email and Password');
-                    window.location.href = 'login.php';
-                </script>
-            ";
+        <script>
+            // Wait for the document to load
+            document.addEventListener('DOMContentLoaded', function() {
+                // Use SweetAlert2 for the alert
+                Swal.fire({
+                    title: 'Incorrect Student ID / Email and Password',
+                    timer: 4000,
+                    showConfirmButton: true, // Show the confirm button
+                    confirmButtonColor: '#4CAF50', // Set the button color to green
+                    confirmButtonText: 'OK' // Change the button text if needed
+                });
+            });
+        </script>";
+    
     }
 } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $stud_id = $_POST['student_id'];
@@ -202,37 +273,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
-        
-     } else if (mysqli_num_rows($emailCheck_decline) > 0) {
+    } else if (mysqli_num_rows($emailCheck_decline) > 0) {
         $errorMessage = "Email Already Exists";
-
     } else if (mysqli_num_rows($idCheck) > 0) {
         $errorMessage = "Student ID Already Exists";
-
     } else if (mysqli_num_rows($idCheck_decline) > 0) {
         $errorMessage = "Student ID Already Exists";
-
     } else {
 
         // email and user existing check
         $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
-        $emailCheck_archive= mysqli_query($conn, "SELECT * FROM alumni_archive WHERE email='$email'");
+        $emailCheck_archive = mysqli_query($conn, "SELECT * FROM alumni_archive WHERE email='$email'");
         $idCheck = mysqli_query($conn, "SELECT * FROM declined_account WHERE student_id='$stud_id'");
         $idCheck_archive = mysqli_query($conn, "SELECT * FROM declined_account WHERE student_id='$stud_id'");
-    
+
 
         if (mysqli_num_rows($emailCheck) > 0) {
             $errorMessage = "Email Already Exists";
-
         } else if (mysqli_num_rows($emailCheck_archive) > 0) {
             $errorMessage = "Email Already Exists";
-
         } else if (mysqli_num_rows($idCheck) > 0) {
             $errorMessage = "Student ID Already Exists";
-    
         } else if (mysqli_num_rows($idCheck_archive) > 0) {
             $errorMessage = "Student ID Already Exists";
-    
         } else {
 
             $filePath = '../assets/profile_icon.jpg';
@@ -245,13 +308,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['log_email']) && isset(
             if ($result) {
                 // $successMessage = "Coordinator Edited Successfully";
                 echo "
-                <script>
-                    alert('Account Successfully Registered');
-                    window.location.href = './login.php';
-                </script>
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Account Successfully Registered',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
+                        window.location.href = './login.php';
+                    });
+                });
+            </script>
             ";
-            } else {
-                $errorMessage = "Error: " . $conn->error;
             }
         }
     }
@@ -302,6 +375,7 @@ function check_alumni($conn, $table, $log_email, $pass)
     <link rel="shortcut icon" href="cvsu.png" type="image/svg+xml">
     <!-- css stylesheet -->
     <link rel="stylesheet" href="css/login.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -309,14 +383,8 @@ function check_alumni($conn, $table, $log_email, $pass)
 
     <div class="container" id="container">
         <div class="form-container sign-up-container">
-            <form action="#" method="POST">
+            <form action="#" method="POST" onsubmit="return submitForm(this);">
                 <h1>Sign Up</h1>
-
-                <?php
-                if (!empty($errorMessage)) {
-                    echo "<script>alert('$errorMessage');</script>";
-                }
-                ?>
 
                 <div class="infield">
                     <input type="email" placeholder="Email" name="email" value="<?php echo htmlspecialchars($email); ?>" required />
@@ -417,11 +485,11 @@ function check_alumni($conn, $table, $log_email, $pass)
             <form action="#" method="POST">
                 <h1>Log in</h1>
                 <div class="infield">
-                    <input type="text" placeholder="Student ID / Email" name="log_email" value="<?php echo htmlspecialchars($log_email); ?>" required />
+                    <input type="text" placeholder="Student ID / Email" name="log_email" required />
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="password" placeholder="Password" name="log_password" value="<?php echo htmlspecialchars($pass); ?>" required />
+                    <input type="password" placeholder="Password" name="log_password" required />
                     <label></label>
                 </div>
                 <!-- <a href="#" class="forgot">Forgot your password?</a> -->
@@ -537,6 +605,24 @@ function check_alumni($conn, $table, $log_email, $pass)
                 }
             }
         });
+
+
+        function submitForm(form) {
+            Swal.fire({
+                    title: 'Do you want to continue?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e03444',
+                    cancelButtonColor: '#ffc404',
+                    confirmButtonText: 'Submit'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Submit the form
+                    }
+                });
+            return false; // Prevent default form submission
+        }
     </script>
 </body>
 

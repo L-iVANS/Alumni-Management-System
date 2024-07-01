@@ -20,7 +20,6 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
     if ($user_result->num_rows > 0) {
         // User is an admin
         $user = $user_result->fetch_assoc();
-        
     }
     $stmt->close();
 
@@ -49,7 +48,6 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
         exit();
     }
     $stmt->close();
-    
 } else {
     header('Location: ../../homepage.php');
     exit();
@@ -71,35 +69,80 @@ $email = "";
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Show the data of alumni
     if (!isset($_GET['id'])) {
-        header("location: ./alumni.php");
-        exit;
+        if (isset($_GET['ide'])) {
+            echo "
+                <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                        title: 'Profile Updated Successfully',
+                        timer: 2000,
+                        showConfirmButton: true, // Show the confirm button
+                        confirmButtonColor: '#4CAF50', // Set the button color to green
+                        confirmButtonText: 'OK' // Change the button text if needed
+                    });
+                });
+            </script>
+            ";
+            $alumni_id = $_GET['ide'];
+
+            //read data from table alumni
+            $sql = "SELECT * FROM alumni WHERE alumni_id=$alumni_id";
+            $result = $conn->query($sql);
+            $row = $result->fetch_assoc();
+
+            if (!$row) {
+                header("location: ./alumni.php");
+                exit;
+            }
+            // data from table alumni where student_id = $alumni_id = $_GET['id']; get from alumni list update
+
+            $stud_id = $row['student_id'];
+            $fname = $row['fname'];
+            $mname = $row['mname'];
+            $lname = $row['lname'];
+            $gender = $row['gender'];
+            $course = $row['course'];
+            $contact = $row['contact'];
+            $address = $row['address'];
+            $email = $row['email'];
+            $file = $row['picture'];
+
+            $batch = $row["batch_startYear"] . " - " . $row["batch_endYear"];
+        } else {
+            header("location: ./alumni.php");
+            exit;
+        }
+    } else {
+        $alumni_id = $_GET['id'];
+
+        //read data from table alumni
+        $sql = "SELECT * FROM alumni WHERE alumni_id=$alumni_id";
+        $result = $conn->query($sql);
+        $row = $result->fetch_assoc();
+
+        if (!$row) {
+            header("location: ./alumni.php");
+            exit;
+        }
+        // data from table alumni where student_id = $alumni_id = $_GET['id']; get from alumni list update
+
+        $stud_id = $row['student_id'];
+        $fname = $row['fname'];
+        $mname = $row['mname'];
+        $lname = $row['lname'];
+        $gender = $row['gender'];
+        $course = $row['course'];
+        $contact = $row['contact'];
+        $address = $row['address'];
+        $email = $row['email'];
+        $file = $row['picture'];
+
+        $batch = $row["batch_startYear"] . " - " . $row["batch_endYear"];
     }
-    $alumni_id = $_GET['id'];
-
-    //read data from table alumni
-    $sql = "SELECT * FROM alumni WHERE alumni_id=$alumni_id";
-    $result = $conn->query($sql);
-    $row = $result->fetch_assoc();
-
-    if (!$row) {
-        header("location: ./alumni.php");
-        exit;
-    }
-    // data from table alumni where student_id = $alumni_id = $_GET['id']; get from alumni list update
-
-    $stud_id = $row['student_id'];
-    $fname = $row['fname'];
-    $mname = $row['mname'];
-    $lname = $row['lname'];
-    $gender = $row['gender'];
-    $course = $row['course'];
-    $contact = $row['contact'];
-    $address = $row['address'];
-    $email = $row['email'];
-    $file = $row['picture'];
-
-    $batch = $row["batch_startYear"] . " - " . $row["batch_endYear"];
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -116,6 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -127,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         <div class="side-content">
             <div class="profile">
-            <i class="bi bi-person-circle"></i>
+                <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
             </div>
@@ -347,12 +391,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             <div class="col" id="buttons">
                                 <div class="button">
 
-                                    <?php 
+                                    <?php
                                     echo "
                                         <a class='btn btn-warning' href='./update_info.php?id=$row[alumni_id]'>Update Info</a>
                                         <a class='btn btn-danger' href='./del_alumni.php?id=$row[alumni_id]'>Archive</a>
                                         <a class='btn btn-danger' href='./alumni.php'>Cancel</a>
-                                    ";?>
+                                    "; ?>
                                 </div>
                             </div>
                         </div>

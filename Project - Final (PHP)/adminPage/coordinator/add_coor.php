@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $mname = ucwords($_POST['mname']);
     $lname = ucwords($_POST['lname']);
     $contact = $_POST['contact'];
-    $email = $_POST['email'];
+    $email = strtolower($_POST['email']);
     $temp_password = $_POST['temp_pass'];
 
 
@@ -79,19 +79,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
         
-    } if (mysqli_num_rows($emailCheck_archive) > 0) {
+    } else if (mysqli_num_rows($emailCheck_archive) > 0) {
         $errorMessage = "Email Already Exists";
         
     } else {
         $sql = "INSERT INTO coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email', password='$temp_password'";
         $result = $conn->query($sql);
-        echo
-        "
-        <script>
-            alert('Alumni Added Successfully');
-            window.location.href = './coordinator.php';
-        </script>
-    ";
+        echo "
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Coordinator Added Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
+                        window.location.href = './coordinator.php';
+                    });
+                });
+            </script>
+            ";
     }
 }
 ?>
@@ -110,6 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
 </head>
 
 <body>
@@ -211,7 +223,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <?php
                 if (!empty($errorMessage)) {
-                    echo "<script>alert('$errorMessage');</script>";
+                    echo "<script>";
+                    echo "Swal.fire({";
+                    echo "  icon: 'error',";
+                    echo "  title: 'Oops...',";
+                    echo "  text: '$errorMessage',";
+                    echo "  timer: 2000,";
+                    echo "})";
+                    echo "</script>";
                 }
                 ?>
 

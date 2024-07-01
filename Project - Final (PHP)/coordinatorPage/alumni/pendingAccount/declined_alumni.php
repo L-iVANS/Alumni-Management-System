@@ -69,11 +69,8 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
     $sql_delete = "DELETE FROM pending WHERE alumni_id=$alumni_id";
     $conn->query($sql_delete);
 }
-echo
-"
-        <script>
-            alert('Alumni Acccount Declined');
-            window.location.href = './pending.php';
-        </script>
-    ";
+// Output SweetAlert2 message with a timer
+$transfer = $alumni_id;
+header("Location: ./pending.php?ide_decline=$transfer");
+exit;
 ?>

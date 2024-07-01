@@ -65,6 +65,7 @@ if (isset($_GET['id'])) {
     $sql_delete = "DELETE FROM coordinator WHERE coor_id=$coor_id";
     $conn->query($sql_delete);
 }
-header("location: ./coordinator.php");
+$transfer = $coor_id;
+header("Location: ./coordinator.php?ide=$transfer");
 exit;
 ?>

@@ -48,7 +48,6 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
         exit();
     }
     $stmt->close();
-    
 } else {
     header('Location: ../../homepage.php');
     exit();
@@ -92,21 +91,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
-
     } else if (mysqli_num_rows($emailCheck_archive) > 0) {
         $errorMessage = "Email Already Exists";
-
     } else {
 
         $sql = "UPDATE coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email' WHERE coor_id = $coor_id";
         $result = $conn->query($sql);
-        echo
-        "
-        <script>
-            alert('Info Updated Successfully');
-            window.location.href = './profile.php';
-        </script>
-    ";
+        echo "
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Info Updated Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
+                        window.location.href = './profile.php';
+                    });
+                });
+            </script>
+            ";
     }
 }
 ?>
@@ -126,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -227,18 +235,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             <div class="page-content">
                 <?php
                 if (!empty($errorMessage)) {
-                    echo "<script>alert('$errorMessage');</script>";
+                    echo "<script>";
+                    echo "Swal.fire({";
+                    echo "  icon: 'error',";
+                    echo "  title: 'Oops...',";
+                    echo "  text: '$errorMessage',";
+                    echo "  timer: 2000,";
+                    echo "})";
+                    echo "</script>";
                 }
                 ?>
                 <div class="row">
                     <div class="container-fluid" id="main-container">
                         <div class="container-fluid" id="content-container">
                             <div class="information">
-                                <form action="update.php" method="POST">
+                                <form action="update.php" method="POST" onsubmit="return submitForm(this);">
                                     <div class="mb-3">
                                         <input type="hidden" name="coor_id" class="form-control" id="formGroupExampleInput" placeholder="Coordinator Id" value="<?php echo $coor_id; ?>">
                                         <label for="formGroupExampleInput" class="form-label">FIRST NAME</label>
-                                        <input type="text" name="fname" class="form-control" id="formGroupExampleInput" placeholder="Enter First Name"required  value="<?php echo htmlspecialchars("$fname"); ?>">
+                                        <input type="text" name="fname" class="form-control" id="formGroupExampleInput" placeholder="Enter First Name" required value="<?php echo htmlspecialchars("$fname"); ?>">
                                     </div>
                                     <div class="mb-3">
                                         <label for="formGroupExampleInput" class="form-label">MIDDLE NAME</label>
@@ -246,11 +261,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     </div>
                                     <div class="mb-3">
                                         <label for="formGroupExampleInput" class="form-label">LAST NAME</label>
-                                        <input type="text" name="lname" class="form-control" id="formGroupExampleInput" placeholder="Enter Last Name"required  value="<?php echo htmlspecialchars("$lname"); ?>">
+                                        <input type="text" name="lname" class="form-control" id="formGroupExampleInput" placeholder="Enter Last Name" required value="<?php echo htmlspecialchars("$lname"); ?>">
                                     </div>
                                     <div class="mb-3">
                                         <label for="formGroupExampleInput" class="form-label">CONTACT NUMBER</label>
-                                        <input type="number" name="contact" class="form-control" id="formGroupExampleInput" placeholder="Enter Contact Number"required  value="<?php echo htmlspecialchars("$contact"); ?>">
+                                        <input type="number" name="contact" class="form-control" id="formGroupExampleInput" placeholder="Enter Contact Number" required value="<?php echo htmlspecialchars("$contact"); ?>">
                                     </div>
                                     <div class="mb-3">
                                         <label for="formGroupExampleInput" class="form-label">EMAIL ADDRESS</label>
@@ -276,7 +291,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         profilePic.src = URL.createObjectURL(inputFile.files[0]);
     }
 </script> -->
-
+            <script>
+                function submitForm(form) {
+                    Swal.fire({
+                            title: 'Do you want to continue?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#e03444',
+                            cancelButtonColor: '#ffc404',
+                            confirmButtonText: 'Submit'
+                        })
+                        .then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit(); // Submit the form
+                            }
+                        });
+                    return false; // Prevent default form submission
+                }
+            </script>
 </body>
 
 </html>

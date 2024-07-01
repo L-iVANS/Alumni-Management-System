@@ -88,7 +88,23 @@ if ($result->num_rows > 0) {
     echo "0 results";
 }
 
-
+if (isset($_GET['id'])) {
+    echo "
+        <script>
+        // Wait for the document to load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Use SweetAlert2 for the alert
+            Swal.fire({
+                title: 'Profile Updated Successfully',
+                timer: 2000,
+                showConfirmButton: true, // Show the confirm button
+                confirmButtonColor: '#4CAF50', // Set the button color to green
+                confirmButtonText: 'OK' // Change the button text if needed
+            });
+        });
+    </script>
+    ";
+}
 ?>
 
 <!DOCTYPE html>
@@ -105,7 +121,7 @@ if ($result->num_rows > 0) {
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>

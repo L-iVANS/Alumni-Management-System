@@ -20,7 +20,6 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
     if ($user_result->num_rows > 0) {
         // User is an admin
         $user = $user_result->fetch_assoc();
-        
     }
     $stmt->close();
 
@@ -49,7 +48,6 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
         exit();
     }
     $stmt->close();
-    
 } else {
     header('Location: ../../homepage.php');
     exit();
@@ -69,7 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_FILES["image"]) && $_FILES["image"]["error"] == 0) {
         $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
         $sql = "INSERT INTO event SET title='$title', schedule='$schedule', description='$description', image='$file'";
-        
     } else {
         // Path to the image file
         $filePath = '../../assets/no_image_available.png';
@@ -79,13 +76,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $result = $conn->query($sql);
-    echo
-    "
-        <script>
-            alert('Event Added Successfully');
-            window.location.href = './event.php';
-        </script>
-    ";
+    echo "
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Event Added Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
+                        window.location.href = './event.php';
+                    });
+                });
+            </script>
+            ";
 }
 ?>
 
@@ -102,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
     <style>
         #preview {
             max-width: 700px;
@@ -211,54 +220,54 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <h1><strong>Event</strong></h1>
             </div>
         </main>
-            <form method="POST" enctype="multipart/form-data">
-                <div class="container-fluid" id="page-content">
-                    <div class="row">
-                        <div class="container-fluid" id="main-container">
-                            <div class="container-fluid" id="content-container">
-                                <h3 style="margin-bottom: 2%;">Add New Event</h3>
-                                <div class="mb-3">
-                                    <label for="formGroupExampleInput" class="form-label">Event Title</label>
-                                    <input type="text" name="title" class="form-control" id="formGroupExampleInput" placeholder="Enter Event Title" required>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="container-fluid" id="page-content">
+                <div class="row">
+                    <div class="container-fluid" id="main-container">
+                        <div class="container-fluid" id="content-container">
+                            <h3 style="margin-bottom: 2%;">Add New Event</h3>
+                            <div class="mb-3">
+                                <label for="formGroupExampleInput" class="form-label">Event Title</label>
+                                <input type="text" name="title" class="form-control" id="formGroupExampleInput" placeholder="Enter Event Title" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="formGroupExampleInput2" class="form-label">Schedule</label>
+                                <input type="datetime-local" name="schedule" class="form-control" id="formGroupExampleInput2" required placeholder="">
+                            </div>
+                            <div class="row">
+                                <div class="container-fluid">
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlTextarea1" class="form-label">Enter Description</label>
+                                        <textarea name="description" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="formGroupExampleInput2" class="form-label">Schedule</label>
-                                    <input type="datetime-local" name="schedule" class="form-control" id="formGroupExampleInput2" required placeholder="">
-                                </div>
-                                <div class="row">
-                                    <div class="container-fluid">
+                                <div class="container-fluid">
+                                    <div class="row">
                                         <div class="mb-3">
-                                            <label for="exampleFormControlTextarea1" class="form-label">Enter Description</label>
-                                            <textarea name="description" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                                            <input class="form-control" type="file" name="image" onchange="getImagePreview(event)">
                                         </div>
-                                    </div>
-                                    <div class="container-fluid">
-                                        <div class="row">
-                                            <div class="mb-3">
-                                                <input class="form-control" type="file" name="image" onchange="getImagePreview(event)">
-                                            </div>
-                                            <div class="col-md-12 mb-md-0 p-md-12" style="text-align: center;">
-                                                <!-- for display image -->
-                                                <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['image']); ?>" alt="EVENT IMAGE">
-                                            </div>
+                                        <div class="col-md-12 mb-md-0 p-md-12" style="text-align: center;">
+                                            <!-- for display image -->
+                                            <img id="preview" src="data:image/jpeg;base64,<?php echo base64_encode($row['image']); ?>" alt="EVENT IMAGE">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container-fluid" id="button-response">
-                        <div class="row">
-                            <div class="d-grid col-4 mx-auto">
-                                <button type="submit" class="btn btn-warning">Submit</button>
-                            </div>
-                            <div class="d-grid col-4 mx-auto">
-                                <a class="btn btn-danger" href="./event.php">Cancel</a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </form>
+                <div class="container-fluid" id="button-response">
+                    <div class="row">
+                        <div class="d-grid col-4 mx-auto">
+                            <button type="submit" class="btn btn-warning">Submit</button>
+                        </div>
+                        <div class="d-grid col-4 mx-auto">
+                            <a class="btn btn-danger" href="./event.php">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
     <!-- <script>
         let eventPic = document.getElementById("event-pic");

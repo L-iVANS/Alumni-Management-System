@@ -212,20 +212,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $final_result = $conn->query($final_sql);
 
         echo "
-        <script>
-            alert('Status updated Successfully');
-            window.location.href = './event.php';
-        </script>";
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Status updated Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
+                        window.location.href = './view_event.php?id=$event_id_id';
+                    });
+                });
+            </script>
+            ";
     } else {
         // insert to event_choice table
         $final_sql = "INSERT INTO event_choice (event_id, alumni_id, event_choice, student_id, fullname, email) VALUES ($event_id, $alumni_id, '$event_choice', $student_id, '$fullname', '$email')";
         $final_result = $conn->query($final_sql);
 
         echo "
-        <script>
-            alert('Status updated Successfully');
-            window.location.href = './event.php';
-        </script>";
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Status updated Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
+                        window.location.href = './view_event.php?id=$event_id_id';
+                    });
+                });
+            </script>
+            ";
     }
 }
 ?>
@@ -242,6 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -380,7 +407,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                         </fieldset>
 
                                     </div>
-                                    <form method="POST" action="view_event.php">
+                                    <form method="POST" action="view_event.php" onsubmit="return submitForm(this);">
                                         <div class="col" id="dropdown">
                                             <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
                                             <input type="hidden" name="alumni_id" value="<?php echo $user['alumni_id']; ?>">
@@ -438,6 +465,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             var image = URL.createObjectURL(event.target.files[0]);
             var preview = document.getElementById('preview');
             preview.src = image;
+        }
+
+
+        function submitForm(form) {
+            Swal.fire({
+                    title: 'Do you want to continue?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e03444',
+                    cancelButtonColor: '#ffc404',
+                    confirmButtonText: 'Submit'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Submit the form
+                    }
+                });
+            return false; // Prevent default form submission
         }
     </script>
 </body>

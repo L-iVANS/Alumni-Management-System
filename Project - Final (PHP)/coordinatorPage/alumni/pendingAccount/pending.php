@@ -102,6 +102,41 @@ $total_records = $total_records_row[0];
 $total_pages = ceil($total_records / $records_per_page);
 
 
+if (isset($_GET['ide'])) {
+    echo "
+        <script>
+        // Wait for the document to load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Use SweetAlert2 for the alert
+            Swal.fire({
+                title: 'Account Accepted Successfully',
+                timer: 2000,
+                showConfirmButton: true, // Show the confirm button
+                confirmButtonColor: '#4CAF50', // Set the button color to green
+                confirmButtonText: 'OK' // Change the button text if needed
+            });
+        });
+    </script>
+    ";
+    }
+
+    if (isset($_GET['ide_decline'])) {
+        echo "
+            <script>
+            // Wait for the document to load
+            document.addEventListener('DOMContentLoaded', function() {
+                // Use SweetAlert2 for the alert
+                Swal.fire({
+                    title: 'Account Declined Successfully',
+                    timer: 2000,
+                    showConfirmButton: true, // Show the confirm button
+                    confirmButtonColor: '#4CAF50', // Set the button color to green
+                    confirmButtonText: 'OK' // Change the button text if needed
+                });
+            });
+        </script>
+        ";
+        }
 ?>
 
 
@@ -121,6 +156,7 @@ $total_pages = ceil($total_records / $records_per_page);
     </script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- FOR PAGINATION -->
     <style>
@@ -363,8 +399,8 @@ $total_pages = ceil($total_records / $records_per_page);
                                             <?php
                                             echo "
                                                 <td class='inline act'>
-                                                    <a class='btn btn-success btn-sm' href='./accept_pending.php?id=$row[alumni_id]' style='font-size: 11.8px;'>Accept</a>
-                                                    <a class='btn btn-danger btn-sm' href='./declined_alumni.php?id=$row[alumni_id]' style='font-size: 11.8px;'>Decline</a>
+                                                    <a class='btn btn-success btn-sm archive' href='./accept_pending.php?id=$row[alumni_id]' style='font-size: 11.8px;'>Accept</a>
+                                                    <a class='btn btn-danger btn-sm archive' href='./declined_alumni.php?id=$row[alumni_id]' style='font-size: 11.8px;'>Decline</a>
                                                 </td>
                                             "; ?>
                                         </tr>
@@ -428,6 +464,34 @@ $total_pages = ceil($total_records / $records_per_page);
 
                 // Initial load
                 loadPage(currentPage);
+            });
+
+
+            // forsweetalert confirm
+            // Debugging: Ensure SweetAlert2 is loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                const archiveButtons = document.querySelectorAll('.archive');
+
+                archiveButtons.forEach(function(button) {
+                    button.addEventListener('click', function(event) {
+                        event.preventDefault(); // Prevent the default action (navigation)
+
+                        const href = this.getAttribute('href'); // Get the href attribute
+
+                        Swal.fire({
+                            title: 'Do you want to continue?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#e03444',
+                            cancelButtonColor: '#ffc404',
+                            confirmButtonText: 'Continue'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = href; // Proceed with the navigation if confirmed
+                            }
+                        });
+                    });
+                });
             });
         </script>
 </body>

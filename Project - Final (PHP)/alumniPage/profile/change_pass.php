@@ -89,11 +89,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $updateQuery = "UPDATE alumni SET password = '$newPass' WHERE alumni_id = $userId";
         if (mysqli_query($conn, $updateQuery)) {
             echo "
-                <script>
-                    alert('Password Successfully Changed');
-                    window.location.href = './profile.php';
-                </script>";
-            exit;
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Password Change Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
+                        window.location.href = './profile.php';
+                    });
+                });
+            </script>
+            ";
         } else {
             $errorMessage = "Error changing password. Please try again.";
         }
@@ -117,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.min.js" integrity="sha512-pBoUgBw+mK85IYWlMTSeBQ0Djx3u23anXFNQfBiIm2D8MbVT9lr+IxUccP8AMMQ6LCvgnlhUCK3ZCThaBCr8Ng==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -187,10 +199,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <div class="container-fluid" id="page-content">
-                <?php
-                // Display the error message if it exists
+            <?php
                 if (!empty($errorMessage)) {
-                    echo "<script>alert('$errorMessage');</script>";
+                    echo "<script>";
+                    echo "Swal.fire({";
+                    echo "  icon: 'error',";
+                    echo "  title: 'Oops...',";
+                    echo "  text: '$errorMessage',";
+                    echo "  timer: 2000,";
+                    echo "})";
+                    echo "</script>";
                 }
                 ?>
 
@@ -201,7 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <h3>CHANGE PASSWORD</h3>
                             </span>
                             <br>
-                            <form method="POST">
+                            <form method="POST" onsubmit="return submitForm(this);">
                                 <div class="mb-3">
                                     <label for="formGroupExampleInput" class="form-label">Enter Current Password</label>
                                     <input type="text" name="currentPass" class="form-control" id="formGroupExampleInput" required>
@@ -236,6 +254,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             preview.src = image;
             preview.style.width = '83px';
             preview.style.height = '83px';
+        }
+
+
+        function submitForm(form) {
+            Swal.fire({
+                    title: 'Do you want to continue?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e03444',
+                    cancelButtonColor: '#ffc404',
+                    confirmButtonText: 'Submit'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Submit the form
+                    }
+                });
+            return false; // Prevent default form submission
         }
     </script>
 </body>

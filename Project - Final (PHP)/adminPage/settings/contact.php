@@ -90,10 +90,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if ($conn->query($sql) === TRUE) {
-        echo "<script>
-            alert('Contact Page Updated Successfully');
-            window.location.href = './contact.php';
-        </script>";
+        echo "
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Info Updated Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
+                        window.location.href = './contact.php';
+                    });
+                });
+            </script>
+            ";
     } else {
         echo "Error updating record: " . $conn->error;
     }
@@ -113,6 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         #preview {
             max-width: 100%;
@@ -181,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                        <form method="POST" enctype="multipart/form-data">
+                        <form method="POST" enctype="multipart/form-data" onsubmit="return submitForm(this);">
                             <div class="mb-3">
                                 <label for="pageTitle" class="form-label">Page Title</label>
                                 <input name="title" type="text" class="form-control" id="pageTitle" value="<?php echo $data_title; ?>">
@@ -256,6 +271,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             })
         });
+
+
+        function submitForm(form) {
+            Swal.fire({
+                    title: 'Do you want to continue?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e03444',
+                    cancelButtonColor: '#ffc404',
+                    confirmButtonText: 'Submit'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Submit the form
+                    }
+                });
+            return false; // Prevent default form submission
+        }
     </script>
 </body>
 

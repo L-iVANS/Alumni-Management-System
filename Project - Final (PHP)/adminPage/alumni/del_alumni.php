@@ -67,11 +67,8 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
     $sql_delete = "DELETE FROM alumni WHERE alumni_id=$alumni_id";
     $conn->query($sql_delete);
 }
-echo
-"
-        <script>
-            alert('Alumni Acccount Archived Successfully ');
-            window.location.href = './alumni.php';
-        </script>
-    ";
+// Output SweetAlert2 message with a timer
+$transfer = $alumni_id;
+header("Location: ./alumni.php?ide=$transfer");
+exit;
 ?>

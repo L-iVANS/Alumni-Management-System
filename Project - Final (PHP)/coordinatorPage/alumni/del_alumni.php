@@ -66,11 +66,7 @@ if (isset($_GET['id'])) {
     $sql_delete = "DELETE FROM alumni WHERE alumni_id=$alumni_id";
     $conn->query($sql_delete);
 }
-echo
-"
-        <script>
-            alert('Alumni Acccount Archived Successfully ');
-            window.location.href = './alumni.php';
-        </script>
-    ";
+$transfer = $alumni_id;
+header("Location: ./alumni.php?ide=$transfer");
+exit;
 ?>

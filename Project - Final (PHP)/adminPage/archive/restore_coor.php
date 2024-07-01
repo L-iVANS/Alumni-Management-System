@@ -68,11 +68,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
     $sql_delete = "DELETE FROM coordinator_archive WHERE coor_id=$coor_id";
     $conn->query($sql_delete);
 }
-echo
-"
-        <script>
-            alert('Coordinator Acccount Restored Successfully ');
-            window.location.href = './coor_archive.php';
-        </script>
-    ";
+$transfer = $coor_id;
+header("Location: ./coor_archive.php?ide=$transfer");
+exit;
 ?>

@@ -98,13 +98,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
 
         $result = $conn->query($sql);
-        echo
-        "
-        <script>
-            alert('Event Updated Successfully');
-            window.location.href = './event.php';
-        </script>
-    ";
+        echo "
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Event Updated Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
+                        window.location.href = './event.php';
+                    });
+                });
+            </script>
+            ";
     }
 }
 
@@ -124,6 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         #preview {
             max-width: 700px;
@@ -227,7 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 <h1><strong>Event</strong></h1>
             </div>
             </main>
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data" onsubmit="return submitForm(this);">
                 <div class="container-fluid" id="page-content">
                     <div class="row">
                         <div class="container-fluid" id="main-container">
@@ -322,6 +334,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 }
             })
         });
+
+
+        function submitForm(form) {
+            Swal.fire({
+                    title: 'Do you want to continue?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e03444',
+                    cancelButtonColor: '#ffc404',
+                    confirmButtonText: 'Submit'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Submit the form
+                    }
+                });
+            return false; // Prevent default form submission
+        }
     </script>
 </body>
 

@@ -64,11 +64,8 @@ if (isset($_GET['id'])) {
     $sql_delete = "DELETE FROM declined_account WHERE alumni_id=$alumni_id";
     $conn->query($sql_delete);
 }
-echo
-"
-        <script>
-            alert('Alumni Acccount Accepted!');
-            window.location.href = './decline_acc.php';
-        </script>
-    ";
+// Output SweetAlert2 message with a timer
+$transfer = $alumni_id;
+header("Location: ./decline_acc.php?ide=$transfer");
+exit;
 ?>

@@ -48,7 +48,6 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
         $user = $user_result->fetch_assoc();
     }
     $stmt->close();
-    
 } else {
     header('Location: ../../homepage.php');
     exit();
@@ -144,13 +143,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $sql = "UPDATE alumni SET fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email' WHERE alumni_id=$alumni_id";
             $result = $conn->query($sql);
-            echo
-            "
-        <script>
-            alert('Info Updated Successfully');
-            window.location.href = './profile.php';
-        </script>
-    ";
+            echo "
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Info Updated Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
+                        window.location.href = './profile.php';
+                    });
+                });
+            </script>
+            ";
         }
     }
 }
@@ -171,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -247,14 +257,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             <div class="page-content">
                 <?php
                 if (!empty($errorMessage)) {
-                    echo "<script>alert('$errorMessage');</script>";
+                    echo "<script>";
+                    echo "Swal.fire({";
+                    echo "  icon: 'error',";
+                    echo "  title: 'Oops...',";
+                    echo "  text: '$errorMessage',";
+                    echo "  timer: 2000,";
+                    echo "})";
+                    echo "</script>";
                 }
                 ?>
                 <div class="row">
                     <div class="container-fluid" id="main-container">
                         <div class="container-fluid" id="content-container">
                             <div class="information">
-                                <form action="update.php" method="POST">
+                                <form action="update.php" method="POST" onsubmit="return submitForm(this);">
                                     <div class="mb-3">
                                         <input type="hidden" name="alumni_id" class="form-control" id="formGroupExampleInput" value="<?php echo $alumni_id; ?>">
                                         <label for="formGroupExampleInput" class="form-label">FIRST NAME</label>
@@ -407,6 +424,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         }
                     }
                 });
+
+
+
+                function submitForm(form) {
+                    Swal.fire({
+                            title: 'Do you want to continue?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#e03444',
+                            cancelButtonColor: '#ffc404',
+                            confirmButtonText: 'Submit'
+                        })
+                        .then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit(); // Submit the form
+                            }
+                        });
+                    return false; // Prevent default form submission
+                }
             </script>
 </body>
 

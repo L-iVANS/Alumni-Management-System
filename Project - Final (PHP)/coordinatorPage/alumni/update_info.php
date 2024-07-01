@@ -114,11 +114,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $email = strtolower($_POST['email']);
 
 
-
     // email and user existing check
-    $emailCheck = mysqli_query($conn, "SELECT * FROM pending WHERE email='$email' AND alumni_id != '$alumni_id'");
+    $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email' AND alumni_id != '$alumni_id'");
     $emailCheck_decline = mysqli_query($conn, "SELECT * FROM declined_account WHERE email='$email' AND alumni_id != '$alumni_id'");
-    $idCheck = mysqli_query($conn, "SELECT * FROM declined_account WHERE student_id='$stud_id' AND alumni_id != '$alumni_id'");
+    $idCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE student_id='$stud_id' AND alumni_id != '$alumni_id'");
     $idCheck_decline = mysqli_query($conn, "SELECT * FROM declined_account WHERE student_id='$stud_id' AND alumni_id != '$alumni_id'");
 
     if (mysqli_num_rows($emailCheck) > 0) {
@@ -131,11 +130,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $errorMessage = "Student ID Already Exists";
     } else {
 
-        // email and user existing check
-        $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email' AND alumni_id != '$alumni_id'");
-        $emailCheck_archive = mysqli_query($conn, "SELECT * FROM alumni_archive WHERE email='$email' AND alumni_id != '$alumni_id'");
-        $idCheck = mysqli_query($conn, "SELECT * FROM declined_account WHERE student_id='$stud_id' AND alumni_id != '$alumni_id'");
-        $idCheck_archive = mysqli_query($conn, "SELECT * FROM declined_account WHERE student_id='$stud_id' AND alumni_id != '$alumni_id'");
+       // email and user existing check
+       $emailCheck = mysqli_query($conn, "SELECT * FROM pending WHERE email='$email' AND alumni_id != '$alumni_id'");
+       $emailCheck_archive = mysqli_query($conn, "SELECT * FROM alumni_archive WHERE email='$email' AND alumni_id != '$alumni_id'");
+       $idCheck = mysqli_query($conn, "SELECT * FROM pending WHERE student_id='$stud_id' AND alumni_id != '$alumni_id'");
+       $idCheck_archive = mysqli_query($conn, "SELECT * FROM alumni_archive WHERE student_id='$stud_id' AND alumni_id != '$alumni_id'");
 
 
         if (mysqli_num_rows($emailCheck) > 0) {
@@ -150,13 +149,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $sql = "UPDATE alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email' WHERE alumni_id=$alumni_id";
             $result = $conn->query($sql);
-            echo
-            "
-        <script>
-            alert('Alumni Info Updated Successfully');
-            window.location.href = './alumni_info.php?id=$alumni_id';
-        </script>
-    ";
+            echo "
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Info Updated Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
+                        window.location.href = './alumni.php';
+                    });
+                });
+            </script>
+            ";
         }
     }
 }
@@ -176,6 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -272,11 +283,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 <?php
                 if (!empty($errorMessage)) {
-                    echo "<script>alert('$errorMessage');</script>";
+                    echo "<script>";
+                    echo "Swal.fire({";
+                    echo "  icon: 'error',";
+                    echo "  title: 'Oops...',";
+                    echo "  text: '$errorMessage',";
+                    echo "  timer: 2000,";
+                    echo "})";
+                    echo "</script>";
                 }
                 ?>
 
-                <form action="" method="POST">
+                <form action="" method="POST" onsubmit="return submitForm(this);">
                     <div class="container" id="content">
                         <div class="container">
                             <div class="row align-items-end">
@@ -450,6 +468,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             </div>
         </div>
     </div>
+
+    <script>
+        function submitForm(form) {
+            Swal.fire({
+                    title: 'Do you want to continue?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e03444',
+                    cancelButtonColor: '#ffc404',
+                    confirmButtonText: 'Submit'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Submit the form
+                    }
+                });
+            return false; // Prevent default form submission
+        }
+    </script>
 </body>
 
 </html>

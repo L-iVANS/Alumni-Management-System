@@ -1,3 +1,4 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
 session_start();
 
@@ -57,20 +58,17 @@ if (isset($_GET['id'])) {
     }
 
 
-    //insert data into table alumni_archive from alumni
+    // Insert data into table event_archive from event
     $sql_archive = "INSERT INTO event_archive (event_id, title, schedule, description, image, going, interested, not_interested, date_created)" .
-        "SELECT event_id, title, schedule, description, image, going, interested, not_interested, date_created FROM event WHERE event_id=$event_id";
+        " SELECT event_id, title, schedule, description, image, going, interested, not_interested, date_created FROM event WHERE event_id=$event_id";
     $conn->query($sql_archive);
 
-    //delete data in table alumni
+    // Delete data from table event
     $sql_delete = "DELETE FROM event WHERE event_id=$event_id";
     $conn->query($sql_delete);
 }
-echo
-"
-        <script>
-            alert('Event Archived Successfully ');
-            window.location.href = './event.php';
-        </script>
-    ";
+// Output SweetAlert2 message with a timer
+$transfer = $event_id;
+header("Location: ./event.php?ide=$transfer");
+exit;
 ?>

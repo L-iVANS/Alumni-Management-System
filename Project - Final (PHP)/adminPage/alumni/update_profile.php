@@ -20,7 +20,6 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
     if ($user_result->num_rows > 0) {
         // User is an admin
         $user = $user_result->fetch_assoc();
-        
     }
     $stmt->close();
 
@@ -49,7 +48,6 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
         exit();
     }
     $stmt->close();
-    
 } else {
     header('Location: ../../homepage.php');
     exit();
@@ -77,7 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
     // data from table alumni where student_id = $alumni_id = $_GET['id']; get from alumni list update
     $file = $row['picture'];
-
 } else {
 
     $alumni_id = $_POST['id'];
@@ -88,13 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     $result = $conn->query($sql);
-    echo
-    "
-        <script>
-            alert('Alumni Info Updated Successfully');
-            window.location.href = './alumni_info.php?id=$alumni_id';
-        </script>
-    ";
+
+    header("Location: ./alumni_info.php?ide=$alumni_id");
+    exit;
 }
 ?>
 
@@ -112,6 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -123,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         <div class="side-content">
             <div class="profile">
-            <i class="bi bi-person-circle"></i>
+                <i class="bi bi-person-circle"></i>
                 <h4><?php echo $user['fname']; ?></h4>
                 <small style="color: white;"><?php echo $user['email']; ?></small>
             </div>
@@ -214,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 </div>
                 <div class="container" id="content">
                     <!-- PROFILE -->
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form action="" method="POST" enctype="multipart/form-data" onsubmit="return submitForm(this);">
                         <div class="container text-center" id="start">
                             <div class="row align-items-end">
                                 <div class="col">
@@ -232,14 +226,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                 <div class="col">
                                     <button type="submit" class="btn btn-warning" name="insert" id="insert" value="insert" style="padding-left: 70px; padding-right: 70px; margin-right: 7%;">Update</button>
                                     <?php
-                                        echo "
-                                        <a class='btn btn-danger' href='./alumni_info.php?id=$row[alumni_id]' style='padding-left: 70px; padding-right: 70px;'>Cancel</a>
-                                        ";?>
-                                    
+                                    echo "
+                                        <a class='btn btn-danger' href='./alumni_info.php?id=$alumni_id' style='padding-left: 70px; padding-right: 70px;'>Cancel</a>
+                                        "; ?>
+
                                 </div>
                             </div>
                         </div>
-                    </div>
+                </div>
                 </form>
             </div>
         </div>
@@ -273,6 +267,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 }
             })
         });
+
+
+        // FOR SWEET ALERT
+        function submitForm(form) {
+            Swal.fire({
+                    title: 'Do you want to continue?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e03444',
+                    cancelButtonColor: '#ffc404',
+                    confirmButtonText: 'Submit'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Submit the form
+                    }
+                });
+            return false; // Prevent default form submission
+        }
     </Script>
 </body>
 

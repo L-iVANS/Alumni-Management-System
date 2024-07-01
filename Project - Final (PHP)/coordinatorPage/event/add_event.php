@@ -77,13 +77,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $result = $conn->query($sql);
-    echo
-    "
-        <script>
-            alert('Event Added Successfully');
-            window.location.href = './event.php';
-        </script>
-    ";
+    echo "
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Event Added Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
+                        window.location.href = './event.php';
+                    });
+                });
+            </script>
+            ";
 }
 
 ?>
@@ -101,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
     <style>
         #preview {
             max-width: 700px;

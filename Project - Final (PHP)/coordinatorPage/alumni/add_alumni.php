@@ -86,10 +86,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     // email and user existing check
-    $emailCheck = mysqli_query($conn, "SELECT * FROM pending WHERE email='$email'");
+    $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
     $emailCheck_decline = mysqli_query($conn, "SELECT * FROM declined_account WHERE email='$email'");
-    $idCheck = mysqli_query($conn, "SELECT * FROM declined_account WHERE email='$stud_id'");
-    $idCheck_decline = mysqli_query($conn, "SELECT * FROM declined_account WHERE email='$stud_id'");
+    $idCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE student_id='$stud_id'");
+    $idCheck_decline = mysqli_query($conn, "SELECT * FROM declined_account WHERE student_id='$stud_id'");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
@@ -102,10 +102,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
 
         // email and user existing check
-        $emailCheck = mysqli_query($conn, "SELECT * FROM alumni WHERE email='$email'");
+        $emailCheck = mysqli_query($conn, "SELECT * FROM pending WHERE email='$email'");
         $emailCheck_archive = mysqli_query($conn, "SELECT * FROM alumni_archive WHERE email='$email'");
-        $idCheck = mysqli_query($conn, "SELECT * FROM declined_account WHERE email='$stud_id'");
-        $idCheck_archive = mysqli_query($conn, "SELECT * FROM declined_account WHERE email='$stud_id'");
+        $idCheck = mysqli_query($conn, "SELECT * FROM pending WHERE student_id='$stud_id'");
+        $idCheck_archive = mysqli_query($conn, "SELECT * FROM alumni_archive WHERE student_id='$stud_id'");
 
 
         if (mysqli_num_rows($emailCheck) > 0) {
@@ -124,13 +124,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $sql = "INSERT INTO alumni SET student_id='$stud_id', fname='$fname', mname='$mname', lname='$lname', gender='$gender', course='$course', batch_startYear='$fromYear', batch_endYear='$toYear', contact='$contact', address='$address', email='$email', password='$temp_password', picture='$imageDataEscaped'";
             $result = $conn->query($sql);
-            echo
-            "
-        <script>
-            alert('Alumni Added Successfully');
-            window.location.href = './alumni.php';
-        </script>
-    ";
+            echo "
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Alumni Added Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
+                        window.location.href = './alumni.php';
+                    });
+                });
+            </script>
+            ";
         }
     }
 }
@@ -150,6 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
 </head>
 
 <body>
@@ -247,9 +259,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <?php
                 if (!empty($errorMessage)) {
-                    echo "<script>alert('$errorMessage');</script>";
+                    echo "<script>";
+                    echo "Swal.fire({";
+                    echo "  icon: 'error',";
+                    echo "  title: 'Oops...',";
+                    echo "  text: '$errorMessage',";
+                    echo "  timer: 2000,";
+                    echo "})";
+                    echo "</script>";
                 }
                 ?>
+
 
                 <div class="container" id="content">
                     <form action="" method="POST">

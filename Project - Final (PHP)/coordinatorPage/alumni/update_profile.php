@@ -89,13 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     $result = $conn->query($sql);
-    echo
-    "
-        <script>
-            alert('Alumni Info Updated Successfully');
-            window.location.href = './alumni_info.php?id=$alumni_id';
-        </script>
-    ";
+    header("Location: ./alumni_info.php?ide=$alumni_id");
+    exit;
 }
 ?>
 
@@ -113,6 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -209,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 </div>
                 <div class="container" id="content">
                     <!-- PROFILE -->
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form action="" method="POST" enctype="multipart/form-data" onsubmit="return submitForm(this);">
                         <div class="container text-center" id="start">
                             <div class="row align-items-end">
                                 <div class="col">
@@ -268,6 +264,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 }
             })
         });
+
+
+
+        // FOR SWEET ALERT
+        function submitForm(form) {
+            Swal.fire({
+                    title: 'Do you want to continue?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e03444',
+                    cancelButtonColor: '#ffc404',
+                    confirmButtonText: 'Submit'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Submit the form
+                    }
+                });
+            return false; // Prevent default form submission
+        }
     </Script>
 </body>
 

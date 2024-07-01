@@ -20,7 +20,6 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
     if ($user_result->num_rows > 0) {
         // User is an admin
         $user = $user_result->fetch_assoc();
-        
     }
     $stmt->close();
 
@@ -49,7 +48,6 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['user_email'])) {
         exit();
     }
     $stmt->close();
-    
 } else {
     header('Location: ../../homepage.php');
     exit();
@@ -79,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         exit;
     }
     // data from table alumni where student_id = $alumni_id = $_GET['id']; get from alumni list update
+    $coor_id = $row['coor_id'];
     $fname = $row['fname'];
     $mname = $row['mname'];
     $lname = $row['lname'];
@@ -95,26 +94,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
     // email and user existing check
-    $emailCheck = mysqli_query($conn, "SELECT * FROM coordinator WHERE email='$email'");
-    $emailCheck_archive = mysqli_query($conn, "SELECT * FROM coordinator_archive WHERE email='$email'");
+    $emailCheck = mysqli_query($conn, "SELECT * FROM coordinator WHERE email='$email' AND coor_id != $coor_id");
+    $emailCheck_archive = mysqli_query($conn, "SELECT * FROM coordinator_archive WHERE email='$email' AND coor_id != $coor_id");
 
     if (mysqli_num_rows($emailCheck) > 0) {
         $errorMessage = "Email Already Exists";
-    }
-    if (mysqli_num_rows($emailCheck_archive) > 0) {
-        $errorMessage = "Email Already Exists"; 
-        
+    } else if (mysqli_num_rows($emailCheck_archive) > 0) {
+        $errorMessage = "Email Already Exists";
     } else {
 
         $sql = "UPDATE coordinator SET fname='$fname', mname='$mname', lname='$lname', contact='$contact', email='$email' WHERE coor_id=$coor_id";
         $result = $conn->query($sql);
-        echo
-        "
-        <script>
-            alert('Coordinator Info Updated Successfully');
-            window.location.href = './coordinator.php';
-        </script>
-    ";
+        echo "
+            <script>
+                // Wait for the document to load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Use SweetAlert2 for the alert
+                    Swal.fire({
+                            title: 'Info Updated Successfully',
+                            timer: 2000,
+                            showConfirmButton: true, // Show the confirm button
+                            confirmButtonColor: '#4CAF50', // Set the button color to green
+                            confirmButtonText: 'OK' // Change the button text if needed
+                    }).then(function() {
+                        // Redirect after the alert closes
+                        window.location.href = './coordinator.php';
+                    });
+                });
+            </script>
+            ";
     }
 }
 ?>
@@ -133,6 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -235,11 +244,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 <?php
                 if (!empty($errorMessage)) {
-                    echo "<script>alert('$errorMessage');</script>";
+                    echo "<script>";
+                    echo "Swal.fire({";
+                    echo "  icon: 'error',";
+                    echo "  title: 'Oops...',";
+                    echo "  text: '$errorMessage',";
+                    echo "  timer: 2000,";
+                    echo "})";
+                    echo "</script>";
                 }
                 ?>
 
-                <form action="" method="POST">
+                <form action="" method="POST" onsubmit="return submitForm(this);">
                     <div class="container" id="content">
                         <div class="container">
                             <div class="row align-items">
@@ -312,6 +328,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             </div>
         </div>
     </div>
+    <script>
+        function submitForm(form) {
+            Swal.fire({
+                    title: 'Do you want to continue?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e03444',
+                    cancelButtonColor: '#ffc404',
+                    confirmButtonText: 'Submit'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Submit the form
+                    }
+                });
+            return false; // Prevent default form submission
+        }
+    </script>
 </body>
 
 </html>
