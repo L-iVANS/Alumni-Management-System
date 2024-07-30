@@ -262,6 +262,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     <div class="container text-center" id="start">
                         <div class="row align-items-end">
                             <div class="col">
+                                <?php echo "
+                                    <a class='btn btn-warning' href='./update_profile.php?id=$row[alumni_id]'> Change Picture </a>
+                                    ";
+                                ?>
                             </div>
                             <div class="col">
                                 <!-- Preview image -->
@@ -386,6 +390,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                                     <?php 
                                     echo "
+                                        <a class='btn btn-warning' href='./update_info.php?id=$row[alumni_id]'>Update Info</a>
                                         <a class='btn btn-danger' href='./del_alumni.php?id=$row[alumni_id]'>Archive</a>
                                         <a class='btn btn-danger' href='./alumni.php'>Cancel</a>
                                     ";?>
