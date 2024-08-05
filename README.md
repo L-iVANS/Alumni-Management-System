@@ -14,7 +14,7 @@ Manage alumni of CvSU.
 * Login three types of account (Admin, Coordinator, and Alumni) | Auto filter login.
 * Add new alumni or register alumni.
 * Manage events.
-* Export PDF files for Reports aswell as list of alumni, etc.
+* Export PDF files for Report.
 
 ## Help And Guide ( Git Commands )
 
