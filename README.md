@@ -49,13 +49,13 @@ Manage alumni of CvSU.
 ## Authors
 
 Contributors
-* Ivans
-* Drei
-* Yrria
-* Seigh
-* Jps
-* Nix
-* Tan
+* [Ivans](https://github.com/L-iVANS)
+* [Drei](https://github.com/MarcAndrei00)
+* [Yrria](https://github.com/Yrria)
+* [Seigh](https://github.com)
+* [Nix](https://github.com/6nix)
+* [Jps](https://github.com)
+* [Tan](https://github.com)
 
 ## Version History
 
