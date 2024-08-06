@@ -69,7 +69,7 @@ Contributors
 
 ## Purpose
 
-This project is for educational purposes only. It is used to fulfill the requirements for a course subjec.
+This project is for educational purposes only. It is used to fulfill the requirements for a course subject.
 <br/>
 ITEC 60A - INTEGRATED PROGRAMMING AND TECHNOLOGIES 1.
 
