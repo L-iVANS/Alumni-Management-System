@@ -1,0 +1,10 @@
+COMPOSSER LINK
+
+SOFTWARE:
+https://getcomposer.org/download/?fbclid=IwZXh0bgNhZW0CMTAAAR2l5s-0VXM69F_WdL_yhmWCzrlT9PlT-7z4h49nLfQNxODqiYgGa2kgpqQ_aem_hPyVMP-dLZoAOMvOFHbWeQ
+
+GITHUB:
+
+INSTALLER PASTE IN GITBASH :        composer require phpmailer/phpmailer
+LINK:
+https://github.com/PHPMailer/PHPMailer?fbclid=IwZXh0bgNhZW0CMTAAAR0oNaHqMaTUJBEA3QTZTbxf9nSpKCAZLu56CywZhaL7YuKd5-7jcqxW3_8_aem_R8fAU9S33ITgpoDUfeON4A
